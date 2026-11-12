@@ -1,0 +1,1726 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Prescrire</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+/* Layout : application plein écran en trois colonnes (arborescence | fiche | sortie CCTP/DPGF/offres), empilées sur écran étroit */
+:root{
+  --bg:#e9ecef; --panel:#fbfbfc; --ink:#1b2430; --muted:#5b6674; --line:#d3d9e0; --line-soft:#e6eaee;
+  --accent:#1d4f91; --accent-ink:#ffffff; --accent-soft:#e2eaf5; --danger:#a3361c; --danger-soft:#f7e6e1; --paper:#ffffff;
+  --ok:#2c6e3f; --ok-soft:#e0efe4; --warn:#8a5a00; --warn-soft:#fbefd5;
+  --f-body:"IBM Plex Sans", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --f-label:"IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11151a; --panel:#181d23; --ink:#e4e8ed; --muted:#94a0ad; --line:#2b333c; --line-soft:#222930;
+  --accent:#7fa9e3; --accent-ink:#0d1622; --accent-soft:#1d2a3b; --danger:#e58a72; --danger-soft:#3a221c; --paper:#1d232a;
+  --ok:#7cc493; --ok-soft:#1a2e21; --warn:#e2b55a; --warn-soft:#352a12; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11151a; --panel:#181d23; --ink:#e4e8ed; --muted:#94a0ad; --line:#2b333c; --line-soft:#222930;
+  --accent:#7fa9e3; --accent-ink:#0d1622; --accent-soft:#1d2a3b; --danger:#e58a72; --danger-soft:#3a221c; --paper:#1d232a;
+  --ok:#7cc493; --ok-soft:#1a2e21; --warn:#e2b55a; --warn-soft:#352a12; color-scheme:dark}
+
+[hidden]{display:none!important}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45}
+*{box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+
+.app{height:100%;display:flex;flex-direction:column;padding-left:max(12px, env(safe-area-inset-left,0px));padding-right:max(12px, env(safe-area-inset-right,0px));padding-block:10px;gap:10px}
+header.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--f-label);font-weight:600;font-size:17px;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+.brand i{display:inline-block;width:14px;height:14px;border:2px solid var(--accent);border-radius:2px;position:relative}
+.brand i::after{content:"";position:absolute;inset:3px 3px auto auto;width:4px;height:4px;background:var(--accent)}
+.proj{display:flex;align-items:center;gap:10px;flex:1;min-width:0;flex-wrap:wrap}
+#p-nom{background:transparent;border:1px solid transparent;border-radius:4px;padding:4px 8px;min-width:0;font-weight:600;font-size:15px;flex:1 1 240px}
+#p-nom:hover,#p-nom:focus{border-color:var(--line);background:var(--panel)}
+.p-meta{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center;white-space:nowrap}
+.p-meta .dirty{color:var(--warn)}
+.p-meta .tagphase{font-family:var(--f-mono);font-size:11.5px;border:1px solid var(--line);border-radius:3px;padding:1px 6px}
+.top-actions{display:flex;gap:6px;flex-wrap:wrap}
+.top-actions .sep{width:1px;background:var(--line);margin:0 4px}
+
+.cols{flex:1;min-height:0;display:grid;grid-template-columns:minmax(250px,23%) minmax(340px,1fr) minmax(400px,1.25fr);gap:10px}
+.col{background:var(--panel);border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;min-height:0;min-width:0}
+.col-h{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.col-h h2{font-family:var(--f-label);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600;flex:1}
+.col-b{flex:1;overflow:auto;min-height:0}
+
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:4px;padding:4px 9px;cursor:pointer;font-size:12.5px;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{color:var(--accent-ink);filter:brightness(1.08)}
+.btn.danger{color:var(--danger)}
+.btn.armed{background:var(--danger);color:var(--panel);border-color:var(--danger)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:disabled:hover{border-color:var(--line);color:inherit}
+.mini{border:1px solid var(--line);background:var(--panel);border-radius:3px;padding:0 6px;font-size:11px;cursor:pointer;color:var(--muted);font-family:var(--f-mono);line-height:18px}
+.mini:hover{color:var(--accent);border-color:var(--accent)}
+.link{border:0;background:none;color:var(--accent);cursor:pointer;padding:0;text-decoration:underline;font-size:12px}
+
+/* Arborescence */
+.tree-tools{display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line-soft);flex-wrap:wrap}
+ul.tree{list-style:none;margin:0;padding:6px 0}
+ul.tree ul{list-style:none;margin:0;padding:0}
+.row{display:flex;align-items:center;gap:6px;padding:4px 10px 4px calc(10px + var(--d,0) * 16px);cursor:pointer;border-top:2px solid transparent;border-bottom:2px solid transparent;user-select:none}
+.row:hover{background:var(--line-soft)}
+.row.sel{background:var(--accent-soft)}
+.row.sel .nm{color:var(--accent)}
+.row .car{width:14px;flex:none;color:var(--muted);font-size:10px;text-align:center;border:0;background:none;padding:0;cursor:pointer}
+.row .num{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
+.row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row.g .nm{font-family:var(--f-label);font-weight:600;letter-spacing:.01em}
+.row.g0 .nm{text-transform:uppercase;font-size:12.5px;letter-spacing:.04em}
+.row .amt{font-family:var(--f-mono);font-size:11px;color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
+.row.p .dot{width:5px;height:5px;border-radius:50%;background:var(--muted);flex:none;margin:0 4px}
+.pse{font-family:var(--f-label);font-size:10.5px;font-weight:600;letter-spacing:.05em;color:var(--warn);background:var(--warn-soft);border-radius:3px;padding:0 4px;flex:none}
+.row.drop-before{border-top-color:var(--accent)}
+.row.drop-after{border-bottom-color:var(--accent)}
+.row.drop-in{background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.row.dragging{opacity:.4}
+.tree-hint{padding:10px 14px 16px;color:var(--muted);font-size:12px}
+
+/* Fiche */
+.fiche{padding:14px 16px 24px;display:flex;flex-direction:column;gap:14px}
+.fiche-title{display:flex;align-items:baseline;gap:10px}
+.fiche-title .num{font-family:var(--f-mono);color:var(--accent);font-size:13px}
+.fiche-title h3{margin:0;font-size:17px;font-weight:600;text-wrap:balance;min-width:0;overflow-wrap:anywhere}
+.ro{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;padding:10px 12px;background:var(--bg);border-radius:4px;font-size:13px;margin:0}
+.ro dt{font-family:var(--f-label);color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:.06em;padding-top:2px}
+.ro dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.f{display:flex;flex-direction:column;gap:4px;min-width:0}
+.lab,.f>label{font-family:var(--f-label);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:500}
+.f input[type=text],.f input[type=number],.f select,.f textarea{border:1px solid var(--line);border-radius:4px;padding:6px 8px;background:var(--paper);width:100%;min-width:0}
+.f textarea{resize:vertical;min-height:84px;line-height:1.45}
+.f input.numin{font-family:var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+.f input.locked{background:var(--bg);color:var(--muted);cursor:not-allowed}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hint{font-size:12px;color:var(--muted)}
+.err{font-size:12px;color:var(--danger)}
+.qres{display:flex;gap:6px;align-items:center;flex-wrap:wrap;min-height:18px;font-size:12px;color:var(--muted)}
+.qres b{font-family:var(--f-mono);color:var(--ink);font-weight:500}
+.libhint{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.libhint .dotc{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:none}
+.libhint.mod .dotc{background:var(--warn)}
+.libhint.new .dotc{background:var(--accent)}
+.ac{position:relative}
+.ac-list{position:absolute;left:0;right:0;top:calc(100% - 18px);margin-top:2px;background:var(--paper);border:1px solid var(--line);border-radius:4px;box-shadow:0 6px 18px rgba(0,0,0,.12);z-index:20;max-height:300px;overflow:auto}
+.ac-item{padding:6px 9px;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:2px 8px}
+.ac-item.on,.ac-item:hover{background:var(--accent-soft)}
+.ac-item .n{min-width:0}
+.ac-item .m{font-family:var(--f-mono);font-size:11px;color:var(--muted);white-space:nowrap}
+.ac-item .l{grid-column:1/-1;font-family:var(--f-label);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.ac-item mark{background:none;color:var(--accent);font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chips .niv{font-family:var(--f-label);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);width:100%;margin-top:4px}
+.chips .niv:first-child{margin-top:0}
+.chip{border:1px solid var(--line);border-radius:999px;padding:3px 10px;font-size:12.5px;background:var(--paper);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chip[aria-pressed="true"] .hint{color:inherit;opacity:.8}
+.chk{display:flex;gap:8px;align-items:center;font-size:13px;cursor:pointer}
+.fin{display:flex;gap:10px;align-items:center}
+.fin input[type=text]{flex:1}
+.fin input:disabled{opacity:.5}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding:10px 12px;border:1px solid var(--line);border-radius:4px}
+.total b{font-family:var(--f-mono);font-size:16px;font-variant-numeric:tabular-nums}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.empty{padding:40px 24px;color:var(--muted);text-align:center;max-width:60ch;margin:0 auto}
+.ql{border:1px solid var(--line);border-radius:4px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:var(--paper)}
+.ql-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ql-row{display:grid;grid-template-columns:minmax(0,1fr) 92px 78px auto;align-items:center;gap:6px}
+.ql-row .ln{min-width:0;overflow-wrap:anywhere}
+.ql-row .ln small{display:block;font-size:10.5px;color:var(--muted);font-family:var(--f-mono);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ql-row input{border:1px solid var(--line);border-radius:4px;padding:5px 8px;background:var(--panel);font-family:var(--f-mono);text-align:right;width:100%;min-width:0}
+.ql-row input.bad{border-color:var(--danger)}
+.ql-row .u{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.ql-row .qm{display:flex;gap:4px}
+.ql-sum{border-top:1px solid var(--line);padding-top:6px;font-weight:600}
+.ql-sum b{font-family:var(--f-mono);text-align:right}
+
+/* Sortie */
+.tabs{display:flex;gap:2px}
+.tab{border:0;background:none;padding:4px 10px;font-family:var(--f-label);font-weight:600;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;margin-left:auto}
+.seg-lab{font-family:var(--f-label);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:5px 10px;background:var(--bg);border-right:1px solid var(--line)}
+.seg button{border:0;background:var(--panel);padding:5px 14px;font-size:13px;font-weight:500;cursor:pointer;color:var(--ink)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button:hover{color:var(--accent)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.out-tools{display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line-soft);flex-wrap:wrap;align-items:center}
+.cctp{padding:22px 26px 40px;background:var(--paper);max-width:72ch;margin:0 auto}
+.cctp h1{font-size:18px;margin:0 0 2px;text-wrap:balance}
+.cctp .sub{color:var(--muted);margin:0 0 20px;font-size:13px}
+.cctp h2{font-family:var(--f-label);font-size:14px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid var(--ink);padding-bottom:4px;margin:26px 0 10px}
+.cctp h3{font-size:14px;margin:18px 0 6px;font-weight:600}
+.cctp .art{margin:10px 0 14px;cursor:pointer;border-radius:3px}
+.cctp .art:hover{background:var(--line-soft)}
+.cctp .art.sel{background:var(--accent-soft)}
+.cctp h4{font-size:13.5px;margin:0 0 3px;font-weight:600;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.cctp h4 span.nr,.cctp h3 span{font-family:var(--f-mono);font-weight:500;margin-right:8px;color:var(--muted)}
+.cctp h4 span.nr{margin-right:0}
+.cctp p{margin:0 0 4px;white-space:pre-line}
+.cctp .meta{font-size:12.5px;color:var(--muted);margin:2px 0 0}
+.cctp .meta b{color:var(--ink);font-weight:500}
+.cctp .intro{font-style:italic;color:var(--muted)}
+.cctp .lotref{font-family:var(--f-label);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 3px}
+.lotbar{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px;border-bottom:1px solid var(--line-soft)}
+.tblwrap{overflow-x:auto;padding:0 0 30px}
+table.dpgf{border-collapse:collapse;width:100%;min-width:560px;font-size:12.5px}
+.dpgf th{position:sticky;top:0;background:var(--panel);font-family:var(--f-label);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.06em;color:var(--muted);text-align:left;padding:7px 8px;border-bottom:1.5px solid var(--ink);z-index:1}
+.dpgf td{padding:5px 8px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.dpgf .r{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.dpgf .c{text-align:center}
+.dpgf .n{font-family:var(--f-mono);color:var(--muted);white-space:nowrap}
+.dpgf tr.lot td{font-family:var(--f-label);font-weight:600;text-transform:uppercase;letter-spacing:.05em;background:var(--bg);padding-top:8px}
+.dpgf tr.psehead td{font-family:var(--f-label);font-weight:600;text-transform:uppercase;letter-spacing:.05em;background:var(--warn-soft);color:var(--warn);padding-top:8px}
+.dpgf tr.grp td{font-weight:600}
+.dpgf tr.art{cursor:pointer}
+.dpgf tr.art:hover td{background:var(--line-soft)}
+.dpgf tr.art.sel td{background:var(--accent-soft)}
+.dpgf tr.st td{font-weight:600;border-top:1px solid var(--ink);border-bottom:0}
+.dpgf tr.tot td{font-weight:600;font-size:13.5px}
+.dpgf tr.ttc td{font-weight:600;font-size:14px;border-top:1.5px solid var(--ink)}
+.dpgf .zero{color:var(--danger)}
+.dpgf .tag{font-family:var(--f-label);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.dpgf select{border:1px solid var(--line);border-radius:3px;background:var(--paper);padding:1px 4px;font-family:var(--f-mono);font-size:12px}
+.dpgf td.best{background:var(--ok-soft)}
+.dpgf .ec{display:block;font-size:11px}
+.ec.lo{color:var(--danger)} .ec.hi{color:var(--warn)} .ec.eq{color:var(--muted)}
+.dpgf td.miss{background:var(--danger-soft);color:var(--danger);text-align:center;font-family:var(--f-label);font-size:11px}
+.dpgf td.flag-lo{box-shadow:inset 3px 0 0 var(--danger)}
+.dpgf td.flag-hi{box-shadow:inset 3px 0 0 var(--warn)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:8px 12px;font-size:12px;color:var(--muted)}
+.legend span{display:flex;gap:6px;align-items:center}
+.legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.offchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:3px 4px 3px 10px;font-size:12.5px;background:var(--paper)}
+.offchip button{border:0;background:none;cursor:pointer;color:var(--muted);font-size:12px;padding:0 6px}
+.offchip button:hover{color:var(--accent)}
+
+/* Fenêtres */
+.modal{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(10,16,24,.45)}
+.dlg{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;box-shadow:0 18px 50px rgba(0,0,0,.3);width:min(580px,100%);max-height:calc(100% - 32px);display:flex;flex-direction:column}
+.dlg.wide{width:min(1060px,100%);height:min(760px,calc(100% - 32px))}
+.dlg-h{padding:16px 20px 10px;border-bottom:1px solid var(--line-soft);display:flex;align-items:baseline;gap:12px}
+.dlg-h h3{margin:0;font-size:16px;flex:1}
+.dlg-b{padding:14px 20px;overflow:auto;display:flex;flex-direction:column;gap:16px;flex:1;min-height:0}
+.dlg-f{padding:12px 20px;border-top:1px solid var(--line-soft);display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+.dlg fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+.dlg legend{font-family:var(--f-label);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:500;margin-bottom:6px;padding:0}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);border-radius:4px;padding:8px 10px;cursor:pointer;background:var(--paper)}
+.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.opt input{margin-top:3px}
+.opt b{display:block;font-weight:600}
+.opt small{color:var(--muted);font-size:12px}
+.optrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lotlist{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:4px;background:var(--paper);max-height:240px;overflow:auto}
+.lotlist label{display:grid;grid-template-columns:auto auto 1fr auto;gap:8px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line-soft);cursor:pointer}
+.lotlist label:last-child{border-bottom:0}
+.lotlist .n{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.lotlist .a{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.recap-opt{border-top:1.5px solid var(--line)}
+.x-sum{font-size:12.5px;color:var(--muted);margin-right:auto}
+.libloc{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12.5px}
+.libloc .dotc{width:8px;height:8px;border-radius:50%;background:var(--ok);flex:none}
+.libloc .dotc.bad{background:var(--danger)}
+.lib{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,1fr);gap:16px;min-height:0;flex:1}
+.lib-list{border:1px solid var(--line);border-radius:4px;overflow:auto;background:var(--paper);min-height:0}
+.lib-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.lib-tools input,.lib-tools select{border:1px solid var(--line);border-radius:4px;padding:5px 8px;background:var(--paper)}
+.lib-tools input{flex:1 1 200px;min-width:0}
+table.lt{border-collapse:collapse;width:100%;font-size:12.5px}
+.lt th{position:sticky;top:0;background:var(--panel);text-align:left;font-family:var(--f-label);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--line);z-index:1}
+.lt td{padding:5px 8px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+.lt tr.it{cursor:pointer}
+.lt tr.it:hover td{background:var(--line-soft)}
+.lt tr.it.on td{background:var(--accent-soft)}
+.lt .r{text-align:right;font-family:var(--f-mono);white-space:nowrap}
+.lt .lotc{font-family:var(--f-label);font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.lib-edit{display:flex;flex-direction:column;gap:10px;min-height:0;overflow:auto}
+table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
+.lieux th{text-align:left;font-family:var(--f-label);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:6px;border-bottom:1px solid var(--line)}
+.lieux td{padding:4px 6px;border-bottom:1px solid var(--line-soft)}
+.lieux input{border:1px solid var(--line);border-radius:4px;padding:4px 6px;background:var(--paper);width:100%;min-width:0}
+.lieux input.numin{font-family:var(--f-mono);text-align:right}
+.lieux td.calc{font-family:var(--f-mono);text-align:right;color:var(--muted);white-space:nowrap}
+.lieux td.act{white-space:nowrap}
+.difflist{display:flex;flex-direction:column;gap:4px;font-size:13px}
+.difflist h4{margin:10px 0 4px;font-family:var(--f-label);font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.difflist .d{display:grid;grid-template-columns:70px 1fr;gap:8px;padding:4px 0;border-bottom:1px solid var(--line-soft)}
+.difflist .d span:first-child{font-family:var(--f-mono);color:var(--muted)}
+.difflist .d small{display:block;color:var(--muted)}
+.idx-list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:4px;background:var(--paper)}
+.idx-list .ir{display:flex;gap:10px;align-items:center;padding:6px 10px;border-bottom:1px solid var(--line-soft)}
+.idx-list .ir:last-child{border-bottom:0}
+.idx-list .ir b{font-family:var(--f-mono)}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--panel);padding:8px 14px;border-radius:4px;font-size:13px;z-index:60;max-width:calc(100% - 32px)}
+
+@media (max-width: 1100px){
+  html,body{height:auto}
+  .app{height:auto}
+  .cols{grid-template-columns:1fr}
+  .col-b{max-height:75vh}
+  .lib{grid-template-columns:1fr}
+  .dlg.wide{height:calc(100% - 32px)}
+}
+@media (max-width: 480px){ .grid2,.optrow{grid-template-columns:1fr} .cctp{padding:16px} .ql-row{grid-template-columns:minmax(0,1fr) 100px} .ql-row .u,.ql-row .qm{grid-column:auto} }
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+<style>body{margin:0}img{max-width:100%}</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="top">
+    <div class="brand"><i></i>Prescrire</div>
+    <div class="proj">
+      <input id="p-nom" type="text" aria-label="Nom de l'opération" placeholder="Nom de l'opération">
+      <span class="p-meta" id="p-meta"></span>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="b-new">Nouveau…</button>
+      <button class="btn" id="b-open">Ouvrir…</button>
+      <button class="btn" id="b-save">Enregistrer</button>
+      <button class="btn" id="b-saveas" hidden>Enregistrer sous…</button>
+      <span class="sep"></span>
+      <button class="btn" id="b-proj">Projet</button>
+      <button class="btn" id="b-lieux">Lieux</button>
+      <button class="btn" id="b-lib">Bibliothèque</button>
+    </div>
+  </header>
+
+  <div class="cols">
+    <section class="col" aria-label="Lots et prestations">
+      <div class="col-h"><h2>Lots et prestations</h2></div>
+      <div class="tree-tools">
+        <button class="btn" id="b-lot">+ Lot</button>
+        <button class="btn" id="b-slot">+ Sous-lot</button>
+        <button class="btn primary" id="b-presta">+ Prestation</button>
+      </div>
+      <div class="col-b">
+        <ul class="tree" id="tree"></ul>
+        <p class="tree-hint">Glissez une ligne pour la déplacer : au-dessus ou en dessous d'une ligne pour la placer avant ou après, au milieu d'un lot pour l'y ranger.</p>
+      </div>
+    </section>
+
+    <section class="col" aria-label="Fiche">
+      <div class="col-h"><h2 id="fiche-h">Fiche prestation</h2></div>
+      <div class="col-b" id="fiche"></div>
+    </section>
+
+    <section class="col" aria-label="Documents">
+      <div class="col-h">
+        <div class="tabs" role="tablist">
+          <button class="tab" role="tab" id="t-cctp">CCTP</button>
+          <button class="tab" role="tab" id="t-dpgf">DPGF</button>
+          <button class="tab" role="tab" id="t-off">Offres</button>
+        </div>
+        <div class="seg" role="group" aria-label="Affichage" id="seg">
+          <span class="seg-lab">Afficher</span>
+          <button id="v-lots">Par lots</button>
+          <button id="v-lieux">Par lieux</button>
+        </div>
+      </div>
+      <div class="out-tools" id="out-tools">
+        <button class="btn" id="b-copy">Copier</button>
+        <span style="flex:1"></span>
+        <button class="btn primary" id="b-export">Exporter…</button>
+      </div>
+      <div class="col-b" id="out"></div>
+    </section>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+<div class="modal" id="modal" hidden>
+  <div class="dlg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <div class="dlg-h"><h3 id="m-title"></h3><span class="hint" id="m-sub"></span></div>
+    <div class="dlg-b" id="m-body"></div>
+    <div class="dlg-f" id="m-foot"></div>
+  </div>
+</div>
+<input type="file" id="file" hidden>
+
+<script src="vendor/exceljs.min.js"></script>
+<script src="vendor/jszip.min.js"></script>
+<script>
+/* ======================================================================
+   Référentiels
+   ====================================================================== */
+const CATS=["Fourniture et pose","Fourniture seule","Pose seule","Dépose / démolition","Préparation de support","Prestation forfaitaire","Essais et contrôles"];
+const UNITES=["U","ens.","ft","m²","ml","m³","kg","h"];
+const PHASES=["ESQ","APS","APD","PRO","DCE","ACT","EXE"];
+/* Lieux d'exemple : [niveau, nom, surface sol m², périmètre ml, hauteur m] */
+const LIEUX_DEF=[["","Toutes pièces"],["RDC","Entrée",6.2,10.4,2.5],["RDC","Séjour",32.5,24.6,2.5],["RDC","Cuisine",12.4,14.2,2.5],["RDC","WC",1.6,5.2,2.5],["RDC","Cellier",4.5,8.6,2.5],["RDC","Garage",18,17,2.4],
+  ["R+1","Circulation",7.8,14.4,2.5],["R+1","Chambre 1",13.2,14.8,2.5],["R+1","Chambre 2",11.6,13.8,2.5],["R+1","Salle de bains",6.4,10.2,2.5],["Combles","Combles",48,28,""],["Extérieur","Façades"],["Extérieur","Extérieurs"]];
+/* Bibliothèque d'exemple : prix indicatifs HT, à remplacer par vos propres bordereaux */
+const DB_DEF=[
+ ["Généralités","Protection des ouvrages conservés","Prestation forfaitaire","ft",650,"Protection par film polyane et panneaux des sols, menuiseries et équipements conservés pendant toute la durée du chantier, dépose en fin de travaux."],
+ ["Démolition – Dépose","Dépose de cloison en carreaux de plâtre","Dépose / démolition","m²",28,"Dépose soignée de cloison en carreaux de plâtre ou briques plâtrières, y compris huisseries, réseaux encastrés neutralisés et évacuation des gravats."],
+ ["Démolition – Dépose","Dépose de revêtement de sol carrelé","Dépose / démolition","m²",22,"Dépose de carrelage et de sa chape ou de son mortier de pose, mise à nu du support et évacuation."],
+ ["Démolition – Dépose","Dépose de menuiserie extérieure","Dépose / démolition","U",85,"Dépose de menuiserie extérieure existante, dormant compris, avec soin pour préserver les tableaux et l'appui."],
+ ["Démolition – Dépose","Benne 10 m³ et évacuation en décharge","Prestation forfaitaire","U",450,"Location, mise en place, enlèvement et évacuation de benne vers un centre de traitement agréé, bordereau de suivi des déchets à fournir."],
+ ["Gros œuvre – Maçonnerie","Ouverture en mur porteur avec linteau béton","Fourniture et pose","U",1850,"Création d'ouverture en mur porteur, y compris étaiement, sciage, linteau béton armé ou profilé acier selon note de calcul du BET, reprises de tableaux."],
+ ["Gros œuvre – Maçonnerie","Chape de ravoirage","Fourniture et pose","m²",32,"Chape de ravoirage ciment dosée à 250 kg, épaisseur moyenne 5 cm, dressée à la règle pour recevoir un revêtement collé."],
+ ["Gros œuvre – Maçonnerie","Dalle béton armé sur terre-plein ép. 12 cm","Fourniture et pose","m²",75,"Dalle béton armé sur hérisson compacté et film polyane, treillis soudé selon étude, surfaçage soigné."],
+ ["Gros œuvre – Maçonnerie","Maçonnerie en blocs béton ép. 20 cm","Fourniture et pose","m²",68,"Maçonnerie de blocs béton creux B40 hourdés au mortier, chaînages verticaux et horizontaux conformes au DTU 20.1."],
+ ["Gros œuvre – Maçonnerie","Enduit monocouche gratté","Fourniture et pose","m²",42,"Enduit monocouche d'imperméabilisation projeté mécaniquement, finition grattée, teinte selon nuancier validé par l'architecte."],
+ ["Menuiseries extérieures","Fenêtre PVC double vitrage 2 vantaux","Fourniture et pose","U",780,"Fenêtre PVC blanc oscillo-battante, double vitrage 4/16/4 argon faiblement émissif, Uw ≤ 1,3 W/m².K, pose en rénovation sur dormant existant ou en tunnel."],
+ ["Menuiseries extérieures","Porte-fenêtre aluminium 2 vantaux","Fourniture et pose","U",1650,"Porte-fenêtre aluminium à rupture de pont thermique, laquage RAL au choix de l'architecte, seuil PMR, double vitrage sécurité."],
+ ["Menuiseries extérieures","Volet roulant électrique","Fourniture et pose","U",520,"Volet roulant à lames aluminium isolées, coffre extérieur ou intégré, manœuvre électrique filaire avec inverseur."],
+ ["Menuiseries extérieures","Porte d'entrée isolante","Fourniture et pose","U",2300,"Porte d'entrée à âme isolante, serrure 3 points, Ud ≤ 1,4 W/m².K, modèle et teinte au choix du maître d'ouvrage."],
+ ["Menuiseries extérieures","Fenêtre de toit","Fourniture et pose","U",690,"Fenêtre de toit à rotation, double vitrage, raccord d'étanchéité adapté à la couverture, habillage intérieur."],
+ ["Plâtrerie – Isolation","Cloison plaque de plâtre 72/48","Fourniture et pose","m²",46,"Cloison de distribution type 72/48 sur ossature métallique, une plaque BA13 par face, isolant laine minérale 45 mm, bandes et enduit des joints."],
+ ["Plâtrerie – Isolation","Doublage isolant PSE + plâtre 10+100","Fourniture et pose","m²",38,"Complexe de doublage polystyrène expansé graphité et plaque de plâtre, R ≥ 3,15 m².K/W, collé au mortier adhésif, joints traités."],
+ ["Plâtrerie – Isolation","Faux plafond plaque de plâtre sur ossature","Fourniture et pose","m²",44,"Plafond en plaque BA13 sur fourrures et suspentes, joints traités, trappes de visite où nécessaire."],
+ ["Plâtrerie – Isolation","Isolation laine minérale en combles perdus R=7","Fourniture et pose","m²",29,"Isolation par soufflage de laine minérale en combles perdus, résistance thermique R ≥ 7 m².K/W, piges de repérage et rehausse de trappe."],
+ ["Électricité","Prise de courant 16 A","Fourniture et pose","U",65,"Prise de courant 2P+T 16 A encastrée, appareillage de la gamme choisie par l'architecte, conforme NF C 15-100."],
+ ["Électricité","Point lumineux en plafond","Fourniture et pose","U",75,"Point de centre DCL avec boîte d'encastrement, alimentation depuis le tableau, douille et ampoule provisoire."],
+ ["Électricité","Interrupteur va-et-vient","Fourniture et pose","U",70,"Interrupteur va-et-vient encastré, gamme identique aux prises."],
+ ["Électricité","Tableau électrique 3 rangées","Fourniture et pose","U",980,"Tableau de répartition 3 rangées, interrupteurs différentiels 30 mA type A et AC, disjoncteurs divisionnaires, repérage des circuits."],
+ ["Plomberie – Sanitaires","Alimentation et évacuation d'appareil sanitaire","Fourniture et pose","U",260,"Alimentation eau froide et eau chaude en PER sous fourreau et évacuation PVC jusqu'à l'appareil, robinet d'arrêt compris."],
+ ["Plomberie – Sanitaires","WC suspendu avec bâti-support","Fourniture et pose","U",890,"Bâti-support autoportant, cuvette suspendue en porcelaine vitrifiée, abattant frein de chute, plaque de commande double débit."],
+ ["Plomberie – Sanitaires","Receveur de douche extra-plat","Fourniture et pose","U",620,"Receveur en résine minérale extra-plat, bonde siphoïde, système d'étanchéité sous carrelage en périphérie."],
+ ["Plomberie – Sanitaires","Chauffe-eau thermodynamique 200 L","Fourniture et pose","U",2900,"Chauffe-eau thermodynamique 200 litres sur air ambiant, raccordements hydrauliques et électriques, groupe de sécurité."],
+ ["Revêtements de sols et murs","Carrelage grès cérame 60x60 collé","Fourniture et pose","m²",78,"Carrelage grès cérame pleine masse 60x60, collé au mortier-colle C2, joints 2 mm, coloris selon choix sur échantillons."],
+ ["Revêtements de sols et murs","Faïence murale 30x60","Fourniture et pose","m²",72,"Faïence murale 30x60 collée, protection à l'eau sous carrelage (SPEC) en zones humides, joints hydrofuges."],
+ ["Revêtements de sols et murs","Parquet chêne contrecollé","Fourniture et pose","m²",85,"Parquet chêne contrecollé 14 mm, parement 3 mm, pose flottante sur sous-couche acoustique ou collée selon support."],
+ ["Revêtements de sols et murs","Plinthe assortie","Fourniture et pose","ml",14,"Plinthe assortie au revêtement de sol, collée ou clouée, coupes d'angle soignées."],
+ ["Peinture","Préparation des supports","Préparation de support","m²",8,"Lessivage, rebouchage, ponçage et dépoussiérage des supports, impression adaptée à leur nature."],
+ ["Peinture","Peinture acrylique murs 2 couches","Fourniture et pose","m²",18,"Peinture acrylique en phase aqueuse, deux couches sur impression, travaux de finition B selon NF DTU 59.1."],
+ ["Peinture","Peinture plafonds 2 couches","Fourniture et pose","m²",20,"Peinture acrylique mate pour plafonds, deux couches sur impression."],
+ ["Peinture","Lasure sur boiseries extérieures","Fourniture et pose","m²",26,"Lasure microporeuse en trois couches sur boiseries extérieures préalablement égrenées et dégraissées."],
+ ["Généralités","Réception des supports et essais","Essais et contrôles","ft",350,"Constat contradictoire de l'état des supports avant intervention, essais de fonctionnement et remise du dossier des ouvrages exécutés."]
+];
+
+/* ======================================================================
+   Outils
+   ====================================================================== */
+const $=s=>document.querySelector(s);
+const uid=()=>Math.random().toString(36).slice(2,10);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm=s=>String(s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().trim();
+const nf=new Intl.NumberFormat("fr-FR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const qf=new Intl.NumberFormat("fr-FR",{maximumFractionDigits:2});
+const pf=new Intl.NumberFormat("fr-FR",{maximumFractionDigits:1,signDisplay:"always"});
+const eur=n=>nf.format(n||0)+" €";
+const num=v=>{if(typeof v==="number")return isFinite(v)?v:0;const n=parseFloat(String(v??"").replace(/\s/g,"").replace(",","."));return isFinite(n)?n:0};
+const r2=v=>Math.round(v*100)/100;
+const fmtIn=v=>v===""||v==null?"":String(r2(num(v))).replace(".",",");
+const today=()=>new Date().toLocaleDateString("fr-FR");
+const slug=s=>(s||"Projet").replace(/[\\/:*?"<>|]/g,"").replace(/\s+/g," ").trim().slice(0,70)||"Projet";
+let toastT;
+function toast(m,ms){const t=$("#toast");t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>t.hidden=true,ms||2800)}
+
+/* ======================================================================
+   État : projet (S) et bibliothèque (BASE), conservés séparément
+   ====================================================================== */
+const KEY_P="prescrire-projet",KEY_B="prescrire-bibliotheque",KEY_OLD="prescrire-v1";
+let S,BASE,LIVE=null;
+const normBase=a=>(Array.isArray(a)?a:[]).filter(x=>x&&x.nom).map(x=>({id:x.id||uid(),nom:String(x.nom),lot:x.lot||"",cat:x.cat||CATS[0],u:x.u||"U",prix:num(x.prix),desc:x.desc||"",maj:x.maj||0,par:x.par||""}));
+const baseDef=()=>normBase(DB_DEF.map(([lot,nom,cat,u,prix,desc])=>({lot,nom,cat,u,prix,desc})));
+const lieuxDef=withDims=>LIEUX_DEF.map(([niv,nom,s,p,h])=>({nom,niv,s:withDims&&s?s:"",p:withDims&&p?p:"",h:withDims&&h?h:(s?2.5:"")}));
+const grp=(nom,children,intro)=>({id:uid(),kind:"g",nom,intro:intro||"",children});
+function newPresta(o={}){return Object.assign({id:uid(),kind:"p",nom:"",cat:CATS[0],u:"U",desc:"",qte:1,qx:"",prix:0,prixBase:null,bid:null,lieux:[],ql:{},qlx:{},finOn:false,fin:"",pse:false},o)}
+function presta(nom,q,o={}){
+  const d=BASE.find(x=>x.nom===nom)||{nom,cat:CATS[0],u:"U",prix:0,desc:""};
+  const n=newPresta({nom:d.nom,cat:d.cat,u:d.u,desc:d.desc,prix:d.prix,prixBase:d.prix,bid:d.id||null,finOn:!!o.fin,fin:o.fin||"",pse:!!o.pse,qte:0});
+  const ks=Object.keys(q);n.lieux=ks;
+  if(ks.length===1){const v=q[ks[0]];if(typeof v==="string")n.qx=v;else n.qte=v}
+  else ks.forEach(l=>{const v=q[l];if(typeof v==="string")n.qlx[l]=v;else n.ql[l]=v});
+  return n;
+}
+function emptyProject(){return{v:6,projet:{nom:"Nouvelle opération",moa:"",adresse:"",moe:"",phase:"DCE",indice:"A",dispo:""},lieux:lieuxDef(false),tree:[grp("Lot 1",[])],sel:null,tab:"cctp",view:"lots",lot:"recap",lieu:null,olot:"synth",open:{},tva:20,offres:[],indices:[],fichier:null,dirty:false}}
+function demoProject(){
+  S=emptyProject();
+  Object.assign(S.projet,{nom:"Réhabilitation d'une maison de ville",moa:"Exemple : M. et Mme Martin",adresse:"12 rue des Tanneurs, Vienne",moe:"Votre agence",phase:"DCE",indice:"A",
+    dispo:"Le présent CCTP définit les ouvrages à réaliser. Les entreprises sont réputées avoir pris connaissance des lieux et de l'ensemble des pièces du dossier.\nLes travaux sont exécutés conformément aux DTU, normes et avis techniques en vigueur à la date de remise des offres."});
+  S.lieux=lieuxDef(true);
+  S.tree=[
+   grp("Démolition – Dépose",[presta("Protection des ouvrages conservés",{"Toutes pièces":1}),presta("Dépose de cloison en carreaux de plâtre",{"Séjour":10,"Cuisine":8}),presta("Dépose de revêtement de sol carrelé",{"Séjour":"S","Cuisine":"S","Entrée":"S"}),presta("Benne 10 m³ et évacuation en décharge",{"Extérieurs":2})],"Les déposes sont exécutées avec soin. Les matériaux réemployables désignés par l'architecte sont stockés sur place."),
+   grp("Gros œuvre – Maçonnerie",[grp("Structure",[presta("Ouverture en mur porteur avec linteau béton",{"Séjour":1})]),grp("Sols",[presta("Chape de ravoirage",{"Séjour":"S","Cuisine":"S","Entrée":"S"})])]),
+   grp("Menuiseries extérieures",[presta("Fenêtre PVC double vitrage 2 vantaux",{"Chambre 1":2,"Chambre 2":2}),presta("Porte-fenêtre aluminium 2 vantaux",{"Séjour":1},{fin:"Laquage RAL 7022 gris terre d'ombre, finition sablée"}),presta("Volet roulant électrique",{"Séjour":2,"Chambre 1":2,"Chambre 2":1}),presta("Fenêtre de toit",{"Combles":2},{pse:true})]),
+   grp("Plâtrerie – Isolation",[grp("Cloisons et doublages",[presta("Cloison plaque de plâtre 72/48",{"Chambre 1":"3,2*2,5","Chambre 2":"3,2*2,5","Circulation":"4,1*2,5"}),presta("Doublage isolant PSE + plâtre 10+100",{"Séjour":"P*H-8","Chambre 1":"P*H-3","Chambre 2":"P*H-3"})]),grp("Plafonds",[presta("Faux plafond plaque de plâtre sur ossature",{"Séjour":"S","Cuisine":"S"})])]),
+   grp("Électricité",[presta("Tableau électrique 3 rangées",{"Cellier":1}),presta("Prise de courant 16 A",{"Toutes pièces":18},{fin:"Appareillage blanc mat, gamme au choix de l'architecte"}),presta("Point lumineux en plafond",{"Toutes pièces":9})]),
+   grp("Peinture",[presta("Préparation des supports",{"Toutes pièces":210}),presta("Peinture acrylique murs 2 couches",{"Séjour":"P*H-8","Chambre 1":"P*H-3","Chambre 2":"P*H-3","Entrée":"P*H-2"},{fin:"Aspect velours, teintes au choix de l'architecte (3 teintes max.)"}),presta("Peinture plafonds 2 couches",{"Séjour":"S","Cuisine":"S","Entrée":"S","Chambre 1":"S","Chambre 2":"S","Circulation":"S"},{fin:"Aspect mat, blanc"})])
+  ];
+  recalcAll();
+  S.sel=S.tree[2].children[1].id;S.dirty=false;
+  return S;
+}
+function walkP(arr,fn){arr.forEach(n=>n.kind==="g"?walkP(n.children,fn):fn(n))}
+function migrate(s){
+  s.v=6;
+  s.projet=Object.assign({nom:"",moa:"",adresse:"",moe:"",phase:"DCE",indice:"A",dispo:""},s.projet||{});
+  s.lieux=(Array.isArray(s.lieux)?s.lieux:[]).map(l=>typeof l==="string"?{nom:l,niv:"",s:"",p:"",h:""}:Object.assign({nom:"",niv:"",s:"",p:"",h:""},l)).filter(l=>l.nom);
+  s.tree=Array.isArray(s.tree)?s.tree:[];
+  Object.assign(s,{offres:s.offres||[],indices:s.indices||[],open:s.open||{},tva:s.tva??20,tab:s.tab||"cctp",view:s.view||"lots",lot:s.lot||"recap",olot:s.olot||"synth"});
+  delete s.db;
+  walkP(s.tree,n=>{
+    n.lieux=n.lieux||[];n.ql=n.ql||{};n.qlx=n.qlx||{};n.qx=n.qx||"";n.pse=!!n.pse;
+    n.lieux.forEach(l=>{if(!s.lieux.some(z=>z.nom===l))s.lieux.push({nom:l,niv:"",s:"",p:"",h:""})});
+    if(n.lieux.length>1&&!Object.keys(n.ql).length){const q=num(n.qte),k=n.lieux.length;
+      if(Number.isInteger(q)){const b=Math.floor(q/k);n.lieux.forEach((l,i)=>n.ql[l]=b+(i<q-b*k?1:0))}
+      else{const p=Math.floor(q/k*100)/100;n.lieux.forEach((l,i)=>n.ql[l]=i<k-1?p:r2(q-p*(k-1)))}}
+  });
+  return s;
+}
+function loadAll(){
+  let p=null,b=null,old=null;
+  try{b=JSON.parse(localStorage.getItem(KEY_B)||"null")}catch(e){}
+  try{p=JSON.parse(localStorage.getItem(KEY_P)||"null")}catch(e){}
+  if(!p){try{old=JSON.parse(localStorage.getItem(KEY_OLD)||"null")}catch(e){}}
+  if(!b&&old&&old.db)b=old.db;
+  const arts=b?(Array.isArray(b)?b:b.articles):null;
+  BASE=arts&&arts.length?normBase(arts):baseDef();resnap();
+  const src=p||old;
+  if(src&&Array.isArray(src.tree)){S=migrate(src)}else demoProject();
+}
+function save(){S.dirty=true;persist()}
+function persist(){try{localStorage.setItem(KEY_P,JSON.stringify(S))}catch(e){}renderMeta()}
+/* ======================================================================
+   Bibliothèque partagée : chaque article porte sa date de modification ;
+   à l'enregistrement, on relit le fichier et on fusionne article par article
+   (le plus récent l'emporte), pour que plusieurs postes puissent écrire.
+   ====================================================================== */
+const T=window.__TAURI__||null,inv=(c,a)=>T.core.invoke(c,a);
+let SNAP=new Map(),TOMB=[],ME="",LIB_PATH=null,LIB_MTIME=0,LIB_ERR="",CFG={},CFG_PATH=null,DIRS=null;
+const artKey=a=>JSON.stringify([a.nom,a.lot,a.cat,a.u,r2(num(a.prix)),a.desc]);
+function resnap(){SNAP=new Map(BASE.map(a=>[a.id,artKey(a)]))}
+function stamp(){const now=Date.now(),seen=new Set();
+  BASE.forEach(a=>{seen.add(a.id);if(SNAP.get(a.id)!==artKey(a)){a.maj=now;a.par=ME||a.par||""}});
+  SNAP.forEach((k,id)=>{if(!seen.has(id))TOMB.push({id,maj:now})});resnap()}
+function mergeLib(disk){
+  const tomb=new Map();[...(disk.suppr||[]),...TOMB].forEach(t=>{if(!tomb.has(t.id)||tomb.get(t.id)<t.maj)tomb.set(t.id,t.maj)});
+  const map=new Map();[...normBase(disk.articles||[]),...BASE].forEach(a=>{const c=map.get(a.id);if(!c||(a.maj||0)>=(c.maj||0))map.set(a.id,a)});
+  const cutoff=Date.now()-120*864e5;
+  return{articles:[...map.values()].filter(a=>!(tomb.has(a.id)&&tomb.get(a.id)>=(a.maj||0))),suppr:[...tomb].filter(([,m])=>m>cutoff).map(([id,maj])=>({id,maj}))};
+}
+function applyMerge(m){const byId=new Map(BASE.map(a=>[a.id,a]));
+  BASE=m.articles.map(a=>{const l=byId.get(a.id);if(l){if(l!==a)Object.assign(l,a);return l}return a});resnap()}
+const libDoc=m=>JSON.stringify({format:"prescrire-bibliotheque",version:8,articles:m.articles,suppr:m.suppr});
+function parseLib(txt){try{const d=JSON.parse(txt);return Array.isArray(d)?{articles:d,suppr:[]}:{articles:d.articles||[],suppr:d.suppr||[]}}catch(e){return null}}
+let sbT=null;
+function saveBase(){stamp();clearTimeout(sbT);sbT=setTimeout(flushBase,T?400:50)}
+async function flushBase(){
+  sbT=null;
+  if(!T){let disk={};try{disk=parseLib(localStorage.getItem(KEY_B)||"[]")||{}}catch(e){}
+    const m=mergeLib(disk);applyMerge(m);TOMB=[];try{localStorage.setItem(KEY_B,libDoc(m))}catch(e){}return}
+  if(!LIB_PATH)return;
+  if(FLUSHING){FLUSH_AGAIN=true;return}
+  FLUSHING=true;
+  try{
+    /* Lecture, fusion, écriture, puis relecture de contrôle : si un autre poste a écrit
+       au même instant, on recommence pour ne perdre aucune modification. */
+    for(let k=0;k<5;k++){
+      const txt=await inv("read_text",{path:LIB_PATH}).catch(()=>null);
+      const m=mergeLib(txt?parseLib(txt)||{}:{});applyMerge(m);
+      await inv("write_text",{path:LIB_PATH,content:libDoc(m)});
+      await new Promise(r=>setTimeout(r,150+Math.random()*350));
+      const back=parseLib(await inv("read_text",{path:LIB_PATH}).catch(()=>"")||"");
+      if(back&&covers(back)){TOMB=[];break}
+    }
+    LIB_MTIME=await inv("mtime",{path:LIB_PATH})||0;LIB_ERR="";
+  }catch(e){LIB_ERR=String(e);toast("La bibliothèque partagée n'a pas pu être enregistrée : "+LIB_ERR,6000)}
+  FLUSHING=false;libStatus();
+  if(FLUSH_AGAIN){FLUSH_AGAIN=false;flushBase()}
+}
+let FLUSHING=false,FLUSH_AGAIN=false;
+function covers(d){const dm=new Map((d.articles||[]).map(a=>[a.id,a.maj||0])),ds=new Set((d.suppr||[]).map(t=>t.id));
+  return BASE.every(a=>dm.has(a.id)&&dm.get(a.id)>=(a.maj||0))&&TOMB.every(t=>ds.has(t.id))}
+async function reloadLib(force){
+  if(!T||!LIB_PATH||sbT||FLUSHING)return;
+  try{const mt=await inv("mtime",{path:LIB_PATH});if(!force&&(!mt||mt===LIB_MTIME))return;
+    const txt=await inv("read_text",{path:LIB_PATH});const d=parseLib(txt);if(!d)return;
+    applyMerge(mergeLib(d));LIB_MTIME=mt||0;LIB_ERR="";
+    if(!covers(d))flushBase();
+    if($("#lb-list"))libList();const n=S.sel&&IDX[S.sel]&&IDX[S.sel].n;if(n&&n.kind==="p")libHint(n);libStatus();
+  }catch(e){LIB_ERR=String(e);libStatus()}
+}
+
+/* ======================================================================
+   Index de l'arbre et totaux
+   ====================================================================== */
+let IDX={};
+function reindex(){
+  IDX={};
+  (function walk(arr,parent,prefix,depth){arr.forEach((n,i)=>{
+    const nr=prefix?prefix+"."+(i+1):String(i+1).padStart(2,"0");
+    IDX[n.id]={n,parent,arr,i,nr,depth};
+    if(n.kind==="g")walk(n.children,n,nr,depth+1);
+  })})(S.tree,null,"",0);
+}
+const lineT=n=>num(n.qte)*num(n.prix);
+const baseT=n=>n.kind==="p"?(n.pse?0:lineT(n)):n.children.reduce((s,c)=>s+baseT(c),0);
+const pseT=n=>n.kind==="p"?(n.pse?lineT(n):0):n.children.reduce((s,c)=>s+pseT(c),0);
+const hasMode=(n,pse)=>n.kind==="p"?!!n.pse===pse:n.children.some(c=>hasMode(c,pse));
+const ancestors=id=>{const a=[];let p=IDX[id]&&IDX[id].parent;while(p){a.unshift(p);p=IDX[p.id].parent}return a};
+const isDesc=(id,anc)=>{let p=IDX[id]&&IDX[id].parent;while(p){if(p.id===anc)return true;p=IDX[p.id].parent}return false};
+const countP=n=>n.kind==="p"?1:n.children.reduce((s,c)=>s+countP(c),0);
+const rootOf=id=>{const a=ancestors(id);return a.length?a[0]:IDX[id].n};
+const lotRef=n=>{const l=rootOf(n.id);return "Lot "+IDX[l.id].nr+" — "+l.nom};
+const flatP=arr=>{const o=[];walkP(arr,n=>o.push(n));return o};
+
+/* ======================================================================
+   Lieux et quantités (formules : S surface, P périmètre, H hauteur)
+   ====================================================================== */
+const LO=name=>S.lieux.find(l=>l.nom===name);
+const isExpr=s=>/[^\d.,\s]/.test(String(s??""));
+function evalQ(expr,lieu){
+  let e=String(expr??"").replace(/\s+/g,"");if(!e)return{v:0};
+  e=e.replace(/,/g,".").replace(/[x×]/g,"*").replace(/÷/g,"/");
+  const names={s:"la surface",p:"le périmètre",h:"la hauteur"};
+  try{
+    e=e.replace(/[SPH]/gi,m=>{const k=m.toLowerCase();
+      if(!lieu)throw new Error("S, P et H ne s'utilisent qu'avec un lieu précis");
+      const li=LO(lieu),v=li?num(li[k]):0;
+      if(!v)throw new Error(`Renseignez ${names[k]} de « ${lieu} » (bouton Lieux)`);
+      return "("+v+")"});
+  }catch(err){return{v:0,err:err.message}}
+  if(!/^[0-9.+\-*/()]+$/.test(e))return{v:0,err:"Formule non reconnue"};
+  try{const v=Function('"use strict";return('+e+")")();if(!isFinite(v))return{v:0,err:"Formule incomplète"};return{v:r2(v)}}
+  catch(x){return{v:0,err:"Formule incomplète"}}
+}
+function syncQ(n){if(n.lieux.length>1)n.qte=r2(n.lieux.reduce((s,l)=>s+num(n.ql[l]),0))}
+function qOf(n,l){return n.lieux.length>1?num(n.ql[l]):num(n.qte)}
+function recalc(n){
+  if(n.lieux.length>1){n.lieux.forEach(l=>{if(n.qlx[l]){const r=evalQ(n.qlx[l],l);if(!r.err)n.ql[l]=r.v}});syncQ(n)}
+  else if(n.qx){const r=evalQ(n.qx,n.lieux[0]);if(!r.err)n.qte=r.v}
+}
+function recalcAll(){walkP(S.tree,recalc)}
+function setQ(n,raw){
+  if(isExpr(raw)){n.qx=raw;const r=evalQ(raw,n.lieux[0]);if(!r.err)n.qte=r.v;return r}
+  n.qx="";n.qte=raw.trim()===""?"":num(raw);return{v:n.qte};
+}
+function setQL(n,l,raw){
+  let r;
+  if(isExpr(raw)){n.qlx[l]=raw;r=evalQ(raw,l);if(!r.err)n.ql[l]=r.v}
+  else{delete n.qlx[l];n.ql[l]=num(raw);r={v:n.ql[l]}}
+  syncQ(n);return r;
+}
+function toggleLieu(n,l){
+  const before=n.lieux.length;
+  if(n.lieux.includes(l)){
+    n.lieux=n.lieux.filter(z=>z!==l);delete n.ql[l];delete n.qlx[l];
+    if(n.lieux.length===1){const k=n.lieux[0];n.qte=num(n.ql[k]);n.qx=n.qlx[k]||""}else if(n.lieux.length>1)syncQ(n);
+  }else{
+    if(before===1){const k=n.lieux[0];n.ql[k]=num(n.qte);if(n.qx)n.qlx[k]=n.qx;else delete n.qlx[k]}
+    const order=S.lieux.map(z=>z.nom);
+    n.lieux=[...n.lieux,l].sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+    if(n.lieux.length>1){if(n.ql[l]==null)n.ql[l]=0;syncQ(n)}
+    else if(before===0&&n.qx)recalc(n);
+  }
+}
+function locTxt(n){return n.lieux.length>1?n.lieux.map(l=>`${l} (${qf.format(qOf(n,l))} ${n.u})`).join(", "):n.lieux.join(", ")}
+function dimTxt(li){if(!li)return"";const a=[];if(num(li.s))a.push("S "+qf.format(num(li.s)));if(num(li.p))a.push("P "+qf.format(num(li.p)));if(num(li.h))a.push("H "+qf.format(num(li.h)));return a.join(" · ")}
+function qBtns(lieu,target){const li=LO(lieu);if(!li)return"";let h="";
+  if(num(li.s))h+=`<button class="mini" data-qins="S" data-qt="${esc(target)}" title="Surface au sol">sol</button>`;
+  if(num(li.p)&&num(li.h))h+=`<button class="mini" data-qins="P*H" data-qt="${esc(target)}" title="Périmètre × hauteur">murs</button>`;
+  if(num(li.p))h+=`<button class="mini" data-qins="P" data-qt="${esc(target)}" title="Périmètre (plinthes…)">pér.</button>`;
+  return h}
+
+/* ======================================================================
+   Arborescence
+   ====================================================================== */
+function renderTree(){
+  reindex();
+  const rec=arr=>arr.map(n=>{
+    const x=IDX[n.id],g=n.kind==="g",closed=g&&S.open[n.id]===false;
+    const amt=g?baseT(n):lineT(n);
+    return `<li><div class="row ${g?"g":"p"} ${g&&x.depth===0?"g0":""} ${S.sel===n.id?"sel":""}" draggable="true" data-id="${n.id}" style="--d:${x.depth}">`+
+      (g?`<button class="car" data-tog="${n.id}" aria-label="${closed?"Déplier":"Replier"}">${closed?"▸":"▾"}</button>`:`<span class="dot"></span>`)+
+      `<span class="num">${x.nr}</span><span class="nm">${esc(n.nom||"Sans titre")}</span>${!g&&n.pse?'<span class="pse">PSE</span>':""}<span class="amt">${amt?nf.format(amt):""}</span></div>`+
+      (g&&!closed&&n.children.length?`<ul>${rec(n.children)}</ul>`:"")+`</li>`;
+  }).join("");
+  $("#tree").innerHTML=rec(S.tree);
+}
+$("#tree").addEventListener("click",e=>{
+  const t=e.target.closest("[data-tog]");
+  if(t){const id=t.dataset.tog;S.open[id]=S.open[id]===false;persist();renderTree();return}
+  const r=e.target.closest(".row");if(r)select(r.dataset.id);
+});
+let dragId=null;
+const treeEl=$("#tree");
+treeEl.addEventListener("dragstart",e=>{const r=e.target.closest(".row");if(!r)return;dragId=r.dataset.id;r.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",dragId)}catch(_){}});
+treeEl.addEventListener("dragend",()=>{dragId=null;clearDrop();document.querySelectorAll(".dragging").forEach(x=>x.classList.remove("dragging"))});
+function clearDrop(){document.querySelectorAll(".drop-before,.drop-after,.drop-in").forEach(x=>x.classList.remove("drop-before","drop-after","drop-in"))}
+function zone(e,r){
+  const t=IDX[r.dataset.id].n,b=r.getBoundingClientRect(),y=(e.clientY-b.top)/b.height;
+  if(t.kind==="g"){if(y<.28)return"before";if(y>.72&&!(t.children.length&&S.open[t.id]!==false))return"after";return"in"}
+  return y<.5?"before":"after";
+}
+function validDrop(tid,z){
+  if(!dragId||tid===dragId||isDesc(tid,dragId))return false;
+  const d=IDX[dragId].n,t=IDX[tid];
+  if(z!=="in"&&!t.parent&&d.kind==="p")return false;
+  return true;
+}
+treeEl.addEventListener("dragover",e=>{
+  const r=e.target.closest(".row");if(!r||!dragId)return;
+  const z=zone(e,r);clearDrop();
+  if(!validDrop(r.dataset.id,z)){e.dataTransfer.dropEffect="none";return}
+  e.preventDefault();r.classList.add("drop-"+z);
+});
+treeEl.addEventListener("drop",e=>{
+  const r=e.target.closest(".row");if(!r||!dragId)return;
+  e.preventDefault();const tid=r.dataset.id,z=zone(e,r);clearDrop();
+  if(!validDrop(tid,z))return;
+  const src=IDX[dragId];src.arr.splice(src.i,1);reindex();
+  const t=IDX[tid];
+  if(z==="in"){t.n.children.push(src.n);S.open[t.n.id]=true}
+  else t.arr.splice(t.i+(z==="after"?1:0),0,src.n);
+  dragId=null;commit();renderFiche();
+});
+function targetGroup(){if(!S.sel||!IDX[S.sel])return null;const x=IDX[S.sel];return x.n.kind==="g"?x.n:x.parent}
+$("#b-lot").onclick=()=>{const g=grp("Nouveau lot",[]);S.tree.push(g);select(g.id,true);setTimeout(()=>{const i=$("#g-nom");if(i){i.focus();i.select()}},0)};
+$("#b-slot").onclick=()=>{const t=targetGroup();if(!t)return toast("Sélectionnez d'abord un lot.");const g=grp("Nouveau sous-lot",[]);t.children.push(g);S.open[t.id]=true;select(g.id,true);setTimeout(()=>{const i=$("#g-nom");if(i){i.focus();i.select()}},0)};
+$("#b-presta").onclick=()=>{
+  const p=newPresta();
+  const x=S.sel&&IDX[S.sel];
+  if(x&&x.n.kind==="p")x.arr.splice(x.i+1,0,p);
+  else{const t=targetGroup();if(!t)return toast("Créez ou sélectionnez d'abord un lot.");t.children.push(p);S.open[t.id]=true}
+  select(p.id,true);setTimeout(()=>{const i=$("#f-nom");i&&i.focus()},0);
+};
+function select(id,changed){if(S.sel!==id)LIVE=null;S.sel=id;if(changed)commit();else{persist();renderTree();renderOut()}renderFiche()}
+function commit(){save();renderTree();renderOut()}
+
+/* ======================================================================
+   Bibliothèque : lien avec la fiche
+   ====================================================================== */
+const lotNameOf=n=>{reindex();return IDX[n.id]?rootOf(n.id).nom:""};
+function baseOf(n){return BASE.find(a=>a.id===n.bid)||BASE.find(a=>norm(a.nom)===norm(n.nom))||null}
+function baseDiff(n,a){if(!a)return[];const d=[];if(a.cat!==n.cat)d.push("catégorie");if(a.u!==n.u)d.push("unité");if(r2(num(a.prix))!==r2(num(n.prix)))d.push("prix");if((a.desc||"")!==(n.desc||""))d.push("descriptif");return d}
+function autoBase(n){
+  const nm=(n.nom||"").trim();if(!nm)return;
+  let a=BASE.find(z=>norm(z.nom)===norm(nm));
+  if(a){n.bid=a.id;libHint(n);return}
+  a={id:uid(),nom:nm,lot:lotNameOf(n),cat:n.cat,u:n.u,prix:num(n.prix),desc:n.desc||""};
+  BASE.push(a);saveBase();n.bid=a.id;n.prixBase=a.prix;LIVE=n.id;save();
+  toast(`« ${nm} » est ajoutée à la bibliothèque.`);libHint(n);
+}
+function syncLive(n){
+  if(LIVE!==n.id)return;
+  const a=BASE.find(z=>z.id===n.bid);if(!a){LIVE=null;return}
+  Object.assign(a,{nom:(n.nom||"").trim()||a.nom,cat:n.cat,u:n.u,prix:num(n.prix),desc:n.desc||""});n.prixBase=a.prix;saveBase();
+}
+function libHint(n){
+  const h=$("#f-lib");if(!h)return;
+  const a=baseOf(n);
+  if(!(n.nom||"").trim()){h.className="libhint";h.innerHTML=`<span>Choisissez un article de la bibliothèque ou saisissez un nouveau nom : il y sera ajouté.</span>`;return}
+  if(!a){h.className="libhint new";h.innerHTML=`<span class="dotc"></span><span>Nouvel article : ajouté à la bibliothèque en quittant ce champ.</span>`;return}
+  if(LIVE===n.id){h.className="libhint new";h.innerHTML=`<span class="dotc"></span><span>Nouvel article de la bibliothèque : vos saisies y sont reportées.</span>`;return}
+  const d=baseDiff(n,a);
+  if(!d.length){h.className="libhint";h.innerHTML=`<span class="dotc"></span><span>Conforme à la bibliothèque.</span>`;return}
+  h.className="libhint mod";h.innerHTML=`<span class="dotc"></span><span>Adapté pour ce projet (${d.join(", ")}).</span><button class="link" id="f-updb">Reporter dans la bibliothèque</button><button class="link" id="f-revert">Revenir à la bibliothèque</button>`;
+  $("#f-updb").onclick=()=>{Object.assign(a,{cat:n.cat,u:n.u,prix:num(n.prix),desc:n.desc});n.prixBase=a.prix;n.bid=a.id;saveBase();save();toast("Bibliothèque mise à jour.");libHint(n)};
+  $("#f-revert").onclick=()=>{Object.assign(n,{cat:a.cat,u:a.u,prix:a.prix,prixBase:a.prix,desc:a.desc,bid:a.id});commit();renderFiche()};
+}
+
+/* ======================================================================
+   Fiche
+   ====================================================================== */
+let armedDel=false;
+function lieuChips(n){
+  let h="",last=null;
+  S.lieux.forEach(l=>{if(l.niv!==last){last=l.niv;h+=`<span class="niv">${esc(l.niv||"Général")}</span>`}
+    h+=`<button class="chip" aria-pressed="${n.lieux.includes(l.nom)}" data-l="${esc(l.nom)}" title="${esc(dimTxt(l))}">${esc(l.nom)}</button>`});
+  return h;
+}
+function qlHTML(n){
+  if(n.lieux.length<2)return"";
+  return`<div class="ql"><div class="ql-h"><span class="lab">Quantités par lieu</span><span class="hint">La quantité totale en est la somme</span></div>`+
+    n.lieux.map((l,i)=>{const ex=n.qlx[l],r=ex?evalQ(ex,l):null,li=LO(l);
+      return`<div class="ql-row"><label class="ln" for="ql-${i}">${esc(l)}<small>${esc(dimTxt(li))}</small></label><input type="text" inputmode="decimal" id="ql-${i}" data-ql="${esc(l)}" value="${esc(ex||fmtIn(n.ql[l]))}" placeholder="0" class="${r&&r.err?"bad":""}" title="${esc(r&&r.err||"")}"><span class="u" data-qlr="${esc(l)}">${ex?(r.err?'<span class="err">erreur</span>':"= "+qf.format(r.v)+" "+esc(n.u)):esc(n.u)}</span><span class="qm">${qBtns(l,"ql-"+i)}</span></div>`}).join("")+
+    `<div class="ql-row ql-sum"><span>Total</span><b id="ql-sum">${qf.format(num(n.qte))}</b><span class="u">${esc(n.u)}</span><span></span></div>
+    <p class="hint">Saisissez un nombre ou une formule : 3,2*2,5 · S = surface au sol, P = périmètre, H = hauteur du lieu.</p></div>`;
+}
+function qresHTML(n){
+  if(n.lieux.length>1)return"";
+  let h="";
+  if(n.qx){const r=evalQ(n.qx,n.lieux[0]);h=r.err?`<span class="err">${esc(r.err)}</span>`:`<span>= <b>${qf.format(r.v)}</b> ${esc(n.u)}</span>`}
+  if(n.lieux.length===1)h+=qBtns(n.lieux[0],"f-qte");
+  return h;
+}
+function renderFiche(){
+  armedDel=false;
+  const el=$("#fiche"),x=S.sel&&IDX[S.sel];
+  if(!x){$("#fiche-h").textContent="Fiche";el.innerHTML=`<div class="empty">Sélectionnez une prestation dans la colonne de gauche, ou créez un lot avec « + Lot ».</div>`;return}
+  const n=x.n,anc=ancestors(n.id);
+  if(n.kind==="g"){
+    const isLot=!x.parent;
+    $("#fiche-h").textContent=isLot?"Fiche lot":"Fiche sous-lot";
+    el.innerHTML=`<div class="fiche">
+      <div class="fiche-title"><span class="num">${x.nr}</span><h3>${esc(n.nom||"Sans titre")}</h3></div>
+      <dl class="ro">${isLot?"":`<dt>Lot</dt><dd>${esc(IDX[anc[0].id].nr+" "+anc[0].nom)}</dd>`}
+        <dt>Contenu</dt><dd>${countP(n)} prestation${countP(n)>1?"s":""}</dd>
+        <dt>Montant HT</dt><dd>${eur(baseT(n))}${pseT(n)?` <span class="hint">+ ${eur(pseT(n))} en PSE</span>`:""}</dd></dl>
+      <div class="f"><label for="g-nom">Intitulé</label><input type="text" id="g-nom" value="${esc(n.nom)}"></div>
+      <div class="f"><label for="g-intro">Généralités (texte d'introduction du CCTP)</label><textarea id="g-intro" rows="6" placeholder="Prescriptions communes à l'ensemble du ${isLot?"lot":"sous-lot"} : documents de référence, DTU applicables, interfaces avec les autres lots…">${esc(n.intro)}</textarea></div>
+      <div class="actions"><button class="btn danger" id="f-del">Supprimer ${isLot?"le lot":"le sous-lot"}</button></div></div>`;
+    $("#g-nom").oninput=e=>{n.nom=e.target.value;el.querySelector("h3").textContent=n.nom||"Sans titre";commit()};
+    $("#g-intro").oninput=e=>{n.intro=e.target.value;save();renderOut()};
+    bindDel(n,countP(n));return;
+  }
+  $("#fiche-h").textContent="Fiche prestation";
+  const lot=anc[0],subs=anc.slice(1),multi=n.lieux.length>1;
+  el.innerHTML=`<div class="fiche">
+    <div class="fiche-title"><span class="num">${x.nr}</span><h3 id="f-h">${esc(n.nom||"Nouvelle prestation")}</h3>${n.pse?'<span class="pse">PSE</span>':""}</div>
+    <dl class="ro"><dt>Lot</dt><dd>${esc(IDX[lot.id].nr+" "+lot.nom)}</dd>
+      <dt>Sous-lot</dt><dd>${subs.length?subs.map(s=>esc(IDX[s.id].nr+" "+s.nom)).join(" › "):"<span class='hint'>aucun</span>"}</dd></dl>
+    <div class="f ac"><label for="f-nom">Nom</label>
+      <input type="text" id="f-nom" value="${esc(n.nom)}" autocomplete="off" placeholder="Tapez pour chercher dans la bibliothèque…" role="combobox" aria-expanded="false" aria-controls="ac-list">
+      <div class="libhint" id="f-lib"></div>
+      <div class="ac-list" id="ac-list" role="listbox" hidden></div></div>
+    <div class="grid2">
+      <div class="f"><label for="f-cat">Catégorie</label><select id="f-cat">${CATS.map(c=>`<option ${c===n.cat?"selected":""}>${c}</option>`).join("")}</select></div>
+      <div class="f"><label for="f-u">Unité</label><select id="f-u">${[...new Set([...UNITES,n.u])].map(u=>`<option ${u===n.u?"selected":""}>${esc(u)}</option>`).join("")}</select></div>
+    </div>
+    <div class="f"><label for="f-desc">Descriptif</label><textarea id="f-desc" rows="4">${esc(n.desc)}</textarea></div>
+    <div class="f"><span class="lab">Lieu</span><div class="chips" id="f-lieux">${lieuChips(n)}</div>
+      <div class="hint">Les lieux, leurs niveaux et leurs dimensions se gèrent avec le bouton <button class="link" id="f-glieux">Lieux</button>.</div></div>
+    ${qlHTML(n)}
+    <div class="grid2">
+      <div class="f"><label for="f-qte">${multi?"Quantité · somme des lieux":"Quantité"}</label>
+        <input type="text" inputmode="decimal" class="numin ${multi?"locked":""}" id="f-qte" value="${esc(multi?fmtIn(n.qte):(n.qx||fmtIn(n.qte)))}" ${multi?'readonly title="Calculée à partir des quantités par lieu"':""} placeholder="Nombre ou formule">
+        <div class="qres" id="f-qres">${qresHTML(n)}</div></div>
+      <div class="f"><label for="f-prix">Prix unitaire HT (€)</label><input type="text" inputmode="decimal" class="numin" id="f-prix" value="${esc(fmtIn(n.prix))}"></div>
+    </div>
+    <div class="total"><span class="hint">Total HT de la ligne</span><b id="f-tot">${eur(lineT(n))}</b></div>
+    <label class="chk"><input type="checkbox" id="f-pse" ${n.pse?"checked":""}> Prestation supplémentaire éventuelle (PSE) : chiffrée à part, hors montant de base</label>
+    <div class="f"><span class="lab">Finition</span>
+      <div class="fin"><input type="checkbox" id="f-finon" ${n.finOn?"checked":""} aria-label="Préciser une finition"><input type="text" id="f-fin" value="${esc(n.fin)}" placeholder="Ex. aspect velours, teinte au choix de l'architecte" ${n.finOn?"":"disabled"}></div></div>
+    <div class="actions">
+      <button class="btn" id="f-dup">Dupliquer</button>
+      <span style="flex:1"></span>
+      <button class="btn danger" id="f-del">Supprimer</button></div></div>`;
+  libHint(n);
+  const upd=()=>{$("#f-tot").textContent=eur(lineT(n));syncLive(n);commit();libHint(n)};
+  const nomI=$("#f-nom");
+  nomI.oninput=e=>{n.nom=e.target.value;$("#f-h").textContent=n.nom||"Nouvelle prestation";upd();acShow()};
+  nomI.onkeydown=acKey;nomI.onblur=()=>setTimeout(()=>{acHide();if(IDX[n.id]&&S.sel===n.id)autoBase(n)},150);nomI.onfocus=()=>{if(nomI.value)acShow()};
+  $("#f-cat").onchange=e=>{n.cat=e.target.value;upd()};
+  $("#f-u").onchange=e=>{n.u=e.target.value;upd();renderFiche()};
+  $("#f-desc").oninput=e=>{n.desc=e.target.value;syncLive(n);save();renderOut();libHint(n)};
+  $("#f-qte").oninput=e=>{if(n.lieux.length>1)return;setQ(n,e.target.value);$("#f-qres").innerHTML=qresHTML(n);upd()};
+  el.querySelectorAll("[data-ql]").forEach(inp=>inp.oninput=e=>{
+    const l=e.target.dataset.ql,r=setQL(n,l,e.target.value);
+    e.target.classList.toggle("bad",!!r.err);e.target.title=r.err||"";
+    const out=el.querySelector(`[data-qlr="${CSS.escape(l)}"]`);if(out)out.innerHTML=n.qlx[l]?(r.err?'<span class="err">erreur</span>':"= "+qf.format(r.v)+" "+esc(n.u)):esc(n.u);
+    $("#f-qte").value=fmtIn(n.qte);$("#ql-sum").textContent=qf.format(num(n.qte));upd()});
+  el.onclick=(e=>{const b=e.target.closest("[data-qins]");if(!b)return;const t=$("#"+b.dataset.qt);if(!t||t.readOnly)return;t.value=b.dataset.qins;t.dispatchEvent(new Event("input"));t.focus()});
+  $("#f-prix").oninput=e=>{n.prix=e.target.value.trim()===""?"":num(e.target.value);upd()};
+  $("#f-lieux").onclick=e=>{const c=e.target.closest(".chip");if(!c)return;toggleLieu(n,c.dataset.l);commit();renderFiche();
+    const q=$("#fiche").querySelector(`[data-ql="${CSS.escape(c.dataset.l)}"]`);if(q){q.focus();q.select()}};
+  $("#f-glieux").onclick=openLieux;
+  $("#f-pse").onchange=e=>{n.pse=e.target.checked;commit();renderFiche()};
+  $("#f-finon").onchange=e=>{n.finOn=e.target.checked;$("#f-fin").disabled=!n.finOn;if(n.finOn)$("#f-fin").focus();save();renderOut()};
+  $("#f-fin").oninput=e=>{n.fin=e.target.value;save();renderOut()};
+  $("#f-dup").onclick=()=>{const c=JSON.parse(JSON.stringify(n));c.id=uid();x.arr.splice(IDX[n.id].i+1,0,c);select(c.id,true);toast("Prestation dupliquée.")};
+  bindDel(n,1);
+}
+function bindDel(n,cnt){
+  const b=$("#f-del");
+  b.onclick=()=>{
+    if(!armedDel){armedDel=true;b.classList.add("armed");b.textContent=n.kind==="g"&&cnt?`Confirmer : supprimer avec ${cnt} prestation${cnt>1?"s":""}`:"Confirmer la suppression";return}
+    const x=IDX[n.id];x.arr.splice(x.i,1);
+    S.sel=x.arr[x.i]?x.arr[x.i].id:x.arr[x.i-1]?x.arr[x.i-1].id:x.parent?x.parent.id:(S.tree[0]&&S.tree[0].id)||null;
+    commit();renderFiche();toast("Supprimé.");
+  };
+}
+
+/* Autocomplétion : articles du lot en cours d'abord */
+let acItems=[],acI=-1;
+function acShow(){
+  const i=$("#f-nom"),L=$("#ac-list");if(!i)return;
+  const q=norm(i.value);if(!q){acHide();return}
+  const words=q.split(/\s+/),n=IDX[S.sel]&&IDX[S.sel].n,lot=n?norm(lotNameOf(n)):"";
+  const same=a=>lot&&a.lot&&(norm(a.lot)===lot||lot.includes(norm(a.lot))||norm(a.lot).includes(lot));
+  acItems=BASE.filter(d=>{const t=norm(d.nom);return words.every(w=>t.includes(w))})
+    .sort((a,b)=>(same(b)-same(a))||(norm(a.nom).startsWith(words[0])?-1:0)-(norm(b.nom).startsWith(words[0])?-1:0)||a.nom.localeCompare(b.nom,"fr")).slice(0,10);
+  if(!acItems.length||(acItems.length===1&&norm(acItems[0].nom)===q)){acHide();return}
+  acI=-1;
+  L.innerHTML=acItems.map((d,k)=>`<div class="ac-item" data-k="${k}" role="option"><span class="n">${hl(d.nom,words)}</span><span class="m">${esc(d.u)} · ${nf.format(d.prix)} €</span>${d.lot?`<span class="l">${esc(d.lot)}</span>`:""}</div>`).join("");
+  L.hidden=false;i.setAttribute("aria-expanded","true");
+  L.onmousedown=e=>{const it=e.target.closest(".ac-item");if(it){e.preventDefault();acPick(+it.dataset.k)}};
+}
+function hl(s,words){let out="";const t=norm(s),m=new Array(s.length).fill(false);
+  words.forEach(w=>{if(!w)return;let p=t.indexOf(w);while(p>-1){for(let k=p;k<p+w.length;k++)m[k]=true;p=t.indexOf(w,p+1)}});
+  for(let k=0;k<s.length;k++){const c=esc(s[k]);out+=m[k]&&(k===0||!m[k-1])?"<mark>"+c:c;if(m[k]&&(k===s.length-1||!m[k+1]))out+="</mark>"}return out}
+function acHide(){const L=$("#ac-list");if(L)L.hidden=true;const i=$("#f-nom");if(i)i.setAttribute("aria-expanded","false");acI=-1}
+function acKey(e){
+  const L=$("#ac-list");if(!L||L.hidden)return;
+  if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();acI=(acI+(e.key==="ArrowDown"?1:-1)+acItems.length)%acItems.length;
+    L.querySelectorAll(".ac-item").forEach((el,k)=>el.classList.toggle("on",k===acI))}
+  else if(e.key==="Enter"&&acI>-1){e.preventDefault();acPick(acI)}
+  else if(e.key==="Escape")acHide();
+}
+function acPick(k){
+  const d=acItems[k],n=IDX[S.sel].n;
+  Object.assign(n,{nom:d.nom,cat:d.cat,u:d.u,prix:d.prix,prixBase:d.prix,desc:d.desc,bid:d.id});
+  LIVE=null;acHide();recalc(n);commit();renderFiche();
+}
+
+/* ======================================================================
+   Colonne de droite : CCTP, DPGF, offres
+   ====================================================================== */
+function setTab(t){S.tab=t;["cctp","dpgf","off"].forEach(k=>$("#t-"+k).setAttribute("aria-selected",k===t));
+  $("#seg").hidden=t==="off";$("#out-tools").hidden=t==="off";$("#b-copy").textContent=t==="dpgf"?"Copier pour Excel":"Copier pour Word";$("#b-copy").hidden=t==="off";persist();renderOut()}
+$("#t-cctp").onclick=()=>setTab("cctp");$("#t-dpgf").onclick=()=>setTab("dpgf");$("#t-off").onclick=()=>setTab("off");
+function setView(v){S.view=v;$("#v-lots").setAttribute("aria-pressed",v==="lots");$("#v-lieux").setAttribute("aria-pressed",v==="lieux");persist();renderOut()}
+$("#v-lots").onclick=()=>setView("lots");$("#v-lieux").onclick=()=>setView("lieux");
+
+function byLieu(){
+  const m=new Map();S.lieux.forEach(l=>m.set(l.nom,[]));const none=[];
+  walkP(S.tree,n=>{if(!n.lieux.length)none.push(n);else n.lieux.forEach(l=>{if(!m.has(l))m.set(l,[]);m.get(l).push(n)})});
+  const out=[...m].filter(([,v])=>v.length);
+  if(none.length)out.push(["Non localisé",none]);
+  return out;
+}
+const indTxt=()=>{const P=S.projet;return [P.phase,P.indice?"indice "+P.indice:""].filter(Boolean).join(" · ")};
+function cctpHead(sub){const P=S.projet;return`<h1>${esc(P.nom)}</h1><p class="sub">${esc([P.moa,P.adresse].filter(Boolean).join(" · "))}<br>${esc(sub)} · ${esc(indTxt())}</p>`}
+function cctpLieuxHTML(){
+  return cctpHead("Prestations classées par lieu")+byLieu().map(([l,arr])=>`<h2>${esc(l)}</h2>`+arr.map(n=>{
+      const autres=n.lieux.filter(z=>z!==l);
+      return`<div class="art ${S.sel===n.id?"sel":""}" data-id="${n.id}"><h4><span class="nr">${IDX[n.id].nr}</span>${esc(n.nom||"Prestation sans nom")}${n.pse?'<span class="pse">PSE</span>':""}</h4><p class="lotref">${esc(lotRef(n))}</p>${n.desc?`<p>${esc(n.desc)}</p>`:""}${n.finOn&&n.fin?`<p class="meta"><b>Finition :</b> ${esc(n.fin)}</p>`:""}<p class="meta"><b>Quantité dans ce lieu :</b> ${l==="Non localisé"?qf.format(num(n.qte)):qf.format(qOf(n,l))} ${esc(n.u)}${autres.length&&l!=="Non localisé"?` sur ${qf.format(num(n.qte))} au total (également : ${esc(autres.join(", "))})`:""}</p></div>`;
+    }).join("")).join("");
+}
+function cctpHTML(){
+  const P=S.projet;
+  const rec=arr=>arr.map(n=>{const nr=IDX[n.id].nr;
+    if(n.kind==="g")return`<h3><span>${nr}</span>${esc(n.nom)}</h3>${n.intro?`<p class="intro">${esc(n.intro)}</p>`:""}${rec(n.children)}`;
+    const meta=[];
+    if(n.lieux.length)meta.push(`<b>Localisation :</b> ${esc(locTxt(n))}`);
+    if(n.finOn&&n.fin)meta.push(`<b>Finition :</b> ${esc(n.fin)}`);
+    meta.push(`<b>Unité de compte :</b> ${esc(n.u)}`);
+    return`<div class="art ${S.sel===n.id?"sel":""}" data-id="${n.id}"><h4><span class="nr">${nr}</span>${esc(n.nom||"Prestation sans nom")}${n.pse?'<span class="pse">PSE</span>':""}</h4>${n.desc?`<p>${esc(n.desc)}</p>`:""}${meta.map(m=>`<p class="meta">${m}</p>`).join("")}</div>`;
+  }).join("");
+  return cctpHead("Cahier des clauses techniques particulières")+(P.dispo?`<h2>Dispositions générales</h2><p>${esc(P.dispo)}</p>`:"")+
+    S.tree.map(l=>`<h2>Lot ${IDX[l.id].nr} — ${esc(l.nom)}</h2>${l.intro?`<p class="intro">${esc(l.intro)}</p>`:""}${rec(l.children)}`).join("");
+}
+function dpgfRows(arr,pse){
+  return arr.map(n=>{const nr=IDX[n.id].nr;
+    if(n.kind==="g")return hasMode(n,pse)?`<tr class="grp"><td class="n">${nr}</td><td colspan="5">${esc(n.nom)}</td></tr>${dpgfRows(n.children,pse)}`:"";
+    if(!!n.pse!==pse)return"";
+    return`<tr class="art ${S.sel===n.id?"sel":""}" data-id="${n.id}"><td class="n">${nr}</td><td>${esc(n.nom||"Prestation sans nom")}${n.lieux.length?`<div class="hint">${esc(locTxt(n))}</div>`:""}</td><td class="c">${esc(n.u)}</td><td class="r">${n.qte===""?"":qf.format(num(n.qte))}</td><td class="r ${num(n.prix)?"":"zero"}">${nf.format(num(n.prix))}</td><td class="r">${nf.format(lineT(n))}</td></tr>`;
+  }).join("");
+}
+function dpgfLieux(){
+  const L=byLieu();
+  if(!L.length)return`<div class="empty">Aucune prestation n'est encore localisée.</div>`;
+  if(S.lieu!=="__recap"&&!L.some(([l])=>l===S.lieu))S.lieu=L[0][0];
+  const qL=(n,l)=>l==="Non localisé"?num(n.qte):qOf(n,l);
+  const amt=(l,arr)=>arr.reduce((s,n)=>s+(n.pse?0:qL(n,l)*num(n.prix)),0);
+  const bar=`<div class="lotbar">${L.map(([l,a])=>`<button class="chip" data-lieu="${esc(l)}" aria-pressed="${l===S.lieu}">${esc(l)} <span class="hint">${a.length}</span></button>`).join("")}<button class="chip" data-lieu="__recap" aria-pressed="${S.lieu==="__recap"}">Récapitulatif</button></div>`;
+  if(S.lieu==="__recap"){
+    const tot=L.reduce((s,[l,a])=>s+amt(l,a),0);
+    return bar+`<div class="tblwrap"><table class="dpgf"><thead><tr><th>Lieu</th><th>Niveau</th><th class="r">Surface</th><th class="r">Montant HT</th><th class="r">€/m²</th></tr></thead><tbody>`+
+      L.map(([l,a])=>{const li=LO(l),s=li?num(li.s):0,m=amt(l,a);return`<tr class="art" data-lieu="${esc(l)}"><td>${esc(l)}</td><td class="tag">${esc(li?li.niv:"")}</td><td class="r">${s?qf.format(s)+" m²":""}</td><td class="r">${eur(m)}</td><td class="r">${s?nf.format(m/s):""}</td></tr>`}).join("")+
+      `<tr class="tot st"><td>Total HT (hors PSE)</td><td></td><td></td><td class="r">${eur(tot)}</td><td></td></tr></tbody></table></div>`;
+  }
+  const arr=L.find(([l])=>l===S.lieu)[1];
+  const rows=arr.map(n=>{const q=qL(n,S.lieu),t=q*num(n.prix),multi=n.lieux.length>1&&S.lieu!=="Non localisé";
+    return`<tr class="art ${S.sel===n.id?"sel":""}" data-id="${n.id}"><td class="n">${IDX[n.id].nr}</td><td>${esc(n.nom||"Prestation sans nom")} ${n.pse?'<span class="pse">PSE</span>':""}<div class="tag">${esc(lotRef(n))}</div>${multi?`<div class="hint">Part de ${qf.format(num(n.qte))} ${esc(n.u)} au total</div>`:""}</td><td class="c">${esc(n.u)}</td><td class="r ${q?"":"zero"}">${qf.format(q)}</td><td class="r">${nf.format(num(n.prix))}</td><td class="r">${nf.format(t)}</td></tr>`}).join("");
+  return bar+`<div class="tblwrap"><table class="dpgf"><thead><tr><th>N°</th><th>Désignation</th><th class="c">U</th><th class="r">Qté</th><th class="r">PU HT</th><th class="r">Total HT</th></tr></thead><tbody>
+  <tr class="lot"><td></td><td colspan="5">${esc(S.lieu)}</td></tr>${rows}
+  <tr class="st"><td></td><td colspan="4">Total ${esc(S.lieu)} (hors PSE)</td><td class="r">${nf.format(amt(S.lieu,arr))}</td></tr></tbody></table></div>`;
+}
+function dpgfLots(){
+  if(S.lot!=="recap"&&!IDX[S.lot])S.lot="recap";
+  const bar=`<div class="lotbar">${S.tree.map(l=>`<button class="chip" data-lot="${l.id}" aria-pressed="${S.lot===l.id}">${IDX[l.id].nr} ${esc(l.nom)}</button>`).join("")}<button class="chip" data-lot="recap" aria-pressed="${S.lot==="recap"}">Récapitulatif</button></div>`;
+  const head=`<thead><tr><th>N°</th><th>Désignation</th><th class="c">U</th><th class="r">Qté</th><th class="r">PU HT</th><th class="r">Total HT</th></tr></thead>`;
+  let body;
+  if(S.lot==="recap"){
+    const ht=S.tree.reduce((s,l)=>s+baseT(l),0),pt=S.tree.reduce((s,l)=>s+pseT(l),0),tva=ht*S.tva/100;
+    body=`<table class="dpgf"><thead><tr><th>Lot</th><th>Désignation</th><th class="r">Base HT</th>${pt?'<th class="r">PSE HT</th>':""}</tr></thead><tbody>`+
+      S.tree.map(l=>`<tr class="art" data-lot="${l.id}"><td class="n">${IDX[l.id].nr}</td><td>${esc(l.nom)}</td><td class="r">${eur(baseT(l))}</td>${pt?`<td class="r">${pseT(l)?eur(pseT(l)):""}</td>`:""}</tr>`).join("")+
+      `<tr class="tot st"><td></td><td>Total HT</td><td class="r">${eur(ht)}</td>${pt?`<td class="r">${eur(pt)}</td>`:""}</tr>
+       <tr class="tot"><td></td><td>TVA <select id="tva" aria-label="Taux de TVA">${[20,10,5.5].map(v=>`<option value="${v}" ${v==S.tva?"selected":""}>${String(v).replace(".",",")} %</option>`).join("")}</select></td><td class="r">${eur(tva)}</td>${pt?`<td class="r">${eur(pt*S.tva/100)}</td>`:""}</tr>
+       <tr class="ttc"><td></td><td>Total TTC</td><td class="r">${eur(ht+tva)}</td>${pt?`<td class="r">${eur(pt*(1+S.tva/100))}</td>`:""}</tr>
+       ${pt?`<tr class="tot"><td></td><td>Total base + PSE TTC</td><td class="r" colspan="2">${eur((ht+pt)*(1+S.tva/100))}</td></tr>`:""}</tbody></table>`;
+  }else{
+    const l=IDX[S.lot].n,pse=hasMode(l,true);
+    body=`<table class="dpgf">${head}<tbody><tr class="lot"><td class="n">${IDX[l.id].nr}</td><td colspan="5">${esc(l.nom)}</td></tr>${dpgfRows(l.children,false)}
+      <tr class="st"><td></td><td colspan="4">Sous-total lot ${IDX[l.id].nr}</td><td class="r">${nf.format(baseT(l))}</td></tr>
+      ${pse?`<tr class="psehead"><td></td><td colspan="5">Prestations supplémentaires éventuelles</td></tr>${dpgfRows(l.children,true)}<tr class="st"><td></td><td colspan="4">Sous-total PSE lot ${IDX[l.id].nr}</td><td class="r">${nf.format(pseT(l))}</td></tr>`:""}</tbody></table>`;
+  }
+  return bar+`<div class="tblwrap">${body}</div>`;
+}
+function renderOut(){
+  reindex();
+  const o=$("#out");
+  if(S.tab==="off"){o.innerHTML=offresHTML();bindOffres();return}
+  if(!S.tree.length){o.innerHTML=`<div class="empty">Aucun lot pour l'instant.</div>`;return}
+  if(S.tab==="cctp"){o.innerHTML=`<article class="cctp" id="cctp">${S.view==="lieux"?cctpLieuxHTML():cctpHTML()}</article>`;return}
+  o.innerHTML=S.view==="lieux"?dpgfLieux():dpgfLots();
+  const tv=$("#tva");if(tv)tv.onchange=e=>{S.tva=+e.target.value;save();renderOut()};
+}
+$("#out").addEventListener("click",e=>{
+  if(S.tab==="off")return;
+  const cl=e.target.closest("[data-lieu]");
+  if(cl){S.lieu=cl.dataset.lieu;persist();renderOut();return}
+  const c=e.target.closest("[data-lot]");
+  if(c){S.lot=c.dataset.lot;persist();renderOut();return}
+  const a=e.target.closest("[data-id]");if(a)select(a.dataset.id);
+});
+
+/* ======================================================================
+   Copie presse-papiers
+   ====================================================================== */
+const tsvN=v=>(Math.round(num(v)*100)/100).toFixed(2).replace(".",",");
+function dpgfTSV(){
+  const L=["N°\tDésignation\tU\tQté\tPU HT\tTotal HT"];
+  const rec=(arr,pse)=>arr.forEach(n=>{const nr=IDX[n.id].nr;
+    if(n.kind==="g"){if(hasMode(n,pse)){L.push(`${nr}\t${n.nom}\t\t\t\t`);rec(n.children,pse)}}
+    else if(!!n.pse===pse)L.push(`${nr}\t${(n.nom||"").replace(/\t/g," ")}\t${n.u}\t${n.qte===""?"":String(num(n.qte)).replace(".",",")}\t${tsvN(n.prix)}\t${tsvN(lineT(n))}`)});
+  S.tree.forEach(l=>{const nr=IDX[l.id].nr;L.push(`${nr}\tLOT ${nr} — ${l.nom.toUpperCase()}\t\t\t\t`);rec(l.children,false);L.push(`\tSous-total lot ${nr}\t\t\t\t${tsvN(baseT(l))}`);
+    if(hasMode(l,true)){L.push(`\tPrestations supplémentaires éventuelles\t\t\t\t`);rec(l.children,true);L.push(`\tSous-total PSE lot ${nr}\t\t\t\t${tsvN(pseT(l))}`)}L.push("")});
+  const ht=S.tree.reduce((s,l)=>s+baseT(l),0);
+  L.push(`\tTotal HT\t\t\t\t${tsvN(ht)}`,`\tTVA ${String(S.tva).replace(".",",")} %\t\t\t\t${tsvN(ht*S.tva/100)}`,`\tTotal TTC\t\t\t\t${tsvN(ht*(1+S.tva/100))}`);
+  return L.join("\n");
+}
+$("#b-copy").onclick=async()=>{
+  reindex();let ok=false;
+  if(S.tab==="cctp"){
+    const html=$("#cctp")?$("#cctp").innerHTML:"",text=$("#cctp")?$("#cctp").innerText:"";
+    try{if(window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){await navigator.clipboard.write([new ClipboardItem({"text/html":new Blob([html],{type:"text/html"}),"text/plain":new Blob([text],{type:"text/plain"})})]);ok=true}}catch(e){}
+    if(!ok){try{await navigator.clipboard.writeText(text);ok=true}catch(e){}}
+    if(ok)return toast("CCTP copié : collez-le dans Word (Cmd+V).");
+    const r=document.createRange();r.selectNodeContents($("#cctp"));const s=getSelection();s.removeAllRanges();s.addRange(r);
+    return toast("Texte sélectionné : appuyez sur Cmd+C pour le copier.");
+  }
+  const tsv=dpgfTSV();
+  try{await navigator.clipboard.writeText(tsv);ok=true}catch(e){}
+  if(ok)return toast("DPGF copiée (tous les lots) : collez-la dans une feuille Excel.");
+  const o=$("#out");o.innerHTML=`<div style="padding:12px"><p class="hint">Copie automatique refusée : sélectionnez le texte ci-dessous puis Cmd+C.</p><textarea style="width:100%;height:320px;font-family:var(--f-mono);font-size:12px" readonly>${esc(tsv)}</textarea></div>`;
+  o.querySelector("textarea").select();
+};
+
+/* ======================================================================
+   Fichiers : enregistrement et ouverture
+   ====================================================================== */
+const dlP=(window.claude&&window.claude.use)?window.claude.use("downloads").catch(()=>null):Promise.resolve(null);
+const pjoin=(dir,name)=>{if(!dir)return name;const sep=dir.includes("\\")&&!dir.includes("/")?"\\":"/";return dir.replace(/[\\/]+$/,"")+sep+name};
+const pdir=p=>String(p||"").replace(/[\\/][^\\/]*$/,"");
+const pbase=p=>String(p||"").split(/[\\/]/).pop();
+async function blobB64(blob){const u=new Uint8Array(await blob.arrayBuffer());let s="";for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)}
+function b64Bytes(b){const s=atob(b),u=new Uint8Array(s.length);for(let i=0;i<s.length;i++)u[i]=s.charCodeAt(i);return u}
+let LASTDIR=null;
+async function saveFile(filename,blob){
+  if(T){
+    const ext=(filename.split(".").pop()||"").toLowerCase();
+    const path=await T.dialog.save({defaultPath:pjoin(LASTDIR||(DIRS&&DIRS.documents)||"",filename),filters:[{name:ext.toUpperCase(),extensions:[ext]}]});
+    if(!path)return false;
+    try{await inv("write_b64",{path,data:await blobB64(blob)});LASTDIR=pdir(path);toast("Enregistré : "+pbase(path),4000);return path}
+    catch(e){toast("Enregistrement impossible : "+e,6000);return false}
+  }
+  const dl=await dlP;
+  if(dl){
+    try{await dl.save({filename,data:blob});toast("Fichier enregistré : "+filename);return true}
+    catch(e){const c=e&&e.code;if(c==="declined")return false;toast(c==="rate_limited"?"Une demande d'enregistrement est déjà ouverte.":"Enregistrement impossible ici.");return false}
+  }
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500);
+  toast("Fichier enregistré dans vos Téléchargements : "+filename,4000);return true;
+}
+async function pickFile(accept,cb){
+  if(T){const exts=accept.split(",").map(x=>x.trim()).filter(x=>x.startsWith(".")).map(x=>x.slice(1));
+    const path=await T.dialog.open({multiple:false,directory:false,defaultPath:LASTDIR||undefined,filters:[{name:exts.map(x=>x.toUpperCase()).join(", "),extensions:exts}]});
+    if(!path)return;LASTDIR=pdir(path);
+    try{const bytes=b64Bytes(await inv("read_b64",{path}));cb(new File([bytes],pbase(path)),path)}catch(e){toast("Lecture impossible : "+e,6000)}
+    return}
+  const f=$("#file");f.value="";f.accept=accept;f.onchange=()=>{const file=f.files&&f.files[0];if(file)cb(file)};f.click()}
+const XLSX_MIME="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+function needLib(name){if(window[name])return true;toast(T?"Le module d'export n'a pas pu être chargé.":"Le module d'export se charge encore (connexion internet requise). Réessayez dans un instant.");return false}
+
+async function saveProject(saveAs){
+  reindex();
+  if(T&&S.chemin&&saveAs!==true){return writeProject(S.chemin)}
+  const used=new Set();walkP(S.tree,n=>{const a=baseOf(n);if(a)used.add(a.id)});
+  const data={format:"prescrire-projet",version:6,enregistre:new Date().toISOString(),projet:S,bibliotheque:BASE.filter(a=>used.has(a.id))};
+  const caz=T||!(await dlP),name=`${slug(S.projet.nom)}.${caz?"caz":"json"}`;
+  const ok=await saveFile(name,new Blob([JSON.stringify(data,null,1)],{type:caz?"application/octet-stream":"application/json"}));
+  if(ok){if(T&&typeof ok==="string"){await releaseLock();S.chemin=ok;await takeLock(ok)}S.dirty=false;S.fichier=T&&typeof ok==="string"?pbase(ok):name;persist()}
+}
+function projectData(){const used=new Set();walkP(S.tree,n=>{const a=baseOf(n);if(a)used.add(a.id)});
+  return JSON.stringify({format:"prescrire-projet",version:8,enregistre:new Date().toISOString(),projet:S,bibliotheque:BASE.filter(a=>used.has(a.id))},null,1)}
+async function writeProject(path){
+  try{const c=JSON.parse(projectData());delete c.projet.chemin;await inv("write_text",{path,content:JSON.stringify(c,null,1)});S.dirty=false;S.fichier=pbase(path);persist();touchLock(path);toast("Projet enregistré.")}
+  catch(e){toast("Enregistrement impossible : "+e,6000)}
+}
+/* Verrou : signale aux autres postes qu'un projet est ouvert */
+const lockOf=p=>pjoin(pdir(p),"."+pbase(p)+".verrou");
+async function readLock(p){try{const t=await inv("read_text",{path:lockOf(p)});const l=JSON.parse(t);return l&&l.par?l:null}catch(e){return null}}
+async function takeLock(p){if(!T||!p)return;try{await inv("write_text",{path:lockOf(p),content:JSON.stringify({par:ME,depuis:new Date().toISOString()})})}catch(e){}}
+function touchLock(p){takeLock(p)}
+async function releaseLock(){if(!T||!S||!S.chemin)return;const l=await readLock(S.chemin);if(l&&l.par===ME){try{await inv("remove_file",{path:lockOf(S.chemin)})}catch(e){}}}
+async function openPath(path){
+  try{
+    const l=await readLock(path);
+    const fresh=l&&l.par!==ME&&(Date.now()-new Date(l.depuis).getTime())<12*3600e3;
+    const go=async()=>{const txt=await inv("read_text",{path});await releaseLock();openProjectText(txt,pbase(path),path);await takeLock(path)};
+    if(!fresh)return go();
+    openModal("Projet déjà ouvert",`<p><b>${esc(l.par)}</b> a ouvert « ${esc(pbase(path))} » ${esc(new Date(l.depuis).toLocaleString("fr-FR",{weekday:"long",hour:"2-digit",minute:"2-digit"}))}.</p><p class="hint">Si vous l'enregistrez tous les deux, le dernier enregistrement écrasera l'autre. Coordonnez-vous, ou utilisez « Enregistrer sous… » pour travailler sur une copie.</p>`,
+      `<button class="btn" data-m="cancel">Annuler</button><button class="btn primary" id="lk-go">Ouvrir quand même</button>`);
+    $("#lk-go").onclick=()=>{closeModal();go()};
+  }catch(e){toast("Ouverture impossible : "+e,6000)}
+}
+function openProjectFile(file,path){
+  if(T&&path)return openPath(path);
+  const r=new FileReader();r.onload=()=>openProjectText(r.result,file.name,null);r.readAsText(file);
+}
+function openProjectText(text,name,path){
+  {
+    let d;try{d=JSON.parse(text)}catch(e){return toast("Ce fichier n'est pas un projet Prescrire lisible.")}
+    const p=d&&d.format==="prescrire-projet"?d.projet:d;
+    if(!p||!Array.isArray(p.tree))return toast("Ce fichier n'est pas un projet Prescrire.");
+    let added=0;normBase(d.bibliotheque||p.db||[]).forEach(a=>{if(!BASE.some(z=>norm(z.nom)===norm(a.nom))){BASE.push(a);added++}});
+    if(added)saveBase();
+    S=migrate(p);S.fichier=name;S.chemin=path||null;S.dirty=false;LIVE=null;boot();
+    toast(`Projet ouvert : ${S.projet.nom}${added?` · ${added} article${added>1?"s":""} ajouté${added>1?"s":""} à votre bibliothèque`:""}`,4000);
+  }
+}
+function guardDirty(label,fn){
+  if(!S.dirty)return fn();
+  openModal("Modifications non enregistrées",`<p>Le projet « ${esc(S.projet.nom)} » contient des modifications qui ne sont pas enregistrées dans un fichier.</p>`,
+    `<button class="btn" data-m="cancel">Annuler</button><button class="btn" data-m="save">Enregistrer d'abord</button><button class="btn danger" data-m="go">${esc(label)} sans enregistrer</button>`);
+  $("#m-foot").onclick=async e=>{const b=e.target.closest("[data-m]");if(!b)return;const m=b.dataset.m;closeModal();
+    if(m==="save"){await saveProject();if(!S.dirty)fn()}else if(m==="go")fn()};
+}
+$("#b-save").onclick=()=>saveProject(false);
+$("#b-saveas").onclick=()=>saveProject(true);
+$("#b-open").onclick=()=>guardDirty("Ouvrir",()=>pickFile(".caz,.json",openProjectFile));
+$("#b-new").onclick=()=>{
+  openModal("Nouveau projet",`<fieldset><legend>Point de départ</legend>
+    <label class="opt"><input type="radio" name="nw" value="blank" checked><span><b>Projet vide</b><small>Un lot vide et la liste de lieux par défaut</small></span></label>
+    <label class="opt"><input type="radio" name="nw" value="demo"><span><b>Projet d'exemple</b><small>La maison de ville, pour essayer les fonctions</small></span></label></fieldset>
+    <p class="hint">Votre bibliothèque d'articles est conservée dans les deux cas.</p>`,
+    `<button class="btn" data-m="cancel">Annuler</button><button class="btn primary" data-m="ok">Créer</button>`);
+  $("#m-foot").onclick=e=>{const b=e.target.closest("[data-m]");if(!b)return;if(b.dataset.m==="cancel")return closeModal();
+    const v=document.querySelector('input[name="nw"]:checked').value;closeModal();
+    guardDirty("Créer",async()=>{await releaseLock();if(v==="demo")demoProject();else{S=emptyProject();S.sel=S.tree[0].id}LIVE=null;S.dirty=false;boot();toast(v==="demo"?"Projet d'exemple chargé.":"Nouveau projet créé.")})};
+};
+
+/* ======================================================================
+   Fenêtre générique
+   ====================================================================== */
+let onModalClose=null;
+function openModal(title,body,foot,o={}){
+  $("#m-title").textContent=title;$("#m-sub").textContent=o.sub||"";$("#m-body").innerHTML=body;$("#m-foot").innerHTML=foot||"";
+  $("#m-foot").onclick=null;$("#dlg").className="dlg"+(o.wide?" wide":"");onModalClose=o.onClose||null;$("#modal").hidden=false;
+  const f=$("#m-body").querySelector("input:not([type=radio]):not([type=checkbox]),textarea");if(f&&o.focus!==false)setTimeout(()=>f.focus(),0);
+}
+function closeModal(){$("#modal").hidden=true;$("#m-body").innerHTML="";const f=onModalClose;onModalClose=null;if(f)f()}
+$("#modal").addEventListener("mousedown",e=>{if(e.target.id==="modal")closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#modal").hidden){e.preventDefault();closeModal()}});
+document.addEventListener("keydown",e=>{
+  if(!(e.metaKey||e.ctrlKey)||e.altKey)return;const k=e.key.toLowerCase();
+  if(k==="s"){e.preventDefault();saveProject(e.shiftKey)}
+  else if(k==="o"&&$("#modal").hidden){e.preventDefault();$("#b-open").click()}
+  else if(k==="e"&&$("#modal").hidden){e.preventDefault();openExport()}
+});
+$("#m-foot").addEventListener("click",e=>{const b=e.target.closest('[data-m="cancel"],[data-m="close"]');if(b)closeModal()});
+
+/* ======================================================================
+   Projet : informations, dispositions générales, indices
+   ====================================================================== */
+function nextIndice(i){i=(i||"A").trim();if(/^[A-Y]$/i.test(i))return String.fromCharCode(i.toUpperCase().charCodeAt(0)+1);const m=/^(.*?)(\d+)$/.exec(i);return m?m[1]+(+m[2]+1):i+"1"}
+function openProjet(){
+  const P=S.projet;
+  const idx=S.indices.length?S.indices.slice().reverse().map(x=>`<div class="ir"><b>${esc(x.indice)}</b><span>${esc(x.date)}</span><span class="hint" style="flex:1">${eur(x.ht)} HT</span><button class="btn" data-cmp="${x.id}">Comparer avec l'actuel</button></div>`).join(""):`<div class="ir"><span class="hint">Aucun indice figé pour l'instant.</span></div>`;
+  openModal("Projet",`
+    <div class="f"><label for="pj-nom">Opération</label><input type="text" id="pj-nom" value="${esc(P.nom)}"></div>
+    <div class="grid2"><div class="f"><label for="pj-moa">Maître d'ouvrage</label><input type="text" id="pj-moa" value="${esc(P.moa)}"></div>
+      <div class="f"><label for="pj-adr">Adresse de l'opération</label><input type="text" id="pj-adr" value="${esc(P.adresse)}"></div></div>
+    <div class="grid2"><div class="f"><label for="pj-moe">Maître d'œuvre</label><input type="text" id="pj-moe" value="${esc(P.moe)}" placeholder="Nom de l'agence"></div>
+      <div class="grid2"><div class="f"><label for="pj-ph">Phase</label><select id="pj-ph">${PHASES.map(p=>`<option ${p===P.phase?"selected":""}>${p}</option>`).join("")}</select></div>
+      <div class="f"><label for="pj-ind">Indice en cours</label><input type="text" id="pj-ind" value="${esc(P.indice)}"></div></div></div>
+    <div class="f"><label for="pj-dispo">Dispositions générales (en tête du CCTP, communes à tous les lots)</label><textarea id="pj-dispo" rows="6" placeholder="Objet du CCTP, documents de référence, obligations communes des entreprises…">${esc(P.dispo)}</textarea></div>
+    <fieldset><legend>Indices du dossier</legend>
+      <p class="hint" style="margin:0 0 6px">Figer un indice enregistre une copie du dossier tel qu'il est diffusé. Vous pourrez ensuite voir ce qui a changé.</p>
+      <div class="idx-list">${idx}</div>
+      <div><button class="btn" id="pj-freeze">Figer l'indice ${esc(P.indice||"A")} et passer à l'indice ${esc(nextIndice(P.indice))}</button></div></fieldset>`,
+    `<button class="btn primary" data-m="close">Fermer</button>`,{onClose:()=>{renderHead();renderOut()}});
+  const bind=(id,k)=>$(id).oninput=e=>{P[k]=e.target.value;save()};
+  bind("#pj-nom","nom");bind("#pj-moa","moa");bind("#pj-adr","adresse");bind("#pj-moe","moe");bind("#pj-ind","indice");bind("#pj-dispo","dispo");
+  $("#pj-ph").onchange=e=>{P.phase=e.target.value;save()};
+  $("#pj-freeze").onclick=()=>{
+    reindex();
+    S.indices.push({id:uid(),indice:P.indice||"A",date:today(),ht:S.tree.reduce((s,l)=>s+baseT(l),0),tree:JSON.parse(JSON.stringify(S.tree))});
+    const old=P.indice||"A";P.indice=nextIndice(old);save();closeModal();toast(`Indice ${old} figé le ${today()}. Vous travaillez maintenant sur l'indice ${P.indice}.`,4000);
+  };
+  $("#m-body").onclick=e=>{const b=e.target.closest("[data-cmp]");if(b)showDiff(b.dataset.cmp)};
+}
+$("#b-proj").onclick=openProjet;
+function showDiff(id){
+  const snap=S.indices.find(x=>x.id===id);if(!snap)return;
+  reindex();
+  const mapOld=new Map(),nrOld=new Map();
+  (function w(arr,prefix){arr.forEach((n,i)=>{const nr=prefix?prefix+"."+(i+1):String(i+1).padStart(2,"0");if(n.kind==="g")w(n.children,nr);else{mapOld.set(n.id,n);nrOld.set(n.id,nr)}})})(snap.tree,"");
+  const cur=flatP(S.tree),add=[],mod=[],del=[];
+  const f=(v)=>qf.format(num(v));
+  cur.forEach(n=>{const o=mapOld.get(n.id);if(!o){add.push(n);return}
+    const ch=[];
+    if(o.nom!==n.nom)ch.push(`Intitulé : ${o.nom} → ${n.nom}`);
+    if(r2(num(o.qte))!==r2(num(n.qte)))ch.push(`Quantité : ${f(o.qte)} → ${f(n.qte)} ${n.u}`);
+    if(o.u!==n.u)ch.push(`Unité : ${o.u} → ${n.u}`);
+    if(r2(num(o.prix))!==r2(num(n.prix)))ch.push(`Prix unitaire : ${nf.format(num(o.prix))} → ${nf.format(num(n.prix))} €`);
+    if((o.desc||"")!==(n.desc||""))ch.push("Descriptif modifié");
+    if((o.lieux||[]).join("|")!==n.lieux.join("|"))ch.push(`Localisation : ${(o.lieux||[]).join(", ")||"aucune"} → ${n.lieux.join(", ")||"aucune"}`);
+    if(!!o.pse!==!!n.pse)ch.push(n.pse?"Passée en PSE":"Sortie des PSE");
+    if((o.fin||"")!==(n.fin||"")||!!o.finOn!==!!n.finOn)ch.push("Finition modifiée");
+    if(nrOld.get(n.id)!==IDX[n.id].nr)ch.push(`Numéro : ${nrOld.get(n.id)} → ${IDX[n.id].nr}`);
+    if(ch.length)mod.push([n,ch]);mapOld.delete(n.id)});
+  mapOld.forEach((o,id)=>del.push([o,nrOld.get(id)]));
+  const ht=S.tree.reduce((s,l)=>s+baseT(l),0);
+  const body=`<p>Montant HT : ${eur(snap.ht)} à l'indice ${esc(snap.indice)} → ${eur(ht)} aujourd'hui (${pf.format(snap.ht?(ht-snap.ht)/snap.ht*100:0)} %).</p>
+   <div class="difflist">
+   <h4>Prestations ajoutées (${add.length})</h4>${add.map(n=>`<div class="d"><span>${IDX[n.id].nr}</span><span>${esc(n.nom)}<small>${qf.format(num(n.qte))} ${esc(n.u)} · ${eur(lineT(n))}</small></span></div>`).join("")||'<p class="hint">Aucune</p>'}
+   <h4>Prestations supprimées (${del.length})</h4>${del.map(([o,nr])=>`<div class="d"><span>${nr}</span><span>${esc(o.nom)}</span></div>`).join("")||'<p class="hint">Aucune</p>'}
+   <h4>Prestations modifiées (${mod.length})</h4>${mod.map(([n,ch])=>`<div class="d"><span>${IDX[n.id].nr}</span><span>${esc(n.nom)}${ch.map(c=>`<small>${esc(c)}</small>`).join("")}</span></div>`).join("")||'<p class="hint">Aucune</p>'}
+   </div>`;
+  openModal(`Changements depuis l'indice ${snap.indice}`,body,`<button class="btn" id="df-back">Retour au projet</button><button class="btn primary" data-m="close">Fermer</button>`,{sub:"figé le "+snap.date});
+  $("#df-back").onclick=()=>{closeModal();openProjet()};
+}
+
+/* ======================================================================
+   Lieux : niveaux et dimensions
+   ====================================================================== */
+function openLieux(){
+  const draw=()=>{
+    $("#m-body").innerHTML=`<p class="hint" style="margin:0">Les dimensions servent aux formules de quantité : <b>S</b> surface au sol, <b>P</b> périmètre, <b>H</b> hauteur sous plafond. Exemple pour des murs : P*H-4 (ouvertures déduites).</p>
+    <div style="overflow-x:auto"><table class="lieux"><thead><tr><th style="width:110px">Niveau</th><th>Nom</th><th style="width:96px">Surface m²</th><th style="width:96px">Périmètre ml</th><th style="width:84px">Hauteur m</th><th style="width:96px" class="r">Murs m²</th><th style="width:120px"></th></tr></thead><tbody>
+    ${S.lieux.map((l,i)=>{const used=flatP(S.tree).filter(n=>n.lieux.includes(l.nom)).length;return`<tr data-i="${i}">
+      <td><input type="text" data-k="niv" value="${esc(l.niv)}" list="niv-list" aria-label="Niveau"></td>
+      <td><input type="text" data-k="nom" value="${esc(l.nom)}" aria-label="Nom du lieu"></td>
+      <td><input type="text" inputmode="decimal" class="numin" data-k="s" value="${esc(fmtIn(l.s))}" aria-label="Surface"></td>
+      <td><input type="text" inputmode="decimal" class="numin" data-k="p" value="${esc(fmtIn(l.p))}" aria-label="Périmètre"></td>
+      <td><input type="text" inputmode="decimal" class="numin" data-k="h" value="${esc(fmtIn(l.h))}" aria-label="Hauteur"></td>
+      <td class="calc" data-murs>${num(l.p)&&num(l.h)?qf.format(r2(num(l.p)*num(l.h))):""}</td>
+      <td class="act"><button class="mini" data-mv="-1" title="Monter">↑</button> <button class="mini" data-mv="1" title="Descendre">↓</button> <button class="mini" data-del title="${used?`Utilisé par ${used} prestation(s)`:"Supprimer"}">✕${used?" "+used:""}</button></td></tr>`}).join("")}
+    </tbody></table></div>
+    <datalist id="niv-list">${[...new Set(["Sous-sol","RDC","R+1","R+2","Combles","Extérieur",...S.lieux.map(l=>l.niv).filter(Boolean)])].map(v=>`<option value="${esc(v)}">`).join("")}</datalist>
+    <div><button class="btn" id="lx-add">+ Ajouter un lieu</button></div>`;
+  };
+  openModal("Lieux du projet","",`<span class="x-sum">Les quantités calculées par formule se mettent à jour automatiquement.</span><button class="btn primary" data-m="close">Fermer</button>`,{wide:true,focus:false,onClose:()=>{recalcAll();commit();renderFiche()}});
+  draw();
+  const body=$("#m-body");
+  body.oninput=e=>{const t=e.target,tr=t.closest("tr[data-i]");if(!tr)return;const l=S.lieux[+tr.dataset.i],k=t.dataset.k;
+    if(k==="nom")return;
+    l[k]=k==="niv"?t.value:(t.value.trim()===""?"":num(t.value));
+    tr.querySelector("[data-murs]").textContent=num(l.p)&&num(l.h)?qf.format(r2(num(l.p)*num(l.h))):"";recalcAll();save()};
+  body.addEventListener("change",e=>{const t=e.target,tr=t.closest("tr[data-i]");if(!tr||t.dataset.k!=="nom")return;
+    const l=S.lieux[+tr.dataset.i],old=l.nom,nw=t.value.trim();
+    if(!nw||nw===old){t.value=old;return}
+    if(S.lieux.some(z=>z!==l&&z.nom===nw)){toast("Ce nom de lieu existe déjà.");t.value=old;return}
+    l.nom=nw;walkP(S.tree,n=>{const i=n.lieux.indexOf(old);if(i<0)return;n.lieux[i]=nw;if(old in n.ql){n.ql[nw]=n.ql[old];delete n.ql[old]}if(old in n.qlx){n.qlx[nw]=n.qlx[old];delete n.qlx[old]}});
+    save();toast(`« ${old} » renommé en « ${nw} » dans toutes les prestations.`)});
+  body.onclick=e=>{
+    if(e.target.id==="lx-add"){S.lieux.push({nom:"Nouveau lieu "+(S.lieux.length+1),niv:S.lieux.length?S.lieux[S.lieux.length-1].niv:"",s:"",p:"",h:2.5});save();draw();const ins=body.querySelectorAll('[data-k="nom"]');const last=ins[ins.length-1];last.focus();last.select();return}
+    const tr=e.target.closest("tr[data-i]");if(!tr)return;const i=+tr.dataset.i;
+    const mv=e.target.closest("[data-mv]");if(mv){const j=i+ +mv.dataset.mv;if(j<0||j>=S.lieux.length)return;[S.lieux[i],S.lieux[j]]=[S.lieux[j],S.lieux[i]];save();draw();return}
+    const d=e.target.closest("[data-del]");if(d){
+      const l=S.lieux[i],used=flatP(S.tree).filter(n=>n.lieux.includes(l.nom));
+      if(used.length&&!d.classList.contains("armed")){d.classList.add("armed");d.textContent="Confirmer";d.title=`Retire « ${l.nom} » de ${used.length} prestation(s)`;return}
+      used.forEach(n=>toggleLieu(n,l.nom));S.lieux.splice(i,1);save();draw();
+    }
+  };
+}
+$("#b-lieux").onclick=openLieux;
+
+/* ======================================================================
+   Bibliothèque
+   ====================================================================== */
+const LIB={q:"",lot:"",sel:null};
+function openLib(){
+  openModal("Bibliothèque d'articles","",`
+    <button class="btn" id="lb-imp">Importer depuis Excel…</button><button class="btn" id="lb-exp">Exporter en Excel</button>
+    <span class="sep" style="width:1px;align-self:stretch;background:var(--line)"></span>
+    <button class="btn" id="lb-save">Sauvegarder la bibliothèque</button><button class="btn" id="lb-load">Charger une sauvegarde…</button>
+    <span style="flex:1"></span><button class="btn primary" data-m="close">Fermer</button>`,{wide:true,focus:false,onClose:()=>{renderFiche()}});
+  $("#m-body").innerHTML=`<div class="libloc" id="lb-loc"></div><div class="lib-tools"><input type="search" id="lb-q" placeholder="Rechercher un article…" value="${esc(LIB.q)}" aria-label="Rechercher"><select id="lb-lot" aria-label="Filtrer par lot"></select><button class="btn primary" id="lb-new">+ Nouvel article</button></div>
+    <div class="lib"><div class="lib-list" id="lb-list"></div><div class="lib-edit" id="lb-edit"></div></div>`;
+  libList();libEdit();libStatus();reloadLib();
+  $("#lb-q").oninput=e=>{LIB.q=e.target.value;libList()};
+  $("#lb-lot").onchange=e=>{LIB.lot=e.target.value;libList()};
+  $("#lb-new").onclick=()=>{const a={id:uid(),nom:"Nouvel article",lot:LIB.lot||"",cat:CATS[0],u:"U",prix:0,desc:""};BASE.unshift(a);saveBase();LIB.sel=a.id;LIB.q="";$("#lb-q").value="";libList();libEdit();const i=$("#lb-nom");i.focus();i.select()};
+  $("#lb-list").onclick=e=>{const tr=e.target.closest("tr[data-a]");if(!tr)return;LIB.sel=tr.dataset.a;libList();libEdit()};
+  $("#lb-imp").onclick=()=>pickFile(".xlsx",f=>importLibXlsx(f).catch(err=>toast("Import impossible : "+(err&&err.message||err))));
+  $("#lb-exp").onclick=()=>exportLibXlsx().catch(err=>toast("Export impossible : "+(err&&err.message||err)));
+  $("#lb-save").onclick=()=>saveFile(`Bibliothèque Prescrire ${today().replace(/\//g,"-")}.json`,new Blob([JSON.stringify({format:"prescrire-bibliotheque",version:6,articles:BASE},null,1)],{type:"application/json"}));
+  $("#lb-load").onclick=()=>pickFile(".json,application/json",f=>{const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);const arr=normBase(d.articles||d.bibliotheque||d);let a=0,u=0;arr.forEach(x=>{const z=BASE.find(b=>norm(b.nom)===norm(x.nom));if(z){Object.assign(z,{lot:x.lot||z.lot,cat:x.cat,u:x.u,prix:x.prix,desc:x.desc||z.desc});u++}else{BASE.push(x);a++}});saveBase();libList();libEdit();toast(`${a} article(s) ajouté(s), ${u} mis à jour.`)}catch(e){toast("Ce fichier n'est pas une sauvegarde de bibliothèque.")}};r.readAsText(f)});
+}
+$("#b-lib").onclick=openLib;
+function libStatus(){
+  const el=$("#lb-loc");if(!el)return;
+  if(!T){el.innerHTML=`<span class="hint">Bibliothèque conservée dans ce navigateur · ${BASE.length} articles. Dans l'application Prescrire, elle peut être partagée entre les postes.</span>`;return}
+  el.innerHTML=`<span class="dotc ${LIB_ERR?"bad":""}"></span><span class="hint" style="flex:1;min-width:0;overflow-wrap:anywhere">${LIB_ERR?"Dossier injoignable : "+esc(LIB_ERR)+" · ":""}Bibliothèque ${CFG.libDir?"partagée":"de ce poste"} : <b>${esc(LIB_PATH||"")}</b> · ${BASE.length} articles</span><button class="btn" id="lb-dir">Changer de dossier…</button>${CFG.libDir?'<button class="btn" id="lb-local">Revenir à la bibliothèque de ce poste</button>':""}`;
+  $("#lb-dir").onclick=chooseLibDir;
+  const lo=$("#lb-local");if(lo)lo.onclick=()=>setLibDir(null,"keep");
+}
+async function chooseLibDir(){
+  const dir=await T.dialog.open({directory:true,multiple:false,title:"Dossier de la bibliothèque partagée"});
+  if(!dir)return;
+  const target=pjoin(dir,"bibliotheque-prescrire.json");
+  const exists=await inv("mtime",{path:target}).catch(()=>null);
+  if(!exists)return setLibDir(dir,"push");
+  const txt=await inv("read_text",{path:target}).catch(()=>"");const d=parseLib(txt)||{articles:[]};
+  openModal("Une bibliothèque existe déjà dans ce dossier",`<p>Le dossier contient une bibliothèque de <b>${(d.articles||[]).length} articles</b>. Votre bibliothèque actuelle en compte ${BASE.length}.</p>`,
+    `<button class="btn" data-m="cancel">Annuler</button><button class="btn" id="ld-merge">Y ajouter mes articles</button><button class="btn primary" id="ld-use">Utiliser celle du dossier</button>`);
+  $("#ld-use").onclick=()=>{closeModal();setLibDir(dir,"use")};
+  $("#ld-merge").onclick=()=>{closeModal();setLibDir(dir,"merge")};
+}
+async function setLibDir(dir,mode){
+  CFG.libDir=dir||null;try{await inv("write_text",{path:CFG_PATH,content:JSON.stringify(CFG,null,1)})}catch(e){}
+  await loadSharedLib(mode);openLib();
+  toast(dir?"Bibliothèque partagée : "+dir:"Bibliothèque de ce poste.",4000);
+}
+async function loadSharedLib(mode){
+  LIB_PATH=pjoin(CFG.libDir||DIRS.data,"bibliotheque-prescrire.json");
+  const txt=await inv("read_text",{path:LIB_PATH}).catch(()=>null);
+  const d=txt?parseLib(txt):null;
+  if(d&&mode!=="push"&&mode!=="merge"){BASE=normBase(d.articles);TOMB=[];resnap();LIB_MTIME=await inv("mtime",{path:LIB_PATH}).catch(()=>0)||0;LIB_ERR="";return}
+  if(d&&mode==="merge"){BASE.forEach(a=>{a.maj=a.maj||Date.now();a.par=a.par||ME})}
+  resnap();await flushBase();
+}
+function libLots(){return[...new Set(BASE.map(a=>a.lot).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"fr"))}
+function libList(){
+  const sel=$("#lb-lot");if(sel){const lots=libLots();sel.innerHTML=`<option value="">Tous les lots (${BASE.length})</option>`+lots.map(l=>`<option ${l===LIB.lot?"selected":""} value="${esc(l)}">${esc(l)} (${BASE.filter(a=>a.lot===l).length})</option>`).join("")+`<option value="__none" ${LIB.lot==="__none"?"selected":""}>Sans lot</option>`}
+  const words=norm(LIB.q).split(/\s+/).filter(Boolean);
+  const list=BASE.filter(a=>(!LIB.lot||(LIB.lot==="__none"?!a.lot:a.lot===LIB.lot))&&words.every(w=>norm(a.nom+" "+a.desc).includes(w)))
+    .sort((a,b)=>(a.lot||"~").localeCompare(b.lot||"~","fr")||a.nom.localeCompare(b.nom,"fr"));
+  $("#lb-list").innerHTML=list.length?`<table class="lt"><thead><tr><th>Article</th><th>U</th><th class="r">Prix HT</th></tr></thead><tbody>${list.map(a=>`<tr class="it ${a.id===LIB.sel?"on":""}" data-a="${a.id}"><td>${esc(a.nom)}<div class="lotc">${esc(a.lot||"Sans lot")}</div></td><td>${esc(a.u)}</td><td class="r">${nf.format(a.prix)}</td></tr>`).join("")}</tbody></table>`
+    :`<div class="empty">Aucun article ne correspond.</div>`;
+}
+function libEdit(){
+  const box=$("#lb-edit"),a=BASE.find(x=>x.id===LIB.sel);
+  if(!a){box.innerHTML=`<div class="empty">Sélectionnez un article pour le modifier.<br><br>Pour reprendre vos bordereaux existants, utilisez « Importer depuis Excel » : une colonne Désignation suffit, les colonnes Unité, Prix, Descriptif et Lot sont reconnues si elles existent. Les DPGF exportées par Prescrire s'importent aussi.</div>`;return}
+  const usedIn=flatP(S.tree).filter(n=>n.bid===a.id||norm(n.nom)===norm(a.nom)).length;
+  box.innerHTML=`<div class="f"><label for="lb-nom">Désignation</label><input type="text" id="lb-nom" value="${esc(a.nom)}"></div>
+    <div class="f"><label for="lb-lotf">Lot</label><input type="text" id="lb-lotf" value="${esc(a.lot)}" list="lb-lots"><datalist id="lb-lots">${libLots().map(l=>`<option value="${esc(l)}">`).join("")}</datalist></div>
+    <div class="grid2"><div class="f"><label for="lb-cat">Catégorie</label><select id="lb-cat">${CATS.map(c=>`<option ${c===a.cat?"selected":""}>${c}</option>`).join("")}</select></div>
+    <div class="grid2"><div class="f"><label for="lb-u">Unité</label><select id="lb-u">${[...new Set([...UNITES,a.u])].map(u=>`<option ${u===a.u?"selected":""}>${esc(u)}</option>`).join("")}</select></div>
+    <div class="f"><label for="lb-prix">Prix HT</label><input type="text" inputmode="decimal" class="numin" id="lb-prix" value="${esc(fmtIn(a.prix))}"></div></div></div>
+    <div class="f"><label for="lb-desc">Descriptif</label><textarea id="lb-desc" rows="8">${esc(a.desc)}</textarea></div>
+    ${a.maj?`<p class="hint">Modifié${a.par?" par "+esc(a.par):""} le ${esc(new Date(a.maj).toLocaleString("fr-FR",{day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"}))}.</p>`:""}
+    <p class="hint">${usedIn?`Utilisé dans ce projet (${usedIn} fois). Modifier l'article ici ne change pas les prestations déjà placées.`:"Non utilisé dans ce projet."}</p>
+    <div class="actions"><span style="flex:1"></span><button class="btn danger" id="lb-del">Supprimer l'article</button></div>`;
+  const set=(k,v)=>{a[k]=v;saveBase();libList()};
+  $("#lb-nom").oninput=e=>set("nom",e.target.value);$("#lb-lotf").oninput=e=>set("lot",e.target.value.trim());
+  $("#lb-cat").onchange=e=>set("cat",e.target.value);$("#lb-u").onchange=e=>set("u",e.target.value);
+  $("#lb-prix").oninput=e=>set("prix",num(e.target.value));$("#lb-desc").oninput=e=>{a.desc=e.target.value;saveBase()};
+  let armed=false;$("#lb-del").onclick=e=>{if(!armed){armed=true;e.target.classList.add("armed");e.target.textContent="Confirmer la suppression";return}
+    BASE.splice(BASE.indexOf(a),1);saveBase();LIB.sel=null;libList();libEdit();toast("Article supprimé de la bibliothèque.")};
+}
+const cv=v=>{if(v==null)return"";if(typeof v==="object"){if(v instanceof Date)return v.toLocaleDateString("fr-FR");if("result" in v)return v.result??"";if(v.richText)return v.richText.map(r=>r.text).join("");if(v.text)return v.text;if("formula" in v)return"";}return v};
+const str=v=>String(cv(v)??"").trim();
+const normU=u=>{const t=norm(u).replace(/\./g,"");return({m2:"m²","m²":"m²",m3:"m³","m³":"m³",ml:"ml",u:"U",un:"U",unite:"U",ens:"ens.",ensemble:"ens.",ft:"ft",forfait:"ft",f:"ft",kg:"kg",h:"h",heure:"h"})[t]||(u?String(u).trim():"")};
+async function importLibXlsx(file){
+  if(!needLib("ExcelJS"))return;
+  const wb=new ExcelJS.Workbook();await wb.xlsx.load(await file.arrayBuffer());
+  let added=0,upd=0,sheets=0;
+  wb.eachSheet(ws=>{
+    let hr=0,map={};
+    for(let r=1;r<=Math.min(20,ws.rowCount);r++){const m={};ws.getRow(r).eachCell((c,col)=>{const t=norm(str(c.value));if(!t)return;
+      if(/^(designation|libelle|intitule|nom|article|prestation|ouvrage)/.test(t))m.nom??=col;
+      else if(/^(u|unite|unites)$/.test(t))m.u??=col;
+      else if(/^(pu|p\.u|prix)/.test(t))m.prix??=col;
+      else if(/^(descriptif|description|texte|prescription|cctp)/.test(t))m.desc??=col;
+      else if(/^lot/.test(t))m.lot??=col;
+      else if(/^categ/.test(t))m.cat??=col});
+      if(m.nom){hr=r;map=m;break}}
+    if(!hr)return;sheets++;
+    const sheetLot=/^r[ée]cap/i.test(ws.name)?"":ws.name.replace(/^lot\s*[\d.]+\s*[-–—]?\s*/i,"").trim();
+    for(let r=hr+1;r<=ws.rowCount;r++){
+      const row=ws.getRow(r),nom=str(row.getCell(map.nom).value);
+      if(!nom||/^(sous-total|total|lot\s|prestations suppl|tva)/i.test(nom))continue;
+      const u=map.u?normU(str(row.getCell(map.u).value)):"",prix=map.prix?num(cv(row.getCell(map.prix).value)):0,desc=map.desc?str(row.getCell(map.desc).value):"";
+      if(!u&&!prix&&!desc)continue;
+      const lot=map.lot?str(row.getCell(map.lot).value):sheetLot,cat=map.cat?str(row.getCell(map.cat).value):"";
+      const z=BASE.find(b=>norm(b.nom)===norm(nom));
+      if(z){if(u)z.u=u;if(prix)z.prix=prix;if(desc)z.desc=desc;if(lot)z.lot=lot;if(cat&&CATS.includes(cat))z.cat=cat;upd++}
+      else{BASE.push({id:uid(),nom,lot,cat:CATS.includes(cat)?cat:CATS[0],u:u||"U",prix,desc});added++}
+    }
+  });
+  saveBase();libList();libEdit();
+  if(!sheets)return toast("Aucune colonne « Désignation » trouvée dans ce fichier.",4000);
+  toast(`Import terminé : ${added} article(s) ajouté(s), ${upd} mis à jour.`,4000);
+}
+async function exportLibXlsx(){
+  if(!needLib("ExcelJS"))return;
+  const wb=new ExcelJS.Workbook(),ws=wb.addWorksheet("Bibliothèque",{views:[{state:"frozen",ySplit:1}]});
+  ws.columns=[{header:"Lot",width:26},{header:"Désignation",width:48},{header:"Catégorie",width:22},{header:"U",width:7},{header:"Prix HT",width:12},{header:"Descriptif",width:80}];
+  ws.getRow(1).font={bold:true,name:"Arial",size:10};
+  BASE.slice().sort((a,b)=>(a.lot||"~").localeCompare(b.lot||"~","fr")||a.nom.localeCompare(b.nom,"fr")).forEach(a=>{const r=ws.addRow([a.lot,a.nom,a.cat,a.u,a.prix,a.desc]);r.font={name:"Arial",size:10};r.getCell(5).numFmt='#,##0.00 "€"';r.getCell(6).alignment={wrapText:true,vertical:"top"};r.getCell(2).alignment={wrapText:true,vertical:"top"}});
+  ws.autoFilter="A1:F1";
+  await saveFile(`Bibliothèque Prescrire ${today().replace(/\//g,"-")}.xlsx`,new Blob([await wb.xlsx.writeBuffer()],{type:XLSX_MIME}));
+}
+
+/* ======================================================================
+   Export : DPGF Excel et CCTP Word
+   ====================================================================== */
+function sheetName(t,used){let n=t.replace(/[\[\]:*?\/\\]/g,"-").slice(0,31).trim(),b=n,k=2;while(used.has(n.toLowerCase())){n=b.slice(0,27).trim()+" ("+k++ +")"}used.add(n.toLowerCase());return n}
+async function exportXlsx(mode,lotIds,withRecap){
+  if(!needLib("ExcelJS"))return;
+  reindex();
+  const lots=S.tree.filter(l=>lotIds.includes(l.id));
+  if(!lots.length&&!withRecap)return toast("Choisissez au moins un lot ou le récapitulatif.");
+  const cons=mode==="cons",P=S.projet;
+  const wb=new ExcelJS.Workbook();wb.creator="Prescrire";wb.calcProperties.fullCalcOnLoad=true;
+  const MONEY='#,##0.00 "€"',QTY='#,##0.##',FONT="Arial",ink="FF1B2430",band="FFE6EAEE",pseFill="FFFBEFD5",input="FFFFF6D5",thin={style:"thin",color:{argb:"FFC9D0D8"}};
+  const page={paperSize:9,orientation:"portrait",fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.5,right:.5,top:.6,bottom:.6,header:.3,footer:.3}};
+  const mkPut=ws=>(r,vals,opt={})=>{const row=ws.getRow(r);vals.forEach((v,i)=>{if(v!==undefined&&v!==null)row.getCell(i+1).value=v});row.eachCell({includeEmpty:true},c=>{c.font={name:FONT,size:opt.size||10,bold:!!opt.bold,italic:!!opt.italic,color:{argb:ink}};if(opt.fill)c.fill={type:"pattern",pattern:"solid",fgColor:{argb:opt.fill}}});return row};
+  const title="DPGF — "+(cons?"dossier de consultation des entreprises":"estimation du maître d'œuvre");
+  const sub=[P.adresse,P.moa?"Maître d'ouvrage : "+P.moa:"",P.moe?"Maître d'œuvre : "+P.moe:""].filter(Boolean).join(" · ");
+  const foot=ws=>{ws.headerFooter.oddFooter="&L"+(P.nom||"").replace(/&/g,"&&")+" · "+indTxt()+"&C&A&RPage &P / &N"};
+  const used=new Set(["récapitulatif"]),links=[];
+  const anyPSE=lots.some(l=>hasMode(l,true));
+  lots.forEach(l=>{
+    const nr=IDX[l.id].nr,name=sheetName("Lot "+nr+" "+l.nom,used);
+    const ws=wb.addWorksheet(name,{pageSetup:page,views:[{state:"frozen",ySplit:7}]});foot(ws);
+    ws.columns=[{width:11},{width:50},{width:26},{width:7},{width:10},{width:13},{width:15},{width:12,hidden:true}];
+    const put=mkPut(ws);
+    put(1,[P.nom],{size:14,bold:true});put(2,[sub]);put(3,[title+" · "+indTxt()],{bold:true});
+    put(4,["Lot "+nr+" — "+l.nom.toUpperCase()],{bold:true,size:12});
+    put(5,[cons?"Entreprise : ":"Établi le "+today()]);
+    if(cons){const c=ws.getCell("B6");c.value="Les cases jaunes (PU HT) sont à compléter par l'entreprise ; les totaux se calculent automatiquement.";c.font={name:FONT,size:9,italic:true,color:{argb:"FF5B6674"}}}
+    const H=put(7,["N°","Désignation","Localisation","U","Qté","PU HT","Total HT","Réf."],{bold:true,fill:band});
+    H.eachCell(c=>{c.border={bottom:{style:"medium",color:{argb:ink}}};c.alignment={vertical:"middle",horizontal:c.col>=4?"center":"left"}});
+    let r=8;
+    const rec=(arr,pse)=>arr.forEach(n=>{
+      if(n.kind==="g"){if(hasMode(n,pse)){put(r,[IDX[n.id].nr,n.nom],{bold:true,italic:true});r++;rec(n.children,pse)}return}
+      if(!!n.pse!==pse)return;
+      const row=put(r,[IDX[n.id].nr,n.nom||"Prestation sans nom",locTxt(n),n.u,n.qte===""?null:num(n.qte),null,null,n.id]);
+      const pu=row.getCell(6),t=row.getCell(7);
+      if(cons){pu.value=null;pu.fill={type:"pattern",pattern:"solid",fgColor:{argb:input}}}else pu.value=num(n.prix);
+      t.value={formula:`IF(F${r}="","",E${r}*F${r})`,result:cons?"":lineT(n)};
+      row.getCell(5).numFmt=QTY;pu.numFmt=MONEY;t.numFmt=MONEY;row.getCell(8).font={name:FONT,size:8,color:{argb:"FF9AA3AE"}};
+      for(let i=1;i<=7;i++){const c=row.getCell(i);c.alignment={vertical:"top",wrapText:i===2||i===3,horizontal:i===4?"center":undefined};c.border={bottom:thin}}
+      r++;
+    });
+    const start=r;rec(l.children,false);
+    const st=put(r,[null,"Sous-total lot "+nr],{bold:true});
+    st.getCell(7).value={formula:r>start?`SUM(G${start}:G${r-1})`:"0",result:cons?0:baseT(l)};st.getCell(7).numFmt=MONEY;
+    for(let i=1;i<=7;i++)st.getCell(i).border={top:{style:"thin",color:{argb:ink}}};
+    const link={l,name,row:r,pseRow:null};r++;
+    if(hasMode(l,true)){
+      r++;put(r,[null,"PRESTATIONS SUPPLÉMENTAIRES ÉVENTUELLES (PSE)"],{bold:true,fill:pseFill});r++;
+      const ps=r;rec(l.children,true);
+      const sp=put(r,[null,"Sous-total PSE lot "+nr],{bold:true});
+      sp.getCell(7).value={formula:r>ps?`SUM(G${ps}:G${r-1})`:"0",result:cons?0:pseT(l)};sp.getCell(7).numFmt=MONEY;
+      for(let i=1;i<=7;i++)sp.getCell(i).border={top:{style:"thin",color:{argb:ink}}};
+      link.pseRow=r;r++;
+    }
+    links.push(link);
+  });
+  if(withRecap){
+    const rc=wb.addWorksheet("Récapitulatif",{pageSetup:page});foot(rc);
+    const src=links.length?links:S.tree.map(l=>({l}));
+    const pse=links.length?anyPSE:S.tree.some(l=>hasMode(l,true));
+    rc.columns=[{width:10},{width:48},{width:18},{width:18}];
+    const put=mkPut(rc);
+    put(1,[P.nom],{size:14,bold:true});put(2,[sub]);put(3,["Récapitulatif — "+title.slice(7)+" · "+indTxt()],{bold:true});
+    put(4,[cons?"Entreprise : ":"Établi le "+today()]);
+    put(6,["Lot","Désignation","Montant HT",pse?"PSE HT":null],{bold:true,fill:band}).eachCell(c=>c.border={bottom:{style:"medium",color:{argb:ink}}});
+    let k=7;
+    const cell=(c,link,row,val)=>{if(link&&row)c.value={formula:`'${link.replace(/'/g,"''")}'!G${row}`,result:cons?0:val};else if(cons)c.fill={type:"pattern",pattern:"solid",fgColor:{argb:input}};else c.value=val;c.numFmt=MONEY};
+    src.forEach(({l,name,row,pseRow})=>{
+      const x=put(k,[IDX[l.id].nr,l.nom]);cell(x.getCell(3),name,row,baseT(l));
+      if(pse){if(hasMode(l,true))cell(x.getCell(4),name,pseRow,pseT(l))}
+      for(let i=1;i<=(pse?4:3);i++)x.getCell(i).border={bottom:thin};k++;
+    });
+    const ht=src.reduce((s,{l})=>s+baseT(l),0),pt=src.reduce((s,{l})=>s+pseT(l),0),last=k-1,rHT=k+1,rT=k+2,rTV=k+3,rTTC=k+4;
+    const a=put(rHT,[null,"Total HT"],{bold:true});a.getCell(3).value={formula:`SUM(C7:C${last})`,result:cons?0:ht};a.getCell(3).numFmt=MONEY;
+    const b=put(rT,[null,"Taux de TVA"]);b.getCell(3).value=S.tva/100;b.getCell(3).numFmt="0.0%";
+    const c=put(rTV,[null,"Montant TVA"]);c.getCell(3).value={formula:`C${rHT}*C${rT}`,result:cons?0:ht*S.tva/100};c.getCell(3).numFmt=MONEY;
+    const d=put(rTTC,[null,"Total TTC"],{bold:true,size:11});d.getCell(3).value={formula:`C${rHT}+C${rTV}`,result:cons?0:ht*(1+S.tva/100)};d.getCell(3).numFmt=MONEY;
+    if(pse){
+      a.getCell(4).value={formula:`SUM(D7:D${last})`,result:cons?0:pt};a.getCell(4).numFmt=MONEY;
+      c.getCell(4).value={formula:`D${rHT}*C${rT}`,result:cons?0:pt*S.tva/100};c.getCell(4).numFmt=MONEY;
+      d.getCell(4).value={formula:`D${rHT}+D${rTV}`,result:cons?0:pt*(1+S.tva/100)};d.getCell(4).numFmt=MONEY;
+    }
+    for(let i=1;i<=(pse?4:3);i++)d.getCell(i).border={top:{style:"medium",color:{argb:ink}}};
+    let nr=rTTC+2;
+    if(links.length&&links.length<S.tree.length){const n=rc.getCell(`B${nr}`);n.value="Récapitulatif limité aux lots inclus dans ce classeur.";n.font={name:FONT,size:9,italic:true,color:{argb:"FF5B6674"}};nr++}
+    if(pse){const n=rc.getCell(`B${nr}`);n.value="Les PSE sont chiffrées à part et ne sont pas comprises dans le montant de base.";n.font={name:FONT,size:9,italic:true,color:{argb:"FF5B6674"}};nr++}
+    if(cons)put(nr+2,[null,"Cachet et signature de l'entreprise :"]);
+  }
+  wb.views=[{activeTab:0}];
+  const buf=await wb.xlsx.writeBuffer();
+  const scope=lots.length===S.tree.length?"":lots.length?" - lot"+(lots.length>1?"s ":" ")+lots.map(l=>IDX[l.id].nr).join(", "):" - récapitulatif";
+  await saveFile(`${slug(P.nom)} - DPGF ${cons?"consultation":"MOA"}${scope} - ind ${P.indice||"A"}.xlsx`,new Blob([buf],{type:XLSX_MIME}));
+}
+
+/* CCTP au format Word (.docx), écrit directement en WordprocessingML */
+const xe=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,"");
+function wRun(t,o={}){const pr=(o.b?"<w:b/>":"")+(o.i?"<w:i/>":"")+(o.caps?"<w:caps/>":"")+(o.color?`<w:color w:val="${o.color}"/>`:"")+(o.sz?`<w:sz w:val="${o.sz}"/><w:szCs w:val="${o.sz}"/>`:"");
+  return String(t??"").split("\n").map((line,i)=>(i?"<w:r><w:br/></w:r>":"")+`<w:r>${pr?`<w:rPr>${pr}</w:rPr>`:""}<w:t xml:space="preserve">${xe(line)}</w:t></w:r>`).join("")}
+function wP(content,o={}){const pp=(o.style?`<w:pStyle w:val="${o.style}"/>`:"")+(o.keep?"<w:keepNext/>":"")+(o.br?"<w:pageBreakBefore/>":"")+(o.sp?`<w:spacing w:before="${o.sp[0]}" w:after="${o.sp[1]}"/>`:"")+(o.jc?`<w:jc w:val="${o.jc}"/>`:"");
+  return`<w:p>${pp?`<w:pPr>${pp}</w:pPr>`:""}${content}</w:p>`}
+const wParas=(text,o)=>String(text||"").split(/\n+/).filter(t=>t.trim()).map(t=>wP(wRun(t),o)).join("");
+async function exportDocx(lotIds){
+  if(!needLib("JSZip"))return;
+  reindex();
+  const P=S.projet,lots=S.tree.filter(l=>lotIds.includes(l.id));
+  if(!lots.length)return toast("Choisissez au moins un lot.");
+  const all=lots.length===S.tree.length;
+  let b="";
+  b+=wP("",{sp:[2400,0]});
+  b+=wP(wRun(P.nom||"Opération",{b:true,sz:44}),{jc:"center",sp:[0,200]});
+  if(P.adresse)b+=wP(wRun(P.adresse,{sz:24}),{jc:"center"});
+  if(P.moa)b+=wP(wRun("Maître d'ouvrage : "+P.moa,{sz:22}),{jc:"center",sp:[120,0]});
+  b+=wP("",{sp:[1200,0]});
+  b+=wP(wRun("CAHIER DES CLAUSES TECHNIQUES PARTICULIÈRES",{b:true,sz:30,color:"1D4F91"}),{jc:"center",sp:[0,120]});
+  b+=wP(wRun(all?"Tous lots":lots.map(l=>"Lot "+IDX[l.id].nr+" — "+l.nom).join("\n"),{sz:24}),{jc:"center"});
+  b+=wP("",{sp:[1600,0]});
+  b+=wP(wRun([P.phase,"Indice "+(P.indice||"A"),today()].filter(Boolean).join(" · "),{sz:22}),{jc:"center"});
+  if(P.moe)b+=wP(wRun("Maître d'œuvre : "+P.moe,{sz:22}),{jc:"center",sp:[120,0]});
+  b+=wP(wRun("Sommaire",{b:true,sz:28}),{br:true,sp:[0,240]});
+  b+=`<w:p><w:r><w:fldChar w:fldCharType="begin" w:dirty="true"/></w:r><w:r><w:instrText xml:space="preserve"> TOC \\o "1-2" \\h \\z \\u </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t xml:space="preserve">Le sommaire se met à jour à l'ouverture. Sinon : clic droit, puis « Mettre à jour les champs ».</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r></w:p>`;
+  let first=true;
+  if(P.dispo){b+=wP(wRun("Dispositions générales"),{style:"Heading1",br:true});b+=wParas(P.dispo);first=false}
+  const rec=arr=>arr.map(n=>{const nr=IDX[n.id].nr;
+    if(n.kind==="g")return wP(wRun(nr+"  "+n.nom),{style:"Heading2"})+(n.intro?wParas(n.intro,{style:"Intro"}):"")+rec(n.children);
+    let h=wP(wRun(nr+"  "+(n.nom||"Prestation sans nom"))+(n.pse?wRun("   (PSE)",{color:"8A5A00"}):""),{style:"Heading3"});
+    if(n.desc)h+=wParas(n.desc);
+    if(n.lieux.length)h+=wP(wRun("Localisation : ",{b:true})+wRun(locTxt(n)),{style:"Meta"});
+    if(n.finOn&&n.fin)h+=wP(wRun("Finition : ",{b:true})+wRun(n.fin),{style:"Meta"});
+    h+=wP(wRun("Unité de compte : ",{b:true})+wRun(n.u)+(n.pse?wRun(" · Prestation supplémentaire éventuelle, chiffrée à part."):""),{style:"Meta"});
+    return h;
+  }).join("");
+  lots.forEach(l=>{b+=wP(wRun("Lot "+IDX[l.id].nr+" — "+l.nom),{style:"Heading1",br:true});first=false;if(l.intro)b+=wParas(l.intro,{style:"Intro"});b+=rec(l.children)});
+  const NS='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
+  const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${b}<w:sectPr><w:headerReference w:type="default" r:id="rId10"/><w:headerReference w:type="first" r:id="rId12"/><w:footerReference w:type="first" r:id="rId13"/><w:footerReference w:type="default" r:id="rId11"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1418" w:right="1247" w:bottom="1418" w:left="1247" w:header="567" w:footer="567" w:gutter="0"/><w:titlePg/></w:sectPr></w:body></w:document>`;
+  const hdr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}>${wP(wRun((P.nom||"")+" — CCTP — "+indTxt()),{style:"Header"})}</w:hdr>`;
+  const ftr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr ${NS}><w:p><w:pPr><w:pStyle w:val="Footer"/><w:tabs><w:tab w:val="right" w:pos="9412"/></w:tabs></w:pPr>${wRun(P.moe||"")}<w:r><w:tab/></w:r>${wRun("Page ")}<w:fldSimple w:instr=" PAGE "><w:r><w:t>1</w:t></w:r></w:fldSimple>${wRun(" / ")}<w:fldSimple w:instr=" NUMPAGES "><w:r><w:t>1</w:t></w:r></w:fldSimple></w:p></w:ftr>`;
+  const st=(id,name,ppr,rpr,o="")=>`<w:style w:type="paragraph" w:styleId="${id}"><w:name w:val="${name}"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/>${o}<w:qFormat/><w:pPr>${ppr}</w:pPr><w:rPr>${rpr}</w:rPr></w:style>`;
+  const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ${NS}>
+<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Arial" w:cs="Arial"/><w:sz w:val="20"/><w:szCs w:val="20"/><w:lang w:val="fr-FR"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="80" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>
+<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/><w:pPr><w:jc w:val="both"/></w:pPr></w:style>
+${st("Heading1","heading 1",'<w:keepNext/><w:spacing w:before="0" w:after="240"/><w:pBdr><w:bottom w:val="single" w:sz="8" w:space="4" w:color="1B2430"/></w:pBdr><w:jc w:val="left"/><w:outlineLvl w:val="0"/>','<w:b/><w:caps/><w:color w:val="1D4F91"/><w:sz w:val="28"/><w:szCs w:val="28"/>')}
+${st("Heading2","heading 2",'<w:keepNext/><w:spacing w:before="320" w:after="120"/><w:jc w:val="left"/><w:outlineLvl w:val="1"/>','<w:b/><w:sz w:val="24"/><w:szCs w:val="24"/>')}
+${st("Heading3","heading 3",'<w:keepNext/><w:spacing w:before="240" w:after="60"/><w:jc w:val="left"/><w:outlineLvl w:val="2"/>','<w:b/><w:sz w:val="21"/><w:szCs w:val="21"/>')}
+${st("Meta","Prescrire - mention",'<w:spacing w:before="0" w:after="20"/><w:jc w:val="left"/>','<w:color w:val="4A5563"/><w:sz w:val="18"/><w:szCs w:val="18"/>')}
+${st("Intro","Prescrire - généralités",'<w:spacing w:after="120"/>','<w:i/>')}
+${st("Header","header",'<w:pBdr><w:bottom w:val="single" w:sz="4" w:space="4" w:color="9AA3AE"/></w:pBdr><w:jc w:val="left"/>','<w:color w:val="5B6674"/><w:sz w:val="16"/><w:szCs w:val="16"/>')}
+${st("Footer","footer",'<w:jc w:val="left"/>','<w:color w:val="5B6674"/><w:sz w:val="16"/><w:szCs w:val="16"/>')}
+${st("TOC1","toc 1",'<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9402"/></w:tabs><w:spacing w:before="120" w:after="40"/><w:jc w:val="left"/>','<w:b/>')}
+${st("TOC2","toc 2",'<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9402"/></w:tabs><w:spacing w:after="20"/><w:ind w:left="300"/><w:jc w:val="left"/>','')}
+</w:styles>`;
+  const z=new JSZip();
+  z.file("[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/header2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`);
+  z.file("_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>`);
+  z.file("docProps/core.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xe("CCTP — "+(P.nom||""))}</dc:title><dc:creator>${xe(P.moe||"Prescrire")}</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">${new Date().toISOString().slice(0,19)}Z</dcterms:created></cp:coreProperties>`);
+  z.file("word/_rels/document.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId10" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/><Relationship Id="rId11" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/><Relationship Id="rId12" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header2.xml"/><Relationship Id="rId13" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer2.xml"/></Relationships>`);
+  z.file("word/document.xml",doc);z.file("word/styles.xml",styles);
+  z.file("word/settings.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings ${NS}><w:updateFields w:val="true"/><w:defaultTabStop w:val="708"/><w:themeFontLang w:val="fr-FR"/></w:settings>`);
+  z.file("word/header1.xml",hdr);z.file("word/footer1.xml",ftr);
+  z.file("word/header2.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}><w:p/></w:hdr>`);z.file("word/footer2.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr ${NS}><w:p/></w:ftr>`);
+  const blob=await z.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
+  const scope=all?"":" - lot"+(lots.length>1?"s ":" ")+lots.map(l=>IDX[l.id].nr).join(", ");
+  await saveFile(`${slug(P.nom)} - CCTP${scope} - ind ${P.indice||"A"}.docx`,blob);
+}
+
+/* Fenêtre d'export unique */
+const X={doc:"dpgf",type:"moa",scope:"all",lots:new Set(),recap:true};
+function openExport(){
+  reindex();
+  if(!S.tree.length)return toast("Aucun lot à exporter.");
+  if(!X.lots.size){const sel=S.sel&&IDX[S.sel]?rootOf(S.sel):null;if(sel)X.lots.add(sel.id)}
+  [...X.lots].forEach(id=>{if(!IDX[id])X.lots.delete(id)});
+  if(S.tab==="cctp")X.doc="docx";else if(S.tab==="dpgf")X.doc="dpgf";
+  openModal("Exporter",`
+    <fieldset><legend>Document</legend><div class="optrow">
+      <label class="opt"><input type="radio" name="x-doc" value="dpgf" ${X.doc==="dpgf"?"checked":""}><span><b>DPGF</b><small>Classeur Excel, un onglet par lot</small></span></label>
+      <label class="opt"><input type="radio" name="x-doc" value="docx" ${X.doc==="docx"?"checked":""}><span><b>CCTP</b><small>Document Word avec page de garde et sommaire</small></span></label></div></fieldset>
+    <fieldset id="x-dest"><legend>Destinataire</legend><div class="optrow">
+      <label class="opt"><input type="radio" name="x-type" value="moa" ${X.type==="moa"?"checked":""}><span><b>Maître d'ouvrage</b><small>Prix et montants de l'estimation</small></span></label>
+      <label class="opt"><input type="radio" name="x-type" value="cons" ${X.type==="cons"?"checked":""}><span><b>Entreprises</b><small>Prix unitaires vides, totaux par formules</small></span></label></div></fieldset>
+    <fieldset><legend>Contenu</legend><div class="optrow">
+      <label class="opt"><input type="radio" name="x-scope" value="all" ${X.scope==="all"?"checked":""}><span><b>Tous les lots</b></span></label>
+      <label class="opt"><input type="radio" name="x-scope" value="some" ${X.scope==="some"?"checked":""}><span><b>Lots choisis</b></span></label></div>
+      <div class="lotlist" id="x-lots">${S.tree.map(l=>`<label><input type="checkbox" data-xl="${l.id}"><span class="n">${IDX[l.id].nr}</span><span>${esc(l.nom)}</span><span class="a">${nf.format(baseT(l))}</span></label>`).join("")}
+        <label class="recap-opt" id="x-recapl"><input type="checkbox" id="x-recap" ${X.recap?"checked":""}><span class="n">Σ</span><span>Récapitulatif (total HT, TVA, TTC)</span><span></span></label></div></fieldset>`,
+    `<span class="x-sum" id="x-sum"></span><button class="btn" data-m="cancel">Annuler</button><button class="btn primary" id="x-go">Exporter</button>`,{focus:false});
+  const body=$("#m-body");
+  const sync=()=>{
+    const all=X.scope==="all",docx=X.doc==="docx";
+    $("#x-dest").hidden=docx;$("#x-recapl").hidden=docx;
+    body.querySelectorAll("[data-xl]").forEach(c=>{c.checked=all||X.lots.has(c.dataset.xl);c.disabled=all;c.closest("label").style.opacity=all?.55:1});
+    const ids=[...body.querySelectorAll("[data-xl]:checked")].map(c=>c.dataset.xl),rc=!docx&&$("#x-recap").checked;
+    const parts=[...ids.map(id=>"Lot "+IDX[id].nr),...(rc?["Récapitulatif"]:[])],n=parts.length;
+    $("#x-sum").textContent=!n?"Rien de sélectionné":docx?`Un document Word : ${ids.length===S.tree.length?"tous les lots":parts.join(", ")}`:`Un classeur de ${n} onglet${n>1?"s":""} : ${parts.join(", ")}`;
+    $("#x-go").disabled=!(docx?ids.length:n);
+  };
+  body.onchange=e=>{const t=e.target;
+    if(t.name==="x-doc")X.doc=t.value;if(t.name==="x-type")X.type=t.value;if(t.name==="x-scope")X.scope=t.value;
+    if(t.dataset.xl)t.checked?X.lots.add(t.dataset.xl):X.lots.delete(t.dataset.xl);
+    if(t.id==="x-recap")X.recap=t.checked;sync()};
+  sync();
+  $("#x-go").onclick=()=>{
+    const ids=[...body.querySelectorAll("[data-xl]:checked")].map(c=>c.dataset.xl),rc=$("#x-recap").checked;closeModal();
+    const p=X.doc==="docx"?exportDocx(ids):exportXlsx(X.type,ids,rc);
+    p.catch(e=>toast("Export impossible : "+(e&&e.message||e),5000));
+  };
+}
+$("#b-export").onclick=openExport;
+
+/* ======================================================================
+   Analyse des offres
+   ====================================================================== */
+const SEUIL=20;
+const covered=(o,l)=>flatP([l]).some(n=>o.pu[n.id]!=null);
+const oLine=(o,n)=>o.pu[n.id]!=null?num(o.pu[n.id])*num(n.qte):null;
+const oBase=(o,l)=>flatP([l]).reduce((s,n)=>s+(n.pse?0:(oLine(o,n)||0)),0);
+const oPse=(o,l)=>flatP([l]).reduce((s,n)=>s+(n.pse?(oLine(o,n)||0):0),0);
+function ecart(v,ref){if(!ref)return"";const p=(v-ref)/ref*100,c=p<-SEUIL?"lo":p>SEUIL?"hi":"eq";return`<span class="ec ${c}">${pf.format(p)} %</span>`}
+function offresHTML(){
+  const O=S.offres;
+  let h=`<div class="out-tools" style="border-bottom:1px solid var(--line-soft)"><button class="btn primary" id="of-imp">Importer une offre…</button>
+    ${O.map(o=>`<span class="offchip">${esc(o.nom)}<button data-of="${o.id}" title="Renommer ou retirer">Modifier</button></span>`).join("")}
+    <span style="flex:1"></span>${O.length?'<button class="btn" id="of-exp">Exporter l\'analyse</button>':""}</div>`;
+  if(!O.length)return h+`<div class="empty"><p><b>Analyse des offres</b></p><p>1. Exportez la DPGF « Entreprises » et envoyez-la aux entreprises consultées.<br>2. Quand elles vous la renvoient remplie, importez chaque fichier ici.<br>3. Prescrire compare chaque prix à votre estimation, ligne par ligne, et signale les écarts de plus de ${SEUIL} % et les prix manquants.</p></div>`;
+  reindex();
+  if(S.olot!=="synth"&&!IDX[S.olot])S.olot="synth";
+  h+=`<div class="lotbar"><button class="chip" data-olot="synth" aria-pressed="${S.olot==="synth"}">Synthèse</button>${S.tree.map(l=>`<button class="chip" data-olot="${l.id}" aria-pressed="${S.olot===l.id}">${IDX[l.id].nr} ${esc(l.nom)}</button>`).join("")}</div>`;
+  h+=`<div class="legend"><span><i style="background:var(--ok-soft);border:1px solid var(--ok)"></i>Moins-disant</span><span><i style="background:var(--danger)"></i>Plus de ${SEUIL} % sous l'estimation</span><span><i style="background:var(--warn)"></i>Plus de ${SEUIL} % au-dessus</span><span><i style="background:var(--danger-soft);border:1px solid var(--danger)"></i>Prix manquant</span></div>`;
+  const ths=O.map(o=>`<th class="r">${esc(o.nom)}</th>`).join("");
+  if(S.olot==="synth"){
+    let rows="";const tot=O.map(()=>0);let te=0;
+    S.tree.forEach(l=>{const est=baseT(l);te+=est;const vals=O.map(o=>covered(o,l)?oBase(o,l):null);const ok=vals.filter(v=>v!=null);const best=ok.length?Math.min(...ok):null;
+      vals.forEach((v,i)=>{if(v!=null)tot[i]+=v});
+      rows+=`<tr class="art" data-olot="${l.id}"><td class="n">${IDX[l.id].nr}</td><td>${esc(l.nom)}</td><td class="r">${nf.format(est)}</td>${vals.map(v=>v==null?`<td class="r hint">non chiffré</td>`:`<td class="r ${v===best&&ok.length>1?"best":""}">${nf.format(v)}${ecart(v,est)}</td>`).join("")}</tr>`});
+    const pseEst=S.tree.reduce((s,l)=>s+pseT(l),0);
+    return h+`<div class="tblwrap"><table class="dpgf"><thead><tr><th>Lot</th><th>Désignation</th><th class="r">Estimation</th>${ths}</tr></thead><tbody>${rows}
+      <tr class="tot st"><td></td><td>Total HT des lots chiffrés</td><td class="r">${nf.format(te)}</td>${tot.map(v=>`<td class="r">${nf.format(v)}${ecart(v,te)}</td>`).join("")}</tr>
+      ${pseEst?`<tr><td></td><td>PSE (pour mémoire)</td><td class="r">${nf.format(pseEst)}</td>${O.map(o=>`<td class="r">${nf.format(S.tree.reduce((s,l)=>s+oPse(o,l),0))}</td>`).join("")}</tr>`:""}
+      </tbody></table></div><p class="hint" style="padding:0 12px 20px">Les écarts du total ne portent que sur les lots chiffrés par chaque entreprise ; comparez lot par lot si les entreprises n'ont pas répondu aux mêmes lots.</p>`;
+  }
+  const l=IDX[S.olot].n,cov=O.map(o=>covered(o,l));
+  const row=n=>{const ref=num(n.prix),pus=O.map(o=>o.pu[n.id]!=null?num(o.pu[n.id]):null),ok=pus.filter(v=>v!=null),best=ok.length>1?Math.min(...ok):null;
+    return`<tr class="art"><td class="n">${IDX[n.id].nr}</td><td>${esc(n.nom)} ${n.pse?'<span class="pse">PSE</span>':""}<div class="hint">${qf.format(num(n.qte))} ${esc(n.u)}</div></td><td class="r">${nf.format(ref)}</td>`+
+      pus.map((v,i)=>!cov[i]?`<td class="r hint">—</td>`:v==null?`<td class="miss">manquant</td>`:(()=>{const p=ref?(v-ref)/ref*100:0;return`<td class="r ${v===best?"best":""} ${p<-SEUIL?"flag-lo":p>SEUIL?"flag-hi":""}">${nf.format(v)}${ecart(v,ref)}</td>`})()).join("")+`</tr>`};
+  const arts=flatP([l]);
+  const base=arts.filter(n=>!n.pse),pse=arts.filter(n=>n.pse);
+  return h+`<div class="tblwrap"><table class="dpgf"><thead><tr><th>N°</th><th>Désignation</th><th class="r">PU estim.</th>${ths}</tr></thead><tbody>
+    <tr class="lot"><td class="n">${IDX[l.id].nr}</td><td colspan="${2+O.length}">${esc(l.nom)} · prix unitaires HT</td></tr>${base.map(row).join("")}
+    <tr class="st"><td></td><td>Total HT du lot</td><td class="r">${nf.format(baseT(l))}</td>${O.map((o,i)=>cov[i]?`<td class="r">${nf.format(oBase(o,l))}${ecart(oBase(o,l),baseT(l))}</td>`:`<td class="r hint">non chiffré</td>`).join("")}</tr>
+    ${pse.length?`<tr class="psehead"><td></td><td colspan="${2+O.length}">Prestations supplémentaires éventuelles</td></tr>${pse.map(row).join("")}<tr class="st"><td></td><td>Total PSE</td><td class="r">${nf.format(pseT(l))}</td>${O.map((o,i)=>cov[i]?`<td class="r">${nf.format(oPse(o,l))}</td>`:`<td></td>`).join("")}</tr>`:""}
+    </tbody></table></div>`;
+}
+function bindOffres(){
+  const o=$("#out");
+  const imp=$("#of-imp");if(imp)imp.onclick=()=>pickFile(".xlsx",f=>importOffre(f).catch(e=>toast("Import impossible : "+(e&&e.message||e),5000)));
+  const ex=$("#of-exp");if(ex)ex.onclick=()=>exportAnalyse().catch(e=>toast("Export impossible : "+(e&&e.message||e),5000));
+  o.onclick=e=>{
+    if(S.tab!=="off")return;
+    const c=e.target.closest("[data-olot]");if(c){S.olot=c.dataset.olot;persist();renderOut();return}
+    const b=e.target.closest("[data-of]");if(b)editOffre(b.dataset.of);
+  };
+}
+function editOffre(id){
+  const of=S.offres.find(x=>x.id===id);if(!of)return;
+  const n=Object.keys(of.pu).length;
+  openModal("Offre",`<div class="f"><label for="of-nom">Entreprise</label><input type="text" id="of-nom" value="${esc(of.nom)}"></div><p class="hint">Fichier : ${esc(of.fichier)} · importé le ${esc(of.date)} · ${n} prix reconnus.</p>`,
+    `<button class="btn danger" id="of-del">Retirer cette offre</button><span style="flex:1"></span><button class="btn primary" data-m="close">Fermer</button>`,{onClose:()=>renderOut()});
+  $("#of-nom").oninput=e=>{of.nom=e.target.value;save()};
+  let armed=false;$("#of-del").onclick=e=>{if(!armed){armed=true;e.target.classList.add("armed");e.target.textContent="Confirmer";return}S.offres.splice(S.offres.indexOf(of),1);save();closeModal()};
+}
+async function importOffre(file){
+  if(!needLib("ExcelJS"))return;
+  reindex();
+  const wb=new ExcelJS.Workbook();await wb.xlsx.load(await file.arrayBuffer());
+  const pu={};let nom="",found=0,byNr=0;
+  const arts=flatP(S.tree);
+  wb.eachSheet(ws=>{
+    if(/^r[ée]cap/i.test(ws.name))return;
+    for(let r=1;r<=6;r++){const a=str(ws.getCell("A"+r).value),m=/^entreprise\s*:\s*(.*)$/i.exec(a);if(m){nom=nom||m[1].trim()||str(ws.getCell("B"+r).value)||str(ws.getCell("C"+r).value)}}
+    let hr=0;for(let r=1;r<=20;r++){if(/^n/i.test(norm(str(ws.getCell("A"+r).value)))&&/design/.test(norm(str(ws.getCell("B"+r).value)))){hr=r;break}}
+    if(!hr)return;
+    const lotNr=(/^lot\s*(\d+)/i.exec(ws.name)||[])[1];
+    for(let r=hr+1;r<=ws.rowCount;r++){
+      const raw=cv(ws.getCell("F"+r).value);if(raw===""||raw==null)continue;
+      const v=num(raw);
+      let id=str(ws.getCell("H"+r).value);
+      if(!(id&&IDX[id]&&IDX[id].n.kind==="p")){
+        const nr=str(ws.getCell("A"+r).value);if(!nr)continue;
+        const hit=arts.find(n=>IDX[n.id].nr===nr&&(!lotNr||IDX[n.id].nr.startsWith(String(lotNr).padStart(2,"0"))));
+        if(!hit)continue;id=hit.id;byNr++;
+      }
+      pu[id]=v;found++;
+    }
+  });
+  if(!found)return toast("Aucun prix reconnu dans ce fichier. Il doit s'agir d'une DPGF « Entreprises » exportée par Prescrire et complétée.",6000);
+  nom=nom||file.name.replace(/\.xlsx$/i,"");
+  S.offres.push({id:uid(),nom,fichier:file.name,date:today(),pu});
+  S.tab="off";save();setTab("off");
+  toast(`Offre « ${nom} » importée : ${found} prix reconnus${byNr?` (dont ${byNr} par numéro d'article)`:""}.`,5000);
+}
+async function exportAnalyse(){
+  if(!needLib("ExcelJS"))return;
+  reindex();
+  const O=S.offres,wb=new ExcelJS.Workbook(),MONEY='#,##0.00 "€"',PCT='+0.0%;-0.0%;0.0%';
+  const font={name:"Arial",size:10},bold={name:"Arial",size:10,bold:true};
+  const ws=wb.addWorksheet("Synthèse",{views:[{state:"frozen",ySplit:4}]});
+  ws.getCell("A1").value=S.projet.nom;ws.getCell("A1").font={name:"Arial",size:14,bold:true};
+  ws.getCell("A2").value="Analyse des offres · "+indTxt()+" · "+today();ws.getCell("A2").font=font;
+  const hdr=["Lot","Désignation","Estimation HT",...O.flatMap(o=>[o.nom,"Écart"])];
+  ws.getRow(4).values=hdr;ws.getRow(4).font=bold;
+  ws.columns=[{width:8},{width:40},{width:16},...O.flatMap(()=>[{width:16},{width:9}])];
+  let r=5;
+  S.tree.forEach(l=>{const est=baseT(l),row=ws.getRow(r);row.values=[IDX[l.id].nr,l.nom,est,...O.flatMap(o=>covered(o,l)?[oBase(o,l),est?(oBase(o,l)-est)/est:null]:["non chiffré",null])];
+    row.font=font;row.getCell(3).numFmt=MONEY;O.forEach((o,i)=>{row.getCell(4+i*2).numFmt=MONEY;row.getCell(5+i*2).numFmt=PCT});r++});
+  const tr=ws.getRow(r+1);tr.values=[null,"Total HT",{formula:`SUM(C5:C${r-1})`},...O.flatMap((o,i)=>{const col=String.fromCharCode(68+i*2);return[{formula:`SUM(${col}5:${col}${r-1})`},null]})];
+  tr.font=bold;tr.getCell(3).numFmt=MONEY;O.forEach((o,i)=>tr.getCell(4+i*2).numFmt=MONEY);
+  const wd=wb.addWorksheet("Détail",{views:[{state:"frozen",ySplit:1}]});
+  wd.getRow(1).values=["N°","Désignation","U","Qté","PU estim.",...O.flatMap(o=>["PU "+o.nom,"Écart"])];wd.getRow(1).font=bold;
+  wd.columns=[{width:10},{width:46},{width:6},{width:9},{width:12},...O.flatMap(()=>[{width:14},{width:9}])];
+  let k=2;
+  S.tree.forEach(l=>{const lr=wd.getRow(k);lr.values=[IDX[l.id].nr,("Lot "+IDX[l.id].nr+" — "+l.nom).toUpperCase()];lr.font=bold;k++;
+    flatP([l]).forEach(n=>{const ref=num(n.prix),row=wd.getRow(k);
+      row.values=[IDX[n.id].nr,n.nom+(n.pse?" (PSE)":""),n.u,num(n.qte),ref,...O.flatMap(o=>{const v=o.pu[n.id];return v==null?[covered(o,l)?"manquant":"",null]:[num(v),ref?(num(v)-ref)/ref:null]})];
+      row.font=font;row.getCell(5).numFmt=MONEY;O.forEach((o,i)=>{row.getCell(6+i*2).numFmt=MONEY;row.getCell(7+i*2).numFmt=PCT});k++});k++});
+  await saveFile(`${slug(S.projet.nom)} - analyse des offres.xlsx`,new Blob([await wb.xlsx.writeBuffer()],{type:XLSX_MIME}));
+}
+
+/* ======================================================================
+   En-tête et démarrage
+   ====================================================================== */
+function renderMeta(){winTitle();const m=$("#p-meta");if(!m)return;m.innerHTML=`<span class="tagphase">${esc(S.projet.phase||"")} · ind. ${esc(S.projet.indice||"A")}</span>${S.dirty?'<span class="dirty" title="Enregistrez le projet dans un fichier pour le conserver">● non enregistré</span>':S.fichier?`<span title="${esc(S.fichier)}">enregistré</span>`:""}`}
+function renderHead(){$("#p-nom").value=S.projet.nom;renderMeta()}
+let lastTitle="";
+function winTitle(){if(!T)return;const t=`${S.fichier||S.projet.nom||"Prescrire"}${S.dirty?" •":""} — Prescrire`;if(t!==lastTitle){lastTitle=t;try{T.window.getCurrentWindow().setTitle(t)}catch(e){}}}
+$("#p-nom").oninput=e=>{S.projet.nom=e.target.value;save();renderOut()};
+if(!T)window.addEventListener("beforeunload",e=>{if(S&&S.dirty){e.preventDefault();e.returnValue=""}});
+function boot(){reindex();recalcAll();renderHead();renderTree();$("#v-lots").setAttribute("aria-pressed",S.view==="lots");$("#v-lieux").setAttribute("aria-pressed",S.view==="lieux");setTab(S.tab||"cctp");renderFiche();persist()}
+async function drainPending(){const list=await inv("take_pending").catch(()=>[]);const p=list&&list[list.length-1];if(p)guardDirty("Ouvrir",()=>openPath(p))}
+async function initApp(){
+  document.documentElement.classList.add("app-bureau");
+  $("#b-saveas").hidden=false;
+  try{
+    DIRS=await inv("app_dirs");ME=await inv("whoami");CFG_PATH=pjoin(DIRS.config,"reglages.json");
+    CFG=JSON.parse(await inv("read_text",{path:CFG_PATH}).catch(()=>"{}")||"{}");
+    await loadSharedLib(null);
+    if(S.chemin)takeLock(S.chemin);
+  }catch(e){LIB_ERR=String(e);toast("Bibliothèque injoignable : "+e,8000)}
+  setInterval(()=>reloadLib(false),15000);
+  window.addEventListener("focus",()=>reloadLib(false));
+  const w=T.window.getCurrentWindow();
+  w.onCloseRequested(async ev=>{
+    if(sbT){ev.preventDefault();clearTimeout(sbT);await flushBase();await releaseLock();return w.destroy()}
+    if(S.dirty){ev.preventDefault();guardDirty("Quitter",async()=>{await releaseLock();S.dirty=false;await w.destroy()});return}
+    await releaseLock();
+  });
+  T.event.listen("open-file",()=>drainPending());
+  drainPending();winTitle();
+}
+loadAll();
+boot();
+if(T)initApp();
+</script>
+
+</body>
+</html>

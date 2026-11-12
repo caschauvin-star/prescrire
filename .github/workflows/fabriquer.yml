@@ -1,0 +1,44 @@
+# Fabrique les applications Mac (.dmg) et Windows (-setup.exe)
+# à chaque nouvelle version (étiquette v0.8.0, v0.9.0…) ou à la demande.
+name: Fabriquer Prescrire
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  fabriquer:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: --target universal-apple-darwin
+          - platform: windows-latest
+            args: ""
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "./src-tauri -> target"
+      - run: npm install
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: "Prescrire v__VERSION__"
+          releaseBody: "Mac : téléchargez le fichier .dmg. Windows : téléchargez le fichier se terminant par -setup.exe."
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}

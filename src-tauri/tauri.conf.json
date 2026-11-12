@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Prescrire",
+  "version": "0.8.0",
+  "identifier": "fr.prescrire.app",
+  "build": { "frontendDist": "../src" },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      { "label": "main", "title": "Prescrire", "width": 1440, "height": 900, "minWidth": 1024, "minHeight": 640, "center": true }
+    ],
+    "security": { "csp": null }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "category": "Productivity",
+    "shortDescription": "Rédaction de CCTP et DPGF",
+    "copyright": "Casimir",
+    "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+    "fileAssociations": [
+      { "ext": ["caz"], "name": "Projet Prescrire", "description": "Projet Prescrire", "role": "Editor", "mimeType": "application/x-prescrire" }
+    ],
+    "macOS": { "signingIdentity": "-", "minimumSystemVersion": "11.0" },
+    "windows": {
+      "nsis": { "installMode": "currentUser", "languages": ["French"], "displayLanguageSelector": false }
+    }
+  }
+}
