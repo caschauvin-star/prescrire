@@ -11,8 +11,8 @@ Rédaction de CCTP et de DPGF pour la maîtrise d'œuvre. Application de bureau 
 ## Publier une nouvelle version
 
 1. Augmenter le numéro de version dans `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml` et `package.json`.
-2. Créer une étiquette `vX.Y.Z` : GitHub fabrique alors le `.dmg` et le `-setup.exe` (environ 15 minutes),
-   puis les dépose dans la page **Releases** du dépôt.
+2. Envoyer les modifications sur la branche `main` : GitHub fabrique alors le `.dmg` et le `-setup.exe`
+   (environ 15 minutes), puis les dépose dans la page **Releases** du dépôt, sous `vX.Y.Z`.
 
 ## Bibliothèque partagée
 

@@ -1,10 +1,13 @@
-# Fabrique les applications Mac (.dmg) et Windows (-setup.exe)
-# à chaque nouvelle version (étiquette v0.8.0, v0.9.0…) ou à la demande.
+# Fabrique les applications Mac (.dmg) et Windows (-setup.exe) à chaque envoi
+# sur la branche main, ou à la demande (onglet Actions > Run workflow).
+# Les fichiers sont déposés dans la page Releases, sous le numéro de version
+# indiqué dans src-tauri/tauri.conf.json.
 name: Fabriquer Prescrire
 
 on:
   push:
-    tags: ["v*"]
+    branches: [main]
+    paths-ignore: ["**.md"]
   workflow_dispatch:
 
 jobs:
