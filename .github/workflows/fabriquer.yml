@@ -7,7 +7,7 @@ name: Fabriquer Prescrire
 on:
   push:
     branches: [main]
-    paths-ignore: ["**.md"]
+    paths-ignore: ["**.md", "LICENSE", ".github/**"]
   workflow_dispatch:
 
 jobs:
