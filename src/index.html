@@ -10,7 +10,7 @@
 :root{
   --bg:#e9ecef; --panel:#fbfbfc; --ink:#1b2430; --muted:#5b6674; --line:#d3d9e0; --line-soft:#e6eaee;
   --accent:#1d4f91; --accent-ink:#ffffff; --accent-soft:#e2eaf5; --danger:#a3361c; --danger-soft:#f7e6e1; --paper:#ffffff;
-  --ok:#2c6e3f; --ok-soft:#e0efe4; --warn:#8a5a00; --warn-soft:#fbefd5;
+  --ok:#2c6e3f; --ok-soft:#e0efe4; --warn:#8a5a00; --warn-soft:#fbefd5; --orange:#b85a0c; --orange-soft:#fbe9d8; --s-ok:#22b455; --s-orange:#ff8c1a; --s-red:#ef4444; --s-grey:#a3abb5; --bg-ok:#bdffd0; --bg-orange:#ffe7d2; --bg-red:#fbbcbc;
   --f-body:"IBM Plex Sans", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --f-label:"IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
   --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
@@ -18,11 +18,11 @@
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#11151a; --panel:#181d23; --ink:#e4e8ed; --muted:#94a0ad; --line:#2b333c; --line-soft:#222930;
   --accent:#7fa9e3; --accent-ink:#0d1622; --accent-soft:#1d2a3b; --danger:#e58a72; --danger-soft:#3a221c; --paper:#1d232a;
-  --ok:#7cc493; --ok-soft:#1a2e21; --warn:#e2b55a; --warn-soft:#352a12; color-scheme:dark}}
+  --ok:#7cc493; --ok-soft:#1a2e21; --warn:#e2b55a; --warn-soft:#352a12; --orange:#f0a35a; --orange-soft:#3a2614; --s-ok:#3ddc84; --s-orange:#ffa54a; --s-red:#ff6b6b; --s-grey:#6b7682; --bg-ok:#173d26; --bg-orange:#45301a; --bg-red:#4d2020; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#11151a; --panel:#181d23; --ink:#e4e8ed; --muted:#94a0ad; --line:#2b333c; --line-soft:#222930;
   --accent:#7fa9e3; --accent-ink:#0d1622; --accent-soft:#1d2a3b; --danger:#e58a72; --danger-soft:#3a221c; --paper:#1d232a;
-  --ok:#7cc493; --ok-soft:#1a2e21; --warn:#e2b55a; --warn-soft:#352a12; color-scheme:dark}
+  --ok:#7cc493; --ok-soft:#1a2e21; --warn:#e2b55a; --warn-soft:#352a12; --orange:#f0a35a; --orange-soft:#3a2614; --s-ok:#3ddc84; --s-orange:#ffa54a; --s-red:#ff6b6b; --s-grey:#6b7682; --bg-ok:#173d26; --bg-orange:#45301a; --bg-red:#4d2020; color-scheme:dark}
 
 [hidden]{display:none!important}
 html,body{height:100%}
@@ -45,7 +45,19 @@ header.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .top-actions{display:flex;gap:6px;flex-wrap:wrap}
 .top-actions .sep{width:1px;background:var(--line);margin:0 4px}
 
-.cols{flex:1;min-height:0;display:grid;grid-template-columns:minmax(250px,23%) minmax(340px,1fr) minmax(400px,1.25fr);gap:10px}
+.cols{flex:1;min-height:0;display:grid;grid-template-columns:300px 10px minmax(0,1fr) 10px 560px;gap:0}
+.split{cursor:col-resize;position:relative;touch-action:none;outline:none}
+.split::after{content:"";position:absolute;top:0;bottom:0;left:4px;width:2px;border-radius:2px;background:transparent;transition:background .15s}
+.split:hover::after,.split:focus-visible::after,.split.drag::after{background:var(--accent)}
+.split.off{cursor:default;pointer-events:none}
+.colhide{border:0;background:none;color:var(--muted);cursor:pointer;width:24px;height:24px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;flex:none;margin-left:auto}
+.colhide:hover{background:var(--line-soft);color:var(--ink)}
+.col .vbar{display:none}
+.col.folded>*{display:none}
+.col.folded>.vbar{display:flex;flex:1;border:0;background:none;cursor:pointer;flex-direction:column;align-items:center;gap:10px;padding:12px 0;color:var(--muted);font-family:var(--f-label);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.col.folded>.vbar span{writing-mode:vertical-rl;transform:rotate(180deg)}
+.col.folded>.vbar:hover{color:var(--accent)}
+body.resizing{cursor:col-resize;user-select:none}
 .col{background:var(--panel);border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;min-height:0;min-width:0}
 .col-h{display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--line);flex-wrap:wrap}
 .col-h h2{font-family:var(--f-label);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0;font-weight:600;flex:1}
@@ -69,15 +81,42 @@ ul.tree{list-style:none;margin:0;padding:6px 0}
 ul.tree ul{list-style:none;margin:0;padding:0}
 .row{display:flex;align-items:center;gap:6px;padding:4px 10px 4px calc(10px + var(--d,0) * 16px);cursor:pointer;border-top:2px solid transparent;border-bottom:2px solid transparent;user-select:none}
 .row:hover{background:var(--line-soft)}
-.row.sel{background:var(--accent-soft)}
-.row.sel .nm{color:var(--accent)}
+.row.sel{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
 .row .car{width:14px;flex:none;color:var(--muted);font-size:10px;text-align:center;border:0;background:none;padding:0;cursor:pointer}
 .row .num{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
 .row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .row.g .nm{font-family:var(--f-label);font-weight:600;letter-spacing:.01em}
 .row.g0 .nm{text-transform:uppercase;font-size:12.5px;letter-spacing:.04em}
 .row .amt{font-family:var(--f-mono);font-size:11px;color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
-.row.p .dot{width:5px;height:5px;border-radius:50%;background:var(--muted);flex:none;margin:0 4px}
+.row.p .dot{width:9px;height:9px;border-radius:50%;background:var(--s-grey);flex:none;margin:0 3px}
+.row.st-validee{background:var(--bg-ok)}.row.p.st-validee .dot{background:var(--s-ok)}
+.row.st-relecture{background:var(--bg-orange)}.row.p.st-relecture .dot{background:var(--s-orange)}
+.row.st-reviser{background:var(--bg-red)}.row.p.st-reviser .dot{background:var(--s-red)}.row.p.st-reviser .nm{font-weight:600}
+.row.st-validee:hover,.row.st-relecture:hover,.row.st-reviser:hover{filter:brightness(.97)}
+.row.st-validee .amt,.row.st-relecture .amt,.row.st-reviser .amt,.row.st-validee .num,.row.st-relecture .num,.row.st-reviser .num{color:var(--ink);opacity:.7}
+.tree-stat button{border:1px solid transparent;background:none;border-radius:999px;padding:1px 8px 1px 6px;font:inherit;color:inherit;cursor:pointer;display:flex;gap:5px;align-items:center;font-variant-numeric:tabular-nums}
+.tree-stat button:hover{border-color:var(--line)}
+.tree-stat button[aria-pressed="true"]{border-color:var(--accent);color:var(--ink);background:var(--accent-soft);font-weight:600}
+.tree-stat button:disabled{opacity:.5;cursor:default}
+.tree-filter{padding:6px 12px;font-size:12px;color:var(--accent);background:var(--accent-soft);border-bottom:1px solid var(--line-soft)}
+.tree-stat{display:flex;gap:10px;flex-wrap:wrap;padding:6px 12px;border-bottom:1px solid var(--line-soft);font-size:11.5px;color:var(--muted)}
+.tree-stat span{display:flex;gap:5px;align-items:center;font-variant-numeric:tabular-nums}
+.tree-stat i,.et i{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.c-redaction{background:var(--s-grey)}.c-relecture{background:var(--s-orange)}.c-validee{background:var(--s-ok)}.c-reviser{background:var(--s-red)}
+.tree-stat i,.et i{width:9px;height:9px}
+.et-meta{font-size:12px;color:var(--muted);margin-top:-6px}
+.etat{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.etat .lab{margin-right:4px}
+.et{border:1px solid var(--line);border-radius:999px;padding:3px 10px 3px 8px;font-size:12px;background:var(--paper);display:flex;gap:6px;align-items:center;cursor:pointer;color:var(--ink)}
+.et:hover{border-color:var(--muted)}
+.et[aria-checked="true"]{font-weight:600}
+.et-redaction[aria-checked="true"]{background:var(--bg);border-color:var(--muted)}
+.et-relecture[aria-checked="true"]{background:var(--orange-soft);border-color:var(--orange);color:var(--orange)}
+.et-validee[aria-checked="true"]{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
+.et-reviser[aria-checked="true"]{background:var(--danger-soft);border-color:var(--danger);color:var(--danger)}
+.phr{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:2px}
+.phr .mini{font-family:var(--f-body);font-size:11.5px;line-height:20px;padding:0 8px}
+.phr select{border:1px solid var(--line);border-radius:3px;background:var(--paper);font-size:11.5px;padding:1px 4px;max-width:220px}
 .pse{font-family:var(--f-label);font-size:10.5px;font-weight:600;letter-spacing:.05em;color:var(--warn);background:var(--warn-soft);border-radius:3px;padding:0 4px;flex:none}
 .row.drop-before{border-top-color:var(--accent)}
 .row.drop-after{border-bottom-color:var(--accent)}
@@ -88,13 +127,24 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 /* Fiche */
 .fiche{padding:14px 16px 24px;display:flex;flex-direction:column;gap:14px}
 .fiche-title{display:flex;align-items:baseline;gap:10px}
-.fiche-title .num{font-family:var(--f-mono);color:var(--accent);font-size:13px}
+.fiche-title .num{font-family:var(--f-mono);color:var(--accent);font-size:17px;font-weight:700}
 .fiche-title h3{margin:0;font-size:17px;font-weight:600;text-wrap:balance;min-width:0;overflow-wrap:anywhere}
 .ro{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;padding:10px 12px;background:var(--bg);border-radius:4px;font-size:13px;margin:0}
 .ro dt{font-family:var(--f-label);color:var(--muted);text-transform:uppercase;font-size:11px;letter-spacing:.06em;padding-top:2px}
 .ro dd{margin:0;min-width:0;overflow-wrap:anywhere}
 .f{display:flex;flex-direction:column;gap:4px;min-width:0}
 .lab,.f>label{font-family:var(--f-label);font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:500}
+.fiche .f>label,.fiche .lab{font-size:12px;font-weight:600;color:var(--ink);letter-spacing:.08em}
+.fiche .f>label .link,.fiche .lab .link{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-weight:400;margin-left:8px}
+.fs{display:flex;flex-direction:column;gap:12px;padding-top:14px;border-top:1px solid var(--line)}
+.fs-h{margin:0;font-family:var(--f-label);font-size:13.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);display:flex;align-items:baseline;gap:10px}
+.fs-h small{font-family:var(--f-body);font-size:12px;font-weight:400;letter-spacing:0;text-transform:none;color:var(--muted)}
+.ftabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:0 -16px;padding:0 16px}
+.ftab{border:0;background:none;padding:7px 12px;font-family:var(--f-label);font-weight:600;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;display:flex;gap:6px;align-items:center}
+.ftab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.ftab .cnt{font-family:var(--f-mono);font-size:11px;font-weight:500;background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:0 6px;letter-spacing:0}
+.fpane{display:flex;flex-direction:column;gap:14px}
+.f textarea.cl{min-height:64px}
 .f input[type=text],.f input[type=number],.f select,.f textarea{border:1px solid var(--line);border-radius:4px;padding:6px 8px;background:var(--paper);width:100%;min-width:0}
 .f textarea{resize:vertical;min-height:84px;line-height:1.45}
 .f input.numin{font-family:var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
@@ -153,7 +203,29 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .seg button:hover{color:var(--accent)}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
 .out-tools{display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid var(--line-soft);flex-wrap:wrap;align-items:center}
-.cctp{padding:22px 26px 40px;background:var(--paper);max-width:72ch;margin:0 auto}
+.cctp{padding:22px 26px 40px;background:var(--paper);max-width:82ch;margin:0 auto}
+.c-h{display:grid;grid-template-columns:64px minmax(0,1fr);column-gap:12px;align-items:baseline}
+.c-h .c-n{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.c-lot{margin:30px 0 0;border-bottom:2px solid var(--ink);padding-bottom:5px}
+.c-lot .c-n{font-size:20px;color:var(--accent)}
+.cctp .c-lot h2{margin:0;padding:0;border:0;font-family:var(--f-label);font-size:17px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--accent)}
+.c-sl{margin:24px 0 0;border-bottom:1px solid var(--ink);padding-bottom:3px}
+.c-sl.d2{border-bottom-style:dotted;margin-top:18px}
+.c-sl .c-n{font-size:13.5px}
+.cctp .c-sl h3{margin:0;font-size:14.5px;font-weight:700}
+.c-art{margin-top:14px;cursor:pointer;border-radius:3px;padding:2px 0}
+.c-art:hover{background:var(--line-soft)}
+.c-art.sel{background:var(--accent-soft)}
+.c-art .c-n{font-size:12.5px;color:var(--muted)}
+.cctp .c-art h4{margin:0;font-size:13.5px;font-weight:700;display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
+.c-body{margin:4px 0 0 76px}
+.c-body>p:not(.cla):not(.clg):not(.c-meta){text-align:justify}
+.c-gen{margin:12px 0 0 76px;background:var(--bg);padding:10px 14px;border-radius:3px}
+.c-gen .gt{font-family:var(--f-label);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 4px}
+.c-gen .gst{font-weight:700;font-size:12.5px;margin:6px 0 2px}
+.cctp .c-meta{font-size:12px;color:var(--muted);margin:6px 0 0}
+.cctp .c-meta b{color:var(--ink);font-weight:600}
+.cctp .cll{display:inline-block;width:24px;text-indent:0}
 .cctp h1{font-size:18px;margin:0 0 2px;text-wrap:balance}
 .cctp .sub{color:var(--muted);margin:0 0 20px;font-size:13px}
 .cctp h2{font-family:var(--f-label);font-size:14px;text-transform:uppercase;letter-spacing:.06em;border-bottom:1.5px solid var(--ink);padding-bottom:4px;margin:26px 0 10px}
@@ -166,6 +238,17 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .cctp h4 span.nr{margin-right:0}
 .cctp p{margin:0 0 4px;white-space:pre-line}
 .cctp .meta{font-size:12.5px;color:var(--muted);margin:2px 0 0}
+.cctp .clg{font-weight:700;font-style:italic;font-size:12.5px;color:var(--muted);margin:8px 0 2px}
+.cctp .cla{margin:0 0 3px;padding-left:24px;text-indent:-24px;font-size:13px}
+.cctp .cla b{font-weight:600}
+table.cats{border-collapse:collapse;width:100%;font-size:13px}
+.cats th{text-align:left;font-family:var(--f-label);font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:6px;border-bottom:1px solid var(--line)}
+.cats td{padding:4px 6px;border-bottom:1px solid var(--line-soft)}
+.cats input{border:1px solid var(--line);border-radius:4px;padding:5px 8px;background:var(--paper);width:100%;min-width:0}
+.cats th.r{text-align:right}
+.cats td.u{font-family:var(--f-mono);font-size:12px;color:var(--muted);white-space:nowrap;text-align:right}
+.cats td.act{white-space:nowrap;text-align:right}
+.cats select{border:1px solid var(--line);border-radius:4px;padding:3px 6px;background:var(--paper)}
 .cctp .meta b{color:var(--ink);font-weight:500}
 .cctp .intro{font-style:italic;color:var(--muted)}
 .cctp .lotref{font-family:var(--f-label);font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 3px}
@@ -263,7 +346,10 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
 @media (max-width: 1100px){
   html,body{height:auto}
   .app{height:auto}
-  .cols{grid-template-columns:1fr}
+  .cols{grid-template-columns:1fr!important;row-gap:10px}
+  .split{display:none}
+  .col.folded>.vbar{flex-direction:row;padding:10px 12px}
+  .col.folded>.vbar span{writing-mode:horizontal-tb;transform:none}
   .col-b{max-height:75vh}
   .lib{grid-template-columns:1fr}
   .dlg.wide{height:calc(100% - 32px)}
@@ -290,30 +376,38 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
       <span class="sep"></span>
       <button class="btn" id="b-proj">Projet</button>
       <button class="btn" id="b-lieux">Lieux</button>
+      <button class="btn" id="b-cats">Catégories</button>
       <button class="btn" id="b-lib">Bibliothèque</button>
     </div>
   </header>
 
-  <div class="cols">
-    <section class="col" aria-label="Lots et prestations">
-      <div class="col-h"><h2>Lots et prestations</h2></div>
+  <div class="cols" id="cols">
+    <section class="col" id="col1" aria-label="Lots et prestations">
+      <button class="vbar" data-unfold="1" title="Afficher la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>Lots et prestations</span></button>
+      <div class="col-h"><h2>Lots et prestations</h2><button class="colhide" data-fold="1" aria-label="Masquer la colonne Lots et prestations" title="Masquer la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button></div>
       <div class="tree-tools">
         <button class="btn" id="b-lot">+ Lot</button>
         <button class="btn" id="b-slot">+ Sous-lot</button>
         <button class="btn primary" id="b-presta">+ Prestation</button>
       </div>
+      <div class="tree-stat" id="tree-stat" aria-label="Avancement de la rédaction"></div>
+      <div class="tree-filter" id="tree-filter" hidden></div>
       <div class="col-b">
         <ul class="tree" id="tree"></ul>
         <p class="tree-hint">Glissez une ligne pour la déplacer : au-dessus ou en dessous d'une ligne pour la placer avant ou après, au milieu d'un lot pour l'y ranger.</p>
       </div>
     </section>
 
-    <section class="col" aria-label="Fiche">
-      <div class="col-h"><h2 id="fiche-h">Fiche prestation</h2></div>
+    <div class="split" data-split="1" role="separator" aria-orientation="vertical" aria-label="Largeur de la colonne Lots et prestations" tabindex="0" title="Glisser pour redimensionner · double-clic : largeurs d'origine"></div>
+    <section class="col" id="col2" aria-label="Fiche">
+      <button class="vbar" data-unfold="2" title="Afficher la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>Fiche</span></button>
+      <div class="col-h"><h2 id="fiche-h">Fiche prestation</h2><button class="colhide" data-fold="2" aria-label="Masquer la colonne Fiche" title="Masquer la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button></div>
       <div class="col-b" id="fiche"></div>
     </section>
 
-    <section class="col" aria-label="Documents">
+    <div class="split" data-split="2" role="separator" aria-orientation="vertical" aria-label="Largeur de la colonne Documents" tabindex="0" title="Glisser pour redimensionner · double-clic : largeurs d'origine"></div>
+    <section class="col" id="col3" aria-label="Documents">
+      <button class="vbar" data-unfold="3" title="Afficher la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><span>CCTP · DPGF · Offres</span></button>
       <div class="col-h">
         <div class="tabs" role="tablist">
           <button class="tab" role="tab" id="t-cctp">CCTP</button>
@@ -325,6 +419,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
           <button id="v-lots">Par lots</button>
           <button id="v-lieux">Par lieux</button>
         </div>
+        <button class="colhide" data-fold="3" aria-label="Masquer la colonne Documents" title="Masquer la colonne" style="margin-left:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
       <div class="out-tools" id="out-tools">
         <button class="btn" id="b-copy">Copier</button>
@@ -351,8 +446,20 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
 /* ======================================================================
    Référentiels
    ====================================================================== */
-const CATS=["Fourniture et pose","Fourniture seule","Pose seule","Dépose / démolition","Préparation de support","Prestation forfaitaire","Essais et contrôles"];
+const CATS_DEF=["Fourniture et pose","Fourniture seule","Pose seule","Dépose / démolition","Préparation de support","Prestation forfaitaire","Essais et contrôles"];
+let CATS=null,CATS_MAJ=0;
 const UNITES=["U","ens.","ft","m²","ml","m³","kg","h"];
+/* Descriptif détaillé : alinéas ajoutés au CCTP à la suite du descriptif */
+const CLAUSES=[
+ ["Clauses préalables",[["support","Pour le support","État et réception du support : planéité, siccité, tolérances, préparations restant à la charge du lot…"],["entrepreneur","Pour l'entrepreneur","Avant intervention : échantillons, fiches techniques, avis techniques, plans d'exécution à soumettre au maître d'œuvre…"]]],
+ ["Clauses d'exécution",[["realisation","Pour la réalisation","Mise en œuvre conforme au DTU et aux prescriptions du fabricant, conditions climatiques, phasage…"],["interruption","Pour l'interruption","Arrêt et reprise des travaux : joints, protections provisoires, arrêt par intempéries…"],["finalisation","Pour la finalisation","Nettoyage, protection des ouvrages, essais, documents à remettre (DOE, notices)…"]]],
+ ["Limites de prestation",[["limites","Limites de prestation","Ce qui n'est pas compris dans la prestation et relève d'un autre lot…"]]]];
+const ETATS=[["redaction","En cours de rédaction"],["relecture","Prête pour relecture"],["validee","Validée"],["reviser","À réviser"]];
+const CL_KEYS=CLAUSES.flatMap(([,f])=>f.map(x=>x[0]));
+const clOf=x=>{const c={};const src=x&&x.cl&&typeof x.cl==="object"?x.cl:{};CL_KEYS.forEach(k=>{if(src[k]&&String(src[k]).trim())c[k]=String(src[k])});return c};
+const clCount=x=>Object.keys(clOf(x)).length;
+const clSig=x=>JSON.stringify(CL_KEYS.map(k=>clOf(x)[k]||""));
+const catList=()=>CATS&&CATS.length?CATS:CATS_DEF;
 const PHASES=["ESQ","APS","APD","PRO","DCE","ACT","EXE"];
 /* Lieux d'exemple : [niveau, nom, surface sol m², périmètre ml, hauteur m] */
 const LIEUX_DEF=[["","Toutes pièces"],["RDC","Entrée",6.2,10.4,2.5],["RDC","Séjour",32.5,24.6,2.5],["RDC","Cuisine",12.4,14.2,2.5],["RDC","WC",1.6,5.2,2.5],["RDC","Cellier",4.5,8.6,2.5],["RDC","Garage",18,17,2.4],
@@ -421,14 +528,19 @@ function toast(m,ms){const t=$("#toast");t.textContent=m;t.hidden=false;clearTim
    ====================================================================== */
 const KEY_P="prescrire-projet",KEY_B="prescrire-bibliotheque",KEY_OLD="prescrire-v1";
 let S,BASE,LIVE=null;
-const normBase=a=>(Array.isArray(a)?a:[]).filter(x=>x&&x.nom).map(x=>({id:x.id||uid(),nom:String(x.nom),lot:x.lot||"",cat:x.cat||CATS[0],u:x.u||"U",prix:num(x.prix),desc:x.desc||"",maj:x.maj||0,par:x.par||""}));
-const baseDef=()=>normBase(DB_DEF.map(([lot,nom,cat,u,prix,desc])=>({lot,nom,cat,u,prix,desc})));
+const normBase=a=>(Array.isArray(a)?a:[]).filter(x=>x&&x.nom).map(x=>({id:x.id||uid(),nom:String(x.nom),lot:x.lot||"",cat:x.cat||catList()[0],u:x.u||"U",prix:num(x.prix),desc:x.desc||"",cl:clOf(x),maj:x.maj||0,par:x.par||""}));
+/* Exemples de descriptif détaillé */
+const DEMO_CL={
+ "Peinture acrylique murs 2 couches":{support:"Supports réceptionnés secs, sains et dépoussiérés, humidité inférieure à 5 %. Les rebouchages importants restent à la charge du lot plâtrerie.",entrepreneur:"Présentation d'un échantillon de chaque teinte sur 1 m² pour validation par l'architecte avant exécution.",realisation:"Application à la brosse ou au rouleau, température ambiante supérieure à 8 °C, respect des temps de séchage entre couches.",finalisation:"Nettoyage des projections sur menuiseries, sols et appareillages ; retouches après passage des autres corps d'état.",limites:"Les menuiseries extérieures et les boiseries sont traitées au lot Menuiseries."},
+ "Cloison plaque de plâtre 72/48":{support:"Sols finis ou ravoirés, tolérance de planéité de 5 mm sous la règle de 2 m.",entrepreneur:"Fiches techniques des plaques et des isolants soumises avant commande.",realisation:"Rails fixés au sol et au plafond, montants tous les 60 cm, joints décalés d'une face à l'autre.",finalisation:"Enduit des joints en trois passes, finition prête à peindre.",limites:"Les huisseries sont fournies et posées par le lot Menuiseries intérieures."},
+ "Chape de ravoirage":{support:"Dalle support débarrassée de tout résidu, réseaux encastrés posés et réceptionnés par le maître d'œuvre.",realisation:"Pose de bandes de désolidarisation en périphérie ; tolérance de planéité de 7 mm sous la règle de 2 m.",interruption:"Joints de fractionnement aux seuils et tous les 40 m².",limites:"Le revêtement de sol fini relève du lot Revêtements de sols et murs."}};
+const baseDef=()=>normBase(DB_DEF.map(([lot,nom,cat,u,prix,desc])=>({lot,nom,cat,u,prix,desc,cl:DEMO_CL[nom]||{}})));
 const lieuxDef=withDims=>LIEUX_DEF.map(([niv,nom,s,p,h])=>({nom,niv,s:withDims&&s?s:"",p:withDims&&p?p:"",h:withDims&&h?h:(s?2.5:"")}));
 const grp=(nom,children,intro)=>({id:uid(),kind:"g",nom,intro:intro||"",children});
-function newPresta(o={}){return Object.assign({id:uid(),kind:"p",nom:"",cat:CATS[0],u:"U",desc:"",qte:1,qx:"",prix:0,prixBase:null,bid:null,lieux:[],ql:{},qlx:{},finOn:false,fin:"",pse:false},o)}
+function newPresta(o={}){return Object.assign({id:uid(),kind:"p",nom:"",cat:catList()[0],u:"U",desc:"",qte:1,qx:"",prix:0,prixBase:null,bid:null,lieux:[],ql:{},qlx:{},cl:{},etat:"redaction",finOn:false,fin:"",pse:false},o)}
 function presta(nom,q,o={}){
-  const d=BASE.find(x=>x.nom===nom)||{nom,cat:CATS[0],u:"U",prix:0,desc:""};
-  const n=newPresta({nom:d.nom,cat:d.cat,u:d.u,desc:d.desc,prix:d.prix,prixBase:d.prix,bid:d.id||null,finOn:!!o.fin,fin:o.fin||"",pse:!!o.pse,qte:0});
+  const d=BASE.find(x=>x.nom===nom)||{nom,cat:catList()[0],u:"U",prix:0,desc:""};
+  const n=newPresta({nom:d.nom,cat:d.cat,u:d.u,desc:d.desc,cl:clOf(d),prix:d.prix,prixBase:d.prix,bid:d.id||null,finOn:!!o.fin,fin:o.fin||"",pse:!!o.pse,qte:0});
   const ks=Object.keys(q);n.lieux=ks;
   if(ks.length===1){const v=q[ks[0]];if(typeof v==="string")n.qx=v;else n.qte=v}
   else ks.forEach(l=>{const v=q[l];if(typeof v==="string")n.qlx[l]=v;else n.ql[l]=v});
@@ -444,11 +556,13 @@ function demoProject(){
    grp("Démolition – Dépose",[presta("Protection des ouvrages conservés",{"Toutes pièces":1}),presta("Dépose de cloison en carreaux de plâtre",{"Séjour":10,"Cuisine":8}),presta("Dépose de revêtement de sol carrelé",{"Séjour":"S","Cuisine":"S","Entrée":"S"}),presta("Benne 10 m³ et évacuation en décharge",{"Extérieurs":2})],"Les déposes sont exécutées avec soin. Les matériaux réemployables désignés par l'architecte sont stockés sur place."),
    grp("Gros œuvre – Maçonnerie",[grp("Structure",[presta("Ouverture en mur porteur avec linteau béton",{"Séjour":1})]),grp("Sols",[presta("Chape de ravoirage",{"Séjour":"S","Cuisine":"S","Entrée":"S"})])]),
    grp("Menuiseries extérieures",[presta("Fenêtre PVC double vitrage 2 vantaux",{"Chambre 1":2,"Chambre 2":2}),presta("Porte-fenêtre aluminium 2 vantaux",{"Séjour":1},{fin:"Laquage RAL 7022 gris terre d'ombre, finition sablée"}),presta("Volet roulant électrique",{"Séjour":2,"Chambre 1":2,"Chambre 2":1}),presta("Fenêtre de toit",{"Combles":2},{pse:true})]),
-   grp("Plâtrerie – Isolation",[grp("Cloisons et doublages",[presta("Cloison plaque de plâtre 72/48",{"Chambre 1":"3,2*2,5","Chambre 2":"3,2*2,5","Circulation":"4,1*2,5"}),presta("Doublage isolant PSE + plâtre 10+100",{"Séjour":"P*H-8","Chambre 1":"P*H-3","Chambre 2":"P*H-3"})]),grp("Plafonds",[presta("Faux plafond plaque de plâtre sur ossature",{"Séjour":"S","Cuisine":"S"})])]),
+   Object.assign(grp("Plâtrerie – Isolation",[grp("Cloisons et doublages",[presta("Cloison plaque de plâtre 72/48",{"Chambre 1":"3,2*2,5","Chambre 2":"3,2*2,5","Circulation":"4,1*2,5"}),presta("Doublage isolant PSE + plâtre 10+100",{"Séjour":"P*H-8","Chambre 1":"P*H-3","Chambre 2":"P*H-3"})]),grp("Plafonds",[presta("Faux plafond plaque de plâtre sur ossature",{"Séjour":"S","Cuisine":"S"})])],"Travaux exécutés conformément au NF DTU 25.41. Les réservations sont à la charge du lot, sur plans des lots techniques."),{cl:{entrepreneur:"Plans de calepinage soumis au maître d'œuvre avant toute exécution.",finalisation:"Évacuation quotidienne des chutes, protection des ouvrages finis jusqu'à la réception."}}),
    grp("Électricité",[presta("Tableau électrique 3 rangées",{"Cellier":1}),presta("Prise de courant 16 A",{"Toutes pièces":18},{fin:"Appareillage blanc mat, gamme au choix de l'architecte"}),presta("Point lumineux en plafond",{"Toutes pièces":9})]),
    grp("Peinture",[presta("Préparation des supports",{"Toutes pièces":210}),presta("Peinture acrylique murs 2 couches",{"Séjour":"P*H-8","Chambre 1":"P*H-3","Chambre 2":"P*H-3","Entrée":"P*H-2"},{fin:"Aspect velours, teintes au choix de l'architecte (3 teintes max.)"}),presta("Peinture plafonds 2 couches",{"Séjour":"S","Cuisine":"S","Entrée":"S","Chambre 1":"S","Chambre 2":"S","Circulation":"S"},{fin:"Aspect mat, blanc"})])
   ];
   recalcAll();
+  const ex=["validee","validee","validee","validee","validee","validee","relecture","relecture","relecture","redaction","relecture","redaction","reviser"];
+  flatP(S.tree).forEach((n,i)=>{n.etat=ex[i]||"redaction"});
   S.sel=S.tree[2].children[1].id;S.dirty=false;
   return S;
 }
@@ -460,8 +574,9 @@ function migrate(s){
   s.tree=Array.isArray(s.tree)?s.tree:[];
   Object.assign(s,{offres:s.offres||[],indices:s.indices||[],open:s.open||{},tva:s.tva??20,tab:s.tab||"cctp",view:s.view||"lots",lot:s.lot||"recap",olot:s.olot||"synth"});
   delete s.db;
+  (function wg(a){a.forEach(g=>{if(g.kind==="g"){g.cl=clOf(g);wg(g.children)}})})(s.tree);
   walkP(s.tree,n=>{
-    n.lieux=n.lieux||[];n.ql=n.ql||{};n.qlx=n.qlx||{};n.qx=n.qx||"";n.pse=!!n.pse;
+    n.lieux=n.lieux||[];n.ql=n.ql||{};n.qlx=n.qlx||{};n.qx=n.qx||"";n.pse=!!n.pse;n.cl=clOf(n);n.etat=ETATS.some(e=>e[0]===n.etat)?n.etat:"redaction";
     n.lieux.forEach(l=>{if(!s.lieux.some(z=>z.nom===l))s.lieux.push({nom:l,niv:"",s:"",p:"",h:""})});
     if(n.lieux.length>1&&!Object.keys(n.ql).length){const q=num(n.qte),k=n.lieux.length;
       if(Number.isInteger(q)){const b=Math.floor(q/k);n.lieux.forEach((l,i)=>n.ql[l]=b+(i<q-b*k?1:0))}
@@ -476,6 +591,7 @@ function loadAll(){
   if(!p){try{old=JSON.parse(localStorage.getItem(KEY_OLD)||"null")}catch(e){}}
   if(!b&&old&&old.db)b=old.db;
   const arts=b?(Array.isArray(b)?b:b.articles):null;
+  if(b&&!Array.isArray(b)&&Array.isArray(b.categories)&&b.categories.length){CATS=b.categories;CATS_MAJ=b.catsMaj||0}
   BASE=arts&&arts.length?normBase(arts):baseDef();resnap();
   const src=p||old;
   if(src&&Array.isArray(src.tree)){S=migrate(src)}else demoProject();
@@ -488,8 +604,8 @@ function persist(){try{localStorage.setItem(KEY_P,JSON.stringify(S))}catch(e){}r
    (le plus récent l'emporte), pour que plusieurs postes puissent écrire.
    ====================================================================== */
 const T=window.__TAURI__||null,inv=(c,a)=>T.core.invoke(c,a);
-let SNAP=new Map(),TOMB=[],ME="",LIB_PATH=null,LIB_MTIME=0,LIB_ERR="",CFG={},CFG_PATH=null,DIRS=null;
-const artKey=a=>JSON.stringify([a.nom,a.lot,a.cat,a.u,r2(num(a.prix)),a.desc]);
+let SNAP=new Map(),TOMB=[],ME=(()=>{try{return localStorage.getItem("prescrire-nom")||""}catch(e){return""}})(),LIB_PATH=null,LIB_MTIME=0,LIB_ERR="",CFG={},CFG_PATH=null,DIRS=null;
+const artKey=a=>JSON.stringify([a.nom,a.lot,a.cat,a.u,r2(num(a.prix)),a.desc,clSig(a)]);
 function resnap(){SNAP=new Map(BASE.map(a=>[a.id,artKey(a)]))}
 function stamp(){const now=Date.now(),seen=new Set();
   BASE.forEach(a=>{seen.add(a.id);if(SNAP.get(a.id)!==artKey(a)){a.maj=now;a.par=ME||a.par||""}});
@@ -498,12 +614,14 @@ function mergeLib(disk){
   const tomb=new Map();[...(disk.suppr||[]),...TOMB].forEach(t=>{if(!tomb.has(t.id)||tomb.get(t.id)<t.maj)tomb.set(t.id,t.maj)});
   const map=new Map();[...normBase(disk.articles||[]),...BASE].forEach(a=>{const c=map.get(a.id);if(!c||(a.maj||0)>=(c.maj||0))map.set(a.id,a)});
   const cutoff=Date.now()-120*864e5;
-  return{articles:[...map.values()].filter(a=>!(tomb.has(a.id)&&tomb.get(a.id)>=(a.maj||0))),suppr:[...tomb].filter(([,m])=>m>cutoff).map(([id,maj])=>({id,maj}))};
+  const dc=Array.isArray(disk.categories)&&disk.categories.length&&(disk.catsMaj||0)>CATS_MAJ;
+  return{categories:dc?disk.categories:catList(),catsMaj:dc?disk.catsMaj:CATS_MAJ,articles:[...map.values()].filter(a=>!(tomb.has(a.id)&&tomb.get(a.id)>=(a.maj||0))),suppr:[...tomb].filter(([,m])=>m>cutoff).map(([id,maj])=>({id,maj}))};
 }
 function applyMerge(m){const byId=new Map(BASE.map(a=>[a.id,a]));
+  if(m.categories&&m.categories.length){CATS=m.categories;CATS_MAJ=m.catsMaj||0}
   BASE=m.articles.map(a=>{const l=byId.get(a.id);if(l){if(l!==a)Object.assign(l,a);return l}return a});resnap()}
-const libDoc=m=>JSON.stringify({format:"prescrire-bibliotheque",version:8,articles:m.articles,suppr:m.suppr});
-function parseLib(txt){try{const d=JSON.parse(txt);return Array.isArray(d)?{articles:d,suppr:[]}:{articles:d.articles||[],suppr:d.suppr||[]}}catch(e){return null}}
+const libDoc=m=>JSON.stringify({format:"prescrire-bibliotheque",version:9,categories:m.categories||catList(),catsMaj:m.catsMaj||CATS_MAJ,articles:m.articles,suppr:m.suppr});
+function parseLib(txt){try{const d=JSON.parse(txt);return Array.isArray(d)?{articles:d,suppr:[]}:{articles:d.articles||[],suppr:d.suppr||[],categories:d.categories,catsMaj:d.catsMaj||0}}catch(e){return null}}
 let sbT=null;
 function saveBase(){stamp();clearTimeout(sbT);sbT=setTimeout(flushBase,T?400:50)}
 async function flushBase(){
@@ -626,18 +744,30 @@ function qBtns(lieu,target){const li=LO(lieu);if(!li)return"";let h="";
 /* ======================================================================
    Arborescence
    ====================================================================== */
+/* État d'un lot : rouge si une prestation est à réviser, orange si une est à relire,
+   vert si toutes sont validées, neutre sinon */
+function grpState(g){const a=flatP([g]);if(!a.length)return"";const has=k=>a.some(n=>(n.etat||"redaction")===k);
+  return has("reviser")?"reviser":has("relecture")?"relecture":a.every(n=>n.etat==="validee")?"validee":""}
+const GRP_TITLE={reviser:"Contient une prestation à réviser",relecture:"Contient une prestation prête pour relecture",validee:"Toutes les prestations sont validées"};
 function renderTree(){
   reindex();
-  const rec=arr=>arr.map(n=>{
-    const x=IDX[n.id],g=n.kind==="g",closed=g&&S.open[n.id]===false;
-    const amt=g?baseT(n):lineT(n);
-    return `<li><div class="row ${g?"g":"p"} ${g&&x.depth===0?"g0":""} ${S.sel===n.id?"sel":""}" draggable="true" data-id="${n.id}" style="--d:${x.depth}">`+
+  const F=S.filtre||null,keep=n=>n.kind==="p"?(n.etat||"redaction")===F:n.children.some(keep);
+  const rec=arr=>arr.filter(n=>!F||keep(n)).map(n=>{
+    const x=IDX[n.id],g=n.kind==="g",closed=g&&!F&&S.open[n.id]===false;
+    const amt=g?baseT(n):lineT(n),gs=g?grpState(n):"";
+    return `<li><div class="row ${g?"g "+(gs?"st-"+gs:""):"p st-"+(n.etat||"redaction")} ${g&&x.depth===0?"g0":""} ${S.sel===n.id?"sel":""}" draggable="true" title="${esc(g?(GRP_TITLE[gs]||""):(ETATS.find(e=>e[0]===(n.etat||"redaction"))||ETATS[0])[1])}" data-id="${n.id}" style="--d:${x.depth}">`+
       (g?`<button class="car" data-tog="${n.id}" aria-label="${closed?"Déplier":"Replier"}">${closed?"▸":"▾"}</button>`:`<span class="dot"></span>`)+
       `<span class="num">${x.nr}</span><span class="nm">${esc(n.nom||"Sans titre")}</span>${!g&&n.pse?'<span class="pse">PSE</span>':""}<span class="amt">${amt?nf.format(amt):""}</span></div>`+
       (g&&!closed&&n.children.length?`<ul>${rec(n.children)}</ul>`:"")+`</li>`;
   }).join("");
   $("#tree").innerHTML=rec(S.tree);
+  const all=flatP(S.tree),cnt=k=>all.filter(n=>(n.etat||"redaction")===k).length;
+  $("#tree-stat").innerHTML=all.length?ETATS.map(([k,l])=>`<button data-filtre="${k}" aria-pressed="${F===k}" ${cnt(k)||F===k?"":"disabled"} title="${F===k?"Tout afficher":"Afficher seulement : "+esc(l.toLowerCase())}"><i class="c-${k}"></i>${cnt(k)} ${{redaction:"en rédaction",relecture:"à relire",validee:"validée"+(cnt(k)>1?"s":""),reviser:"à réviser"}[k]}</button>`).join(""):"";
+  $("#tree-filter").hidden=!F;
+  if(F)$("#tree-filter").innerHTML=`Filtre : ${esc((ETATS.find(e=>e[0]===F)||["",""])[1].toLowerCase())} · <button class="link" data-filtre="${F}">tout afficher</button>`;
 }
+document.addEventListener("click",e=>{const b=e.target.closest("[data-filtre]");if(!b||!b.closest("#tree-stat,#tree-filter"))return;
+  S.filtre=S.filtre===b.dataset.filtre?null:b.dataset.filtre;persist();renderTree()});
 $("#tree").addEventListener("click",e=>{
   const t=e.target.closest("[data-tog]");
   if(t){const id=t.dataset.tog;S.open[id]=S.open[id]===false;persist();renderTree();return}
@@ -685,7 +815,7 @@ $("#b-presta").onclick=()=>{
   else{const t=targetGroup();if(!t)return toast("Créez ou sélectionnez d'abord un lot.");t.children.push(p);S.open[t.id]=true}
   select(p.id,true);setTimeout(()=>{const i=$("#f-nom");i&&i.focus()},0);
 };
-function select(id,changed){if(S.sel!==id)LIVE=null;S.sel=id;if(changed)commit();else{persist();renderTree();renderOut()}renderFiche()}
+function select(id,changed){if(S.sel!==id){LIVE=null;const f=$("#fiche");if(f)f.scrollTop=0}S.sel=id;if(changed)commit();else{persist();renderTree();renderOut()}renderFiche()}
 function commit(){save();renderTree();renderOut()}
 
 /* ======================================================================
@@ -693,19 +823,19 @@ function commit(){save();renderTree();renderOut()}
    ====================================================================== */
 const lotNameOf=n=>{reindex();return IDX[n.id]?rootOf(n.id).nom:""};
 function baseOf(n){return BASE.find(a=>a.id===n.bid)||BASE.find(a=>norm(a.nom)===norm(n.nom))||null}
-function baseDiff(n,a){if(!a)return[];const d=[];if(a.cat!==n.cat)d.push("catégorie");if(a.u!==n.u)d.push("unité");if(r2(num(a.prix))!==r2(num(n.prix)))d.push("prix");if((a.desc||"")!==(n.desc||""))d.push("descriptif");return d}
+function baseDiff(n,a){if(!a)return[];const d=[];if(a.cat!==n.cat)d.push("catégorie");if(a.u!==n.u)d.push("unité");if(r2(num(a.prix))!==r2(num(n.prix)))d.push("prix");if((a.desc||"")!==(n.desc||""))d.push("descriptif");if(clSig(a)!==clSig(n))d.push("descriptif détaillé");return d}
 function autoBase(n){
   const nm=(n.nom||"").trim();if(!nm)return;
   let a=BASE.find(z=>norm(z.nom)===norm(nm));
   if(a){n.bid=a.id;libHint(n);return}
-  a={id:uid(),nom:nm,lot:lotNameOf(n),cat:n.cat,u:n.u,prix:num(n.prix),desc:n.desc||""};
+  a={id:uid(),nom:nm,lot:lotNameOf(n),cat:n.cat,u:n.u,prix:num(n.prix),desc:n.desc||"",cl:clOf(n)};
   BASE.push(a);saveBase();n.bid=a.id;n.prixBase=a.prix;LIVE=n.id;save();
   toast(`« ${nm} » est ajoutée à la bibliothèque.`);libHint(n);
 }
 function syncLive(n){
   if(LIVE!==n.id)return;
   const a=BASE.find(z=>z.id===n.bid);if(!a){LIVE=null;return}
-  Object.assign(a,{nom:(n.nom||"").trim()||a.nom,cat:n.cat,u:n.u,prix:num(n.prix),desc:n.desc||""});n.prixBase=a.prix;saveBase();
+  Object.assign(a,{nom:(n.nom||"").trim()||a.nom,cat:n.cat,u:n.u,prix:num(n.prix),desc:n.desc||"",cl:clOf(n)});n.prixBase=a.prix;saveBase();
 }
 function libHint(n){
   const h=$("#f-lib");if(!h)return;
@@ -716,14 +846,43 @@ function libHint(n){
   const d=baseDiff(n,a);
   if(!d.length){h.className="libhint";h.innerHTML=`<span class="dotc"></span><span>Conforme à la bibliothèque.</span>`;return}
   h.className="libhint mod";h.innerHTML=`<span class="dotc"></span><span>Adapté pour ce projet (${d.join(", ")}).</span><button class="link" id="f-updb">Reporter dans la bibliothèque</button><button class="link" id="f-revert">Revenir à la bibliothèque</button>`;
-  $("#f-updb").onclick=()=>{Object.assign(a,{cat:n.cat,u:n.u,prix:num(n.prix),desc:n.desc});n.prixBase=a.prix;n.bid=a.id;saveBase();save();toast("Bibliothèque mise à jour.");libHint(n)};
-  $("#f-revert").onclick=()=>{Object.assign(n,{cat:a.cat,u:a.u,prix:a.prix,prixBase:a.prix,desc:a.desc,bid:a.id});commit();renderFiche()};
+  $("#f-updb").onclick=()=>{Object.assign(a,{cat:n.cat,u:n.u,prix:num(n.prix),desc:n.desc,cl:clOf(n)});n.prixBase=a.prix;n.bid=a.id;saveBase();save();toast("Bibliothèque mise à jour.");libHint(n)};
+  $("#f-revert").onclick=()=>{Object.assign(n,{cat:a.cat,u:a.u,prix:a.prix,prixBase:a.prix,desc:a.desc,cl:clOf(a),bid:a.id});commit();renderFiche()};
 }
 
 /* ======================================================================
    Fiche
    ====================================================================== */
-let armedDel=false;
+let armedDel=false,FTAB="fiche";
+/* Champs du descriptif détaillé (prestations, lots et sous-lots) */
+const PHRASES=[["Hors fourniture","Hors fourniture : matériel fourni par le maître d'ouvrage."],["Reprises comprises","Les reprises et raccords sur les ouvrages existants sont compris."],["Raccordements","Compris toutes sujétions de raccordement aux ouvrages existants."],["Réservations","Les réservations et calfeutrements relèvent des lots concernés."],["Essais","Les essais et la mise en service sont à la charge du présent lot."]];
+function clFields(n){
+  const me=IDX[n.id]?rootOf(n.id).id:null;
+  return CLAUSES.map(([g,fs])=>`<section class="fs"><h4 class="fs-h">${g}</h4>${fs.map(([k,l,ph])=>`<div class="f">${fs.length>1?`<label for="cl-${k}">${l}</label>`:""}<textarea class="cl" id="cl-${k}" data-cl="${k}" rows="3" placeholder="${esc(ph)}" ${fs.length>1?"":`aria-label="${esc(l)}"`}>${esc((n.cl||{})[k]||"")}</textarea>
+    ${k==="limites"?`<div class="phr"><span class="hint">Phrases types :</span><select data-phlot aria-label="Insérer : relève du lot…"><option value="">Relève du lot…</option>${S.tree.filter(l=>l.id!==me).map(l=>`<option value="${esc("Relève du lot "+IDX[l.id].nr+" "+l.nom+".")}">${esc(IDX[l.id].nr+" "+l.nom)}</option>`).join("")}</select>${PHRASES.map(([lb,t],i)=>`<button class="mini" data-ph="${i}" title="${esc(t)}">${esc(lb)}</button>`).join("")}</div>`:""}</div>`).join("")}</section>`).join("");
+}
+function bindCl(el,n,after){
+  n.cl=n.cl||{};
+  const put=(t,txt)=>{t.value=t.value.trim()?t.value.replace(/\s+$/,"")+"\n"+txt:txt;t.dispatchEvent(new Event("input"));t.focus()};
+  el.querySelectorAll("[data-cl]").forEach(t=>t.oninput=e=>{const k=e.target.dataset.cl,v=e.target.value;if(v.trim())n.cl[k]=v;else delete n.cl[k];
+    if(after)after();save();renderOut()});
+  el.querySelectorAll("[data-ph]").forEach(b=>b.onclick=()=>put($("#cl-limites"),PHRASES[+b.dataset.ph][1]));
+  el.querySelectorAll("[data-phlot]").forEach(s=>s.onchange=()=>{if(s.value)put($("#cl-limites"),s.value);s.value=""});
+}
+/* Nom de l'utilisateur : session de l'ordinateur dans l'application, demandé une fois dans le navigateur */
+const KEY_NOM="prescrire-nom";
+function myName(){if(CFG&&CFG.nom)return CFG.nom;if(T)return ME||"";try{return localStorage.getItem(KEY_NOM)||""}catch(e){return""}}
+async function setMyName(v){v=(v||"").trim();if(T){CFG.nom=v||undefined;ME=v||await inv("whoami").catch(()=>ME);try{await inv("write_text",{path:CFG_PATH,content:JSON.stringify(CFG,null,1)})}catch(e){}}else{try{localStorage.setItem(KEY_NOM,v)}catch(e){}ME=v}}
+function withName(fn){
+  if(myName())return fn();
+  openModal("Votre nom",`<p style="margin:0">Prescrire note qui change l'état d'une prestation, pour savoir qui a relu ou validé quoi. Ce nom n'est demandé qu'une fois ; vous pourrez le modifier dans la fenêtre Projet.</p>
+    <div class="f"><label for="nm-in">Nom ou initiales</label><input type="text" id="nm-in" autocomplete="name" placeholder="Ex. Casimir ou C. C."></div>`,
+    `<button class="btn" data-m="cancel">Annuler</button><button class="btn primary" id="nm-ok">Enregistrer</button>`);
+  const go=async()=>{const v=$("#nm-in").value.trim();if(!v){$("#nm-in").focus();return}await setMyName(v);closeModal();fn()};
+  $("#nm-ok").onclick=go;$("#nm-in").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go()}};
+}
+function etatMeta(n){if(!n.etatLe)return"";const l=(ETATS.find(e=>e[0]===(n.etat||"redaction"))||ETATS[0])[1];
+  return`${esc(l)}${n.etatPar?" par "+esc(n.etatPar):""} le ${esc(new Date(n.etatLe).toLocaleString("fr-FR",{day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"}))}`}
 function lieuChips(n){
   let h="",last=null;
   S.lieux.forEach(l=>{if(l.niv!==last){last=l.niv;h+=`<span class="niv">${esc(l.niv||"Général")}</span>`}
@@ -759,30 +918,48 @@ function renderFiche(){
         <dt>Contenu</dt><dd>${countP(n)} prestation${countP(n)>1?"s":""}</dd>
         <dt>Montant HT</dt><dd>${eur(baseT(n))}${pseT(n)?` <span class="hint">+ ${eur(pseT(n))} en PSE</span>`:""}</dd></dl>
       <div class="f"><label for="g-nom">Intitulé</label><input type="text" id="g-nom" value="${esc(n.nom)}"></div>
-      <div class="f"><label for="g-intro">Généralités (texte d'introduction du CCTP)</label><textarea id="g-intro" rows="6" placeholder="Prescriptions communes à l'ensemble du ${isLot?"lot":"sous-lot"} : documents de référence, DTU applicables, interfaces avec les autres lots…">${esc(n.intro)}</textarea></div>
-      <div class="actions"><button class="btn danger" id="f-del">Supprimer ${isLot?"le lot":"le sous-lot"}</button></div></div>`;
+      <div class="f"><label for="g-intro">Généralités (texte d'introduction du CCTP)</label><textarea id="g-intro" rows="5" placeholder="Prescriptions communes à l'ensemble du ${isLot?"lot":"sous-lot"} : documents de référence, DTU applicables, interfaces avec les autres lots…">${esc(n.intro)}</textarea></div>
+      <p class="hint" style="margin:6px 0 0">Clauses communes à toutes les prestations du ${isLot?"lot":"sous-lot"} : elles s'impriment une seule fois, dans l'encadré de généralités, au lieu d'être répétées dans chaque article.</p>
+      ${clFields(n)}
+      <div class="actions" style="border-top:1px solid var(--line);padding-top:14px"><button class="btn danger" id="f-del">Supprimer ${isLot?"le lot":"le sous-lot"}</button></div></div>`;
+    bindCl(el,n);
     $("#g-nom").oninput=e=>{n.nom=e.target.value;el.querySelector("h3").textContent=n.nom||"Sans titre";commit()};
     $("#g-intro").oninput=e=>{n.intro=e.target.value;save();renderOut()};
     bindDel(n,countP(n));return;
   }
   $("#fiche-h").textContent="Fiche prestation";
   const lot=anc[0],subs=anc.slice(1),multi=n.lieux.length>1;
+  const nc=clCount(n);
   el.innerHTML=`<div class="fiche">
     <div class="fiche-title"><span class="num">${x.nr}</span><h3 id="f-h">${esc(n.nom||"Nouvelle prestation")}</h3>${n.pse?'<span class="pse">PSE</span>':""}</div>
     <dl class="ro"><dt>Lot</dt><dd>${esc(IDX[lot.id].nr+" "+lot.nom)}</dd>
       <dt>Sous-lot</dt><dd>${subs.length?subs.map(s=>esc(IDX[s.id].nr+" "+s.nom)).join(" › "):"<span class='hint'>aucun</span>"}</dd></dl>
+    <div class="etat" role="radiogroup" aria-label="État de la prestation"><span class="lab">État</span>${ETATS.map(([k,l])=>`<button class="et et-${k}" role="radio" aria-checked="${(n.etat||"redaction")===k}" data-et="${k}"><i class="c-${k}"></i>${l}</button>`).join("")}</div>
+    <div class="et-meta" id="f-etm">${etatMeta(n)}</div>
+    <div class="ftabs" role="tablist"><button class="ftab" role="tab" data-ft="fiche" aria-selected="${FTAB==="fiche"}">Fiche</button><button class="ftab" role="tab" data-ft="det" aria-selected="${FTAB==="det"}">Descriptif détaillé <span class="cnt" id="f-clc" ${nc?"":"hidden"}>${nc}</span></button></div>
+    <div class="fpane" id="fp-det" ${FTAB==="det"?"":"hidden"}>
+      <p class="hint" style="margin:0">Ces clauses s'ajoutent au CCTP sous forme d'alinéas, à la suite du descriptif. Laissez vide ce qui ne s'applique pas : seuls les champs remplis apparaissent.</p>
+      ${clFields(n)}
+    </div>
+    <div class="fpane" id="fp-fiche" ${FTAB==="fiche"?"":"hidden"}>
+    <section class="fs" style="border-top:0;padding-top:4px"><h4 class="fs-h">Désignation</h4>
     <div class="f ac"><label for="f-nom">Nom</label>
       <input type="text" id="f-nom" value="${esc(n.nom)}" autocomplete="off" placeholder="Tapez pour chercher dans la bibliothèque…" role="combobox" aria-expanded="false" aria-controls="ac-list">
       <div class="libhint" id="f-lib"></div>
       <div class="ac-list" id="ac-list" role="listbox" hidden></div></div>
     <div class="grid2">
-      <div class="f"><label for="f-cat">Catégorie</label><select id="f-cat">${CATS.map(c=>`<option ${c===n.cat?"selected":""}>${c}</option>`).join("")}</select></div>
+      <div class="f"><label for="f-cat">Catégorie <button class="link" id="f-gcats">gérer</button></label><select id="f-cat">${[...new Set([...catList(),n.cat].filter(Boolean))].map(c=>`<option ${c===n.cat?"selected":""}>${esc(c)}</option>`).join("")}</select></div>
       <div class="f"><label for="f-u">Unité</label><select id="f-u">${[...new Set([...UNITES,n.u])].map(u=>`<option ${u===n.u?"selected":""}>${esc(u)}</option>`).join("")}</select></div>
     </div>
-    <div class="f"><label for="f-desc">Descriptif</label><textarea id="f-desc" rows="4">${esc(n.desc)}</textarea></div>
-    <div class="f"><span class="lab">Lieu</span><div class="chips" id="f-lieux">${lieuChips(n)}</div>
-      <div class="hint">Les lieux, leurs niveaux et leurs dimensions se gèrent avec le bouton <button class="link" id="f-glieux">Lieux</button>.</div></div>
+    </section>
+    <section class="fs"><h4 class="fs-h">Descriptif <small>${nc?`+ ${nc} clause${nc>1?"s":""} au descriptif détaillé`:""}</small></h4>
+    <div class="f"><textarea id="f-desc" rows="5" aria-label="Descriptif" placeholder="Description de l'ouvrage : nature, matériaux, performances…">${esc(n.desc)}</textarea></div>
+    </section>
+    <section class="fs"><h4 class="fs-h">Localisation <small><button class="link" id="f-glieux">gérer les lieux</button></small></h4>
+    <div class="chips" id="f-lieux">${lieuChips(n)}</div>
     ${qlHTML(n)}
+    </section>
+    <section class="fs"><h4 class="fs-h">Quantité et prix</h4>
     <div class="grid2">
       <div class="f"><label for="f-qte">${multi?"Quantité · somme des lieux":"Quantité"}</label>
         <input type="text" inputmode="decimal" class="numin ${multi?"locked":""}" id="f-qte" value="${esc(multi?fmtIn(n.qte):(n.qx||fmtIn(n.qte)))}" ${multi?'readonly title="Calculée à partir des quantités par lieu"':""} placeholder="Nombre ou formule">
@@ -791,13 +968,21 @@ function renderFiche(){
     </div>
     <div class="total"><span class="hint">Total HT de la ligne</span><b id="f-tot">${eur(lineT(n))}</b></div>
     <label class="chk"><input type="checkbox" id="f-pse" ${n.pse?"checked":""}> Prestation supplémentaire éventuelle (PSE) : chiffrée à part, hors montant de base</label>
-    <div class="f"><span class="lab">Finition</span>
-      <div class="fin"><input type="checkbox" id="f-finon" ${n.finOn?"checked":""} aria-label="Préciser une finition"><input type="text" id="f-fin" value="${esc(n.fin)}" placeholder="Ex. aspect velours, teinte au choix de l'architecte" ${n.finOn?"":"disabled"}></div></div>
-    <div class="actions">
+    </section>
+    <section class="fs"><h4 class="fs-h">Finition</h4>
+      <div class="fin"><input type="checkbox" id="f-finon" ${n.finOn?"checked":""} aria-label="Préciser une finition"><input type="text" id="f-fin" value="${esc(n.fin)}" placeholder="Ex. aspect velours, teinte au choix de l'architecte" ${n.finOn?"":"disabled"}></div>
+    </section>
+    </div>
+    <div class="actions" style="border-top:1px solid var(--line);padding-top:14px">
       <button class="btn" id="f-dup">Dupliquer</button>
       <span style="flex:1"></span>
       <button class="btn danger" id="f-del">Supprimer</button></div></div>`;
   libHint(n);
+  el.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{FTAB=b.dataset.ft;el.querySelectorAll("[data-ft]").forEach(z=>z.setAttribute("aria-selected",z===b));$("#fp-fiche").hidden=FTAB!=="fiche";$("#fp-det").hidden=FTAB!=="det"});
+  bindCl(el,n,()=>{const c=clCount(n),b=$("#f-clc");b.textContent=c;b.hidden=!c;syncLive(n);libHint(n)});
+  el.querySelectorAll("[data-et]").forEach(b=>b.onclick=()=>withName(()=>{if(n.etat===b.dataset.et)return;n.etat=b.dataset.et;n.etatPar=myName();n.etatLe=Date.now();
+    el.querySelectorAll("[data-et]").forEach(z=>z.setAttribute("aria-checked",z===b));$("#f-etm").innerHTML=etatMeta(n);save();renderTree()}));
+  $("#f-gcats").onclick=e=>{e.preventDefault();openCats()};
   const upd=()=>{$("#f-tot").textContent=eur(lineT(n));syncLive(n);commit();libHint(n)};
   const nomI=$("#f-nom");
   nomI.oninput=e=>{n.nom=e.target.value;$("#f-h").textContent=n.nom||"Nouvelle prestation";upd();acShow()};
@@ -860,7 +1045,7 @@ function acKey(e){
 }
 function acPick(k){
   const d=acItems[k],n=IDX[S.sel].n;
-  Object.assign(n,{nom:d.nom,cat:d.cat,u:d.u,prix:d.prix,prixBase:d.prix,desc:d.desc,bid:d.id});
+  Object.assign(n,{nom:d.nom,cat:d.cat,u:d.u,prix:d.prix,prixBase:d.prix,desc:d.desc,cl:clOf(d),bid:d.id});
   LIVE=null;acHide();recalc(n);commit();renderFiche();
 }
 
@@ -882,24 +1067,32 @@ function byLieu(){
 }
 const indTxt=()=>{const P=S.projet;return [P.phase,P.indice?"indice "+P.indice:""].filter(Boolean).join(" · ")};
 function cctpHead(sub){const P=S.projet;return`<h1>${esc(P.nom)}</h1><p class="sub">${esc([P.moa,P.adresse].filter(Boolean).join(" · "))}<br>${esc(sub)} · ${esc(indTxt())}</p>`}
+const LET=i=>i<26?String.fromCharCode(97+i):String.fromCharCode(97+Math.floor(i/26)-1)+String.fromCharCode(97+i%26);
+/* Alinéas lettrés a), b), c)… ; numérotation reprise à chaque prestation */
+function clHTML(n,flat){const c=clOf(n);let i=0;
+  return CLAUSES.map(([g,fs])=>{const f=fs.filter(([k])=>c[k]);if(!f.length)return"";
+    const items=f.map(([k,l])=>`<p class="cla"><span class="cll">${LET(i++)})</span>${fs.length>1||flat?`<b>${l} :</b> `:""}${esc(c[k])}</p>`).join("");
+    return flat?items:`<p class="clg">${g}</p>`+items}).join("")}
+function genHTML(g,isLot){
+  const k=isLot?"lot":"sous-lot";if(!(g.intro||"").trim()&&!clCount(g))return"";
+  return`<div class="c-gen"><p class="gt">Généralités du ${k}</p>${(g.intro||"").trim()?`<p class="intro">${esc(g.intro)}</p>`:""}${clCount(g)?`<p class="gst">Clauses communes à toutes les prestations du ${k}</p>${clHTML(g,true)}`:""}</div>`}
 function cctpLieuxHTML(){
   return cctpHead("Prestations classées par lieu")+byLieu().map(([l,arr])=>`<h2>${esc(l)}</h2>`+arr.map(n=>{
       const autres=n.lieux.filter(z=>z!==l);
-      return`<div class="art ${S.sel===n.id?"sel":""}" data-id="${n.id}"><h4><span class="nr">${IDX[n.id].nr}</span>${esc(n.nom||"Prestation sans nom")}${n.pse?'<span class="pse">PSE</span>':""}</h4><p class="lotref">${esc(lotRef(n))}</p>${n.desc?`<p>${esc(n.desc)}</p>`:""}${n.finOn&&n.fin?`<p class="meta"><b>Finition :</b> ${esc(n.fin)}</p>`:""}<p class="meta"><b>Quantité dans ce lieu :</b> ${l==="Non localisé"?qf.format(num(n.qte)):qf.format(qOf(n,l))} ${esc(n.u)}${autres.length&&l!=="Non localisé"?` sur ${qf.format(num(n.qte))} au total (également : ${esc(autres.join(", "))})`:""}</p></div>`;
+      return`<div class="art ${S.sel===n.id?"sel":""}" data-id="${n.id}"><h4><span class="nr">${IDX[n.id].nr}</span>${esc(n.nom||"Prestation sans nom")}${n.pse?'<span class="pse">PSE</span>':""}</h4><p class="lotref">${esc(lotRef(n))}</p>${n.desc?`<p>${esc(n.desc)}</p>`:""}${clHTML(n)}${n.finOn&&n.fin?`<p class="meta"><b>Finition :</b> ${esc(n.fin)}</p>`:""}<p class="meta"><b>Quantité dans ce lieu :</b> ${l==="Non localisé"?qf.format(num(n.qte)):qf.format(qOf(n,l))} ${esc(n.u)}${autres.length&&l!=="Non localisé"?` sur ${qf.format(num(n.qte))} au total (également : ${esc(autres.join(", "))})`:""}</p></div>`;
     }).join("")).join("");
 }
 function cctpHTML(){
   const P=S.projet;
-  const rec=arr=>arr.map(n=>{const nr=IDX[n.id].nr;
-    if(n.kind==="g")return`<h3><span>${nr}</span>${esc(n.nom)}</h3>${n.intro?`<p class="intro">${esc(n.intro)}</p>`:""}${rec(n.children)}`;
-    const meta=[];
+  const art=n=>{const nr=IDX[n.id].nr,meta=[];
     if(n.lieux.length)meta.push(`<b>Localisation :</b> ${esc(locTxt(n))}`);
     if(n.finOn&&n.fin)meta.push(`<b>Finition :</b> ${esc(n.fin)}`);
     meta.push(`<b>Unité de compte :</b> ${esc(n.u)}`);
-    return`<div class="art ${S.sel===n.id?"sel":""}" data-id="${n.id}"><h4><span class="nr">${nr}</span>${esc(n.nom||"Prestation sans nom")}${n.pse?'<span class="pse">PSE</span>':""}</h4>${n.desc?`<p>${esc(n.desc)}</p>`:""}${meta.map(m=>`<p class="meta">${m}</p>`).join("")}</div>`;
-  }).join("");
-  return cctpHead("Cahier des clauses techniques particulières")+(P.dispo?`<h2>Dispositions générales</h2><p>${esc(P.dispo)}</p>`:"")+
-    S.tree.map(l=>`<h2>Lot ${IDX[l.id].nr} — ${esc(l.nom)}</h2>${l.intro?`<p class="intro">${esc(l.intro)}</p>`:""}${rec(l.children)}`).join("");
+    return`<div class="c-art ${S.sel===n.id?"sel":""}" data-id="${n.id}"><div class="c-h"><span class="c-n">${nr}</span><h4>${esc(n.nom||"Prestation sans nom")}${n.pse?'<span class="pse">PSE</span>':""}</h4></div><div class="c-body">${n.desc?`<p>${esc(n.desc)}</p>`:""}${clHTML(n)}<p class="c-meta">${meta.join(" · ")}</p></div></div>`};
+  const rec=arr=>arr.map(n=>n.kind==="g"?`<div class="c-h c-sl ${IDX[n.id].depth>1?"d2":""}"><span class="c-n">${IDX[n.id].nr}</span><h3>${esc(n.nom)}</h3></div>${genHTML(n,false)}${rec(n.children)}`:art(n)).join("");
+  return cctpHead("Cahier des clauses techniques particulières")+
+    (P.dispo?`<div class="c-h c-lot"><span class="c-n"></span><h2>Dispositions générales</h2></div><div class="c-body"><p>${esc(P.dispo)}</p></div>`:"")+
+    S.tree.map(l=>`<div class="c-h c-lot"><span class="c-n">${IDX[l.id].nr}</span><h2>${esc(l.nom)}</h2></div>${genHTML(l,true)}${rec(l.children)}`).join("");
 }
 function dpgfRows(arr,pse){
   return arr.map(n=>{const nr=IDX[n.id].nr;
@@ -1109,6 +1302,7 @@ $("#b-new").onclick=()=>{
    ====================================================================== */
 let onModalClose=null;
 function openModal(title,body,foot,o={}){
+  {const ob=$("#m-body");ob.replaceWith(ob.cloneNode(false))} /* une fenêtre neuve, sans les écouteurs de la précédente */
   $("#m-title").textContent=title;$("#m-sub").textContent=o.sub||"";$("#m-body").innerHTML=body;$("#m-foot").innerHTML=foot||"";
   $("#m-foot").onclick=null;$("#dlg").className="dlg"+(o.wide?" wide":"");onModalClose=o.onClose||null;$("#modal").hidden=false;
   const f=$("#m-body").querySelector("input:not([type=radio]):not([type=checkbox]),textarea");if(f&&o.focus!==false)setTimeout(()=>f.focus(),0);
@@ -1138,6 +1332,7 @@ function openProjet(){
     <div class="grid2"><div class="f"><label for="pj-moe">Maître d'œuvre</label><input type="text" id="pj-moe" value="${esc(P.moe)}" placeholder="Nom de l'agence"></div>
       <div class="grid2"><div class="f"><label for="pj-ph">Phase</label><select id="pj-ph">${PHASES.map(p=>`<option ${p===P.phase?"selected":""}>${p}</option>`).join("")}</select></div>
       <div class="f"><label for="pj-ind">Indice en cours</label><input type="text" id="pj-ind" value="${esc(P.indice)}"></div></div></div>
+    <div class="f"><label for="pj-me">Votre nom <span class="hint" style="text-transform:none;letter-spacing:0;font-weight:400">· ${T?"par défaut, celui de votre session":"enregistré dans ce navigateur"}, noté quand vous changez l'état d'une prestation</span></label><input type="text" id="pj-me" value="${esc(myName())}" placeholder="${T?esc(ME):"Nom ou initiales"}"></div>
     <div class="f"><label for="pj-dispo">Dispositions générales (en tête du CCTP, communes à tous les lots)</label><textarea id="pj-dispo" rows="6" placeholder="Objet du CCTP, documents de référence, obligations communes des entreprises…">${esc(P.dispo)}</textarea></div>
     <fieldset><legend>Indices du dossier</legend>
       <p class="hint" style="margin:0 0 6px">Figer un indice enregistre une copie du dossier tel qu'il est diffusé. Vous pourrez ensuite voir ce qui a changé.</p>
@@ -1145,6 +1340,7 @@ function openProjet(){
       <div><button class="btn" id="pj-freeze">Figer l'indice ${esc(P.indice||"A")} et passer à l'indice ${esc(nextIndice(P.indice))}</button></div></fieldset>`,
     `<button class="btn primary" data-m="close">Fermer</button>`,{onClose:()=>{renderHead();renderOut()}});
   const bind=(id,k)=>$(id).oninput=e=>{P[k]=e.target.value;save()};
+  $("#pj-me").onchange=e=>setMyName(e.target.value);
   bind("#pj-nom","nom");bind("#pj-moa","moa");bind("#pj-adr","adresse");bind("#pj-moe","moe");bind("#pj-ind","indice");bind("#pj-dispo","dispo");
   $("#pj-ph").onchange=e=>{P.phase=e.target.value;save()};
   $("#pj-freeze").onclick=()=>{
@@ -1168,7 +1364,7 @@ function showDiff(id){
     if(r2(num(o.qte))!==r2(num(n.qte)))ch.push(`Quantité : ${f(o.qte)} → ${f(n.qte)} ${n.u}`);
     if(o.u!==n.u)ch.push(`Unité : ${o.u} → ${n.u}`);
     if(r2(num(o.prix))!==r2(num(n.prix)))ch.push(`Prix unitaire : ${nf.format(num(o.prix))} → ${nf.format(num(n.prix))} €`);
-    if((o.desc||"")!==(n.desc||""))ch.push("Descriptif modifié");
+    if((o.desc||"")!==(n.desc||""))ch.push("Descriptif modifié");if(clSig(o)!==clSig(n))ch.push("Descriptif détaillé modifié");
     if((o.lieux||[]).join("|")!==n.lieux.join("|"))ch.push(`Localisation : ${(o.lieux||[]).join(", ")||"aucune"} → ${n.lieux.join(", ")||"aucune"}`);
     if(!!o.pse!==!!n.pse)ch.push(n.pse?"Passée en PSE":"Sortie des PSE");
     if((o.fin||"")!==(n.fin||"")||!!o.finOn!==!!n.finOn)ch.push("Finition modifiée");
@@ -1246,7 +1442,7 @@ function openLib(){
   libList();libEdit();libStatus();reloadLib();
   $("#lb-q").oninput=e=>{LIB.q=e.target.value;libList()};
   $("#lb-lot").onchange=e=>{LIB.lot=e.target.value;libList()};
-  $("#lb-new").onclick=()=>{const a={id:uid(),nom:"Nouvel article",lot:LIB.lot||"",cat:CATS[0],u:"U",prix:0,desc:""};BASE.unshift(a);saveBase();LIB.sel=a.id;LIB.q="";$("#lb-q").value="";libList();libEdit();const i=$("#lb-nom");i.focus();i.select()};
+  $("#lb-new").onclick=()=>{const a={id:uid(),nom:"Nouvel article",lot:LIB.lot||"",cat:catList()[0],u:"U",prix:0,desc:""};BASE.unshift(a);saveBase();LIB.sel=a.id;LIB.q="";$("#lb-q").value="";libList();libEdit();const i=$("#lb-nom");i.focus();i.select()};
   $("#lb-list").onclick=e=>{const tr=e.target.closest("tr[data-a]");if(!tr)return;LIB.sel=tr.dataset.a;libList();libEdit()};
   $("#lb-imp").onclick=()=>pickFile(".xlsx",f=>importLibXlsx(f).catch(err=>toast("Import impossible : "+(err&&err.message||err))));
   $("#lb-exp").onclick=()=>exportLibXlsx().catch(err=>toast("Export impossible : "+(err&&err.message||err)));
@@ -1254,6 +1450,38 @@ function openLib(){
   $("#lb-load").onclick=()=>pickFile(".json,application/json",f=>{const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);const arr=normBase(d.articles||d.bibliotheque||d);let a=0,u=0;arr.forEach(x=>{const z=BASE.find(b=>norm(b.nom)===norm(x.nom));if(z){Object.assign(z,{lot:x.lot||z.lot,cat:x.cat,u:x.u,prix:x.prix,desc:x.desc||z.desc});u++}else{BASE.push(x);a++}});saveBase();libList();libEdit();toast(`${a} article(s) ajouté(s), ${u} mis à jour.`)}catch(e){toast("Ce fichier n'est pas une sauvegarde de bibliothèque.")}};r.readAsText(f)});
 }
 $("#b-lib").onclick=openLib;
+function catUse(c){return flatP(S.tree).filter(n=>n.cat===c).length+BASE.filter(a=>a.cat===c).length}
+function saveCats(){CATS_MAJ=Date.now();saveBase();save()}
+function openCats(){
+  if(!CATS)CATS=[...CATS_DEF];
+  const draw=()=>{
+    $("#m-body").innerHTML=`<p class="hint" style="margin:0">Les catégories sont communes à tous vos projets et à la bibliothèque${T&&CFG.libDir?", donc partagées avec les autres postes de l'agence":""}. Renommer une catégorie la met à jour partout.</p>
+    <table class="cats"><thead><tr><th>Catégorie</th><th class="r" style="width:110px">Utilisée</th><th style="width:220px"></th></tr></thead><tbody>
+    ${CATS.map((c,i)=>{const u=catUse(c);return`<tr data-i="${i}"><td><input type="text" data-ck value="${esc(c)}" aria-label="Nom de la catégorie"></td><td class="u">${u?u+" fois":"—"}</td>
+      <td class="act"><span data-rep hidden>remplacer par <select aria-label="Catégorie de remplacement">${CATS.filter((z,j)=>j!==i).map(z=>`<option>${esc(z)}</option>`).join("")}</select> <button class="btn armed" data-ok>Confirmer</button></span>
+      <span data-std><button class="mini" data-mv="-1" title="Monter">↑</button> <button class="mini" data-mv="1" title="Descendre">↓</button> <button class="mini" data-del ${CATS.length<2?"disabled":""} title="Supprimer">✕</button></span></td></tr>`}).join("")}
+    </tbody></table>
+    <div><button class="btn" id="ct-add">+ Ajouter une catégorie</button></div>`;
+  };
+  openModal("Catégories","",`<button class="btn primary" data-m="close">Fermer</button>`,{focus:false,onClose:()=>{renderFiche();renderOut()}});
+  draw();
+  const body=$("#m-body");
+  body.addEventListener("change",e=>{const t=e.target;if(!t.matches("[data-ck]"))return;const i=+t.closest("tr").dataset.i,old=CATS[i],nw=t.value.trim();
+    if(!nw||nw===old){t.value=old;return}
+    if(CATS.some((c,j)=>j!==i&&norm(c)===norm(nw))){toast("Cette catégorie existe déjà.");t.value=old;return}
+    CATS=CATS.map((c,j)=>j===i?nw:c);walkP(S.tree,n=>{if(n.cat===old)n.cat=nw});BASE.forEach(a=>{if(a.cat===old)a.cat=nw});
+    saveCats();draw();toast(`« ${old} » renommée en « ${nw} » partout.`)});
+  body.onclick=e=>{
+    if(e.target.id==="ct-add"){CATS=[...CATS,"Nouvelle catégorie"];saveCats();draw();const ins=body.querySelectorAll("[data-ck]");const l=ins[ins.length-1];l.focus();l.select();return}
+    const tr=e.target.closest("tr[data-i]");if(!tr)return;const i=+tr.dataset.i;
+    const mv=e.target.closest("[data-mv]");if(mv){const j=i+ +mv.dataset.mv;if(j<0||j>=CATS.length)return;const c=[...CATS];[c[i],c[j]]=[c[j],c[i]];CATS=c;saveCats();draw();return}
+    if(e.target.closest("[data-del]")){const c=CATS[i];if(!catUse(c)){CATS=CATS.filter((z,j)=>j!==i);saveCats();draw();return}
+      tr.querySelector("[data-std]").hidden=true;tr.querySelector("[data-rep]").hidden=false;return}
+    if(e.target.closest("[data-ok]")){const c=CATS[i],by=tr.querySelector("select").value;walkP(S.tree,n=>{if(n.cat===c)n.cat=by});BASE.forEach(a=>{if(a.cat===c)a.cat=by});
+      CATS=CATS.filter((z,j)=>j!==i);saveCats();draw();toast(`« ${c} » supprimée, remplacée par « ${by} ».`)}
+  };
+}
+$("#b-cats").onclick=openCats;
 function libStatus(){
   const el=$("#lb-loc");if(!el)return;
   if(!T){el.innerHTML=`<span class="hint">Bibliothèque conservée dans ce navigateur · ${BASE.length} articles. Dans l'application Prescrire, elle peut être partagée entre les postes.</span>`;return}
@@ -1282,7 +1510,7 @@ async function loadSharedLib(mode){
   LIB_PATH=pjoin(CFG.libDir||DIRS.data,"bibliotheque-prescrire.json");
   const txt=await inv("read_text",{path:LIB_PATH}).catch(()=>null);
   const d=txt?parseLib(txt):null;
-  if(d&&mode!=="push"&&mode!=="merge"){BASE=normBase(d.articles);TOMB=[];resnap();LIB_MTIME=await inv("mtime",{path:LIB_PATH}).catch(()=>0)||0;LIB_ERR="";return}
+  if(d&&mode!=="push"&&mode!=="merge"){BASE=normBase(d.articles);if(Array.isArray(d.categories)&&d.categories.length){CATS=d.categories;CATS_MAJ=d.catsMaj||0}TOMB=[];resnap();LIB_MTIME=await inv("mtime",{path:LIB_PATH}).catch(()=>0)||0;LIB_ERR="";return}
   if(d&&mode==="merge"){BASE.forEach(a=>{a.maj=a.maj||Date.now();a.par=a.par||ME})}
   resnap();await flushBase();
 }
@@ -1301,10 +1529,13 @@ function libEdit(){
   const usedIn=flatP(S.tree).filter(n=>n.bid===a.id||norm(n.nom)===norm(a.nom)).length;
   box.innerHTML=`<div class="f"><label for="lb-nom">Désignation</label><input type="text" id="lb-nom" value="${esc(a.nom)}"></div>
     <div class="f"><label for="lb-lotf">Lot</label><input type="text" id="lb-lotf" value="${esc(a.lot)}" list="lb-lots"><datalist id="lb-lots">${libLots().map(l=>`<option value="${esc(l)}">`).join("")}</datalist></div>
-    <div class="grid2"><div class="f"><label for="lb-cat">Catégorie</label><select id="lb-cat">${CATS.map(c=>`<option ${c===a.cat?"selected":""}>${c}</option>`).join("")}</select></div>
+    <div class="grid2"><div class="f"><label for="lb-cat">Catégorie</label><select id="lb-cat">${[...new Set([...catList(),a.cat].filter(Boolean))].map(c=>`<option ${c===a.cat?"selected":""}>${esc(c)}</option>`).join("")}</select></div>
     <div class="grid2"><div class="f"><label for="lb-u">Unité</label><select id="lb-u">${[...new Set([...UNITES,a.u])].map(u=>`<option ${u===a.u?"selected":""}>${esc(u)}</option>`).join("")}</select></div>
     <div class="f"><label for="lb-prix">Prix HT</label><input type="text" inputmode="decimal" class="numin" id="lb-prix" value="${esc(fmtIn(a.prix))}"></div></div></div>
-    <div class="f"><label for="lb-desc">Descriptif</label><textarea id="lb-desc" rows="8">${esc(a.desc)}</textarea></div>
+    <div class="f"><label for="lb-desc">Descriptif</label><textarea id="lb-desc" rows="6">${esc(a.desc)}</textarea></div>
+    <details ${clCount(a)?"open":""}><summary class="lab" style="cursor:pointer">Descriptif détaillé (${clCount(a)} clause${clCount(a)>1?"s":""})</summary>
+      ${CLAUSES.map(([g,fs])=>fs.map(([k,l,ph])=>`<div class="f" style="margin-top:8px"><label for="lbc-${k}">${fs.length>1?g+" · "+l:l}</label><textarea id="lbc-${k}" data-lcl="${k}" rows="2" placeholder="${esc(ph)}">${esc((a.cl||{})[k]||"")}</textarea></div>`).join("")).join("")}
+    </details>
     ${a.maj?`<p class="hint">Modifié${a.par?" par "+esc(a.par):""} le ${esc(new Date(a.maj).toLocaleString("fr-FR",{day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"}))}.</p>`:""}
     <p class="hint">${usedIn?`Utilisé dans ce projet (${usedIn} fois). Modifier l'article ici ne change pas les prestations déjà placées.`:"Non utilisé dans ce projet."}</p>
     <div class="actions"><span style="flex:1"></span><button class="btn danger" id="lb-del">Supprimer l'article</button></div>`;
@@ -1312,6 +1543,7 @@ function libEdit(){
   $("#lb-nom").oninput=e=>set("nom",e.target.value);$("#lb-lotf").oninput=e=>set("lot",e.target.value.trim());
   $("#lb-cat").onchange=e=>set("cat",e.target.value);$("#lb-u").onchange=e=>set("u",e.target.value);
   $("#lb-prix").oninput=e=>set("prix",num(e.target.value));$("#lb-desc").oninput=e=>{a.desc=e.target.value;saveBase()};
+  box.querySelectorAll("[data-lcl]").forEach(t=>t.oninput=e=>{a.cl=Object.assign({},a.cl);const k=e.target.dataset.lcl,v=e.target.value;if(v.trim())a.cl[k]=v;else delete a.cl[k];saveBase()});
   let armed=false;$("#lb-del").onclick=e=>{if(!armed){armed=true;e.target.classList.add("armed");e.target.textContent="Confirmer la suppression";return}
     BASE.splice(BASE.indexOf(a),1);saveBase();LIB.sel=null;libList();libEdit();toast("Article supprimé de la bibliothèque.")};
 }
@@ -1321,7 +1553,7 @@ const normU=u=>{const t=norm(u).replace(/\./g,"");return({m2:"m²","m²":"m²",m
 async function importLibXlsx(file){
   if(!needLib("ExcelJS"))return;
   const wb=new ExcelJS.Workbook();await wb.xlsx.load(await file.arrayBuffer());
-  let added=0,upd=0,sheets=0;
+  let added=0,upd=0,sheets=0,newCats=0;
   wb.eachSheet(ws=>{
     let hr=0,map={};
     for(let r=1;r<=Math.min(20,ws.rowCount);r++){const m={};ws.getRow(r).eachCell((c,col)=>{const t=norm(str(c.value));if(!t)return;
@@ -1329,6 +1561,12 @@ async function importLibXlsx(file){
       else if(/^(u|unite|unites)$/.test(t))m.u??=col;
       else if(/^(pu|p\.u|prix)/.test(t))m.prix??=col;
       else if(/^(descriptif|description|texte|prescription|cctp)/.test(t))m.desc??=col;
+      else if(/support/.test(t))m.support??=col;
+      else if(/entrepreneur/.test(t))m.entrepreneur??=col;
+      else if(/realisation/.test(t))m.realisation??=col;
+      else if(/interruption/.test(t))m.interruption??=col;
+      else if(/finalisation/.test(t))m.finalisation??=col;
+      else if(/^limite/.test(t))m.limites??=col;
       else if(/^lot/.test(t))m.lot??=col;
       else if(/^categ/.test(t))m.cat??=col});
       if(m.nom){hr=r;map=m;break}}
@@ -1340,22 +1578,25 @@ async function importLibXlsx(file){
       const u=map.u?normU(str(row.getCell(map.u).value)):"",prix=map.prix?num(cv(row.getCell(map.prix).value)):0,desc=map.desc?str(row.getCell(map.desc).value):"";
       if(!u&&!prix&&!desc)continue;
       const lot=map.lot?str(row.getCell(map.lot).value):sheetLot,cat=map.cat?str(row.getCell(map.cat).value):"";
+      const cl={};CL_KEYS.forEach(k=>{if(map[k]){const v=str(row.getCell(map[k]).value);if(v)cl[k]=v}});
+      if(cat&&!catList().some(c=>norm(c)===norm(cat))){CATS=[...catList(),cat];CATS_MAJ=Date.now();newCats++}
+      const catOk=cat?catList().find(c=>norm(c)===norm(cat)):"";
       const z=BASE.find(b=>norm(b.nom)===norm(nom));
-      if(z){if(u)z.u=u;if(prix)z.prix=prix;if(desc)z.desc=desc;if(lot)z.lot=lot;if(cat&&CATS.includes(cat))z.cat=cat;upd++}
-      else{BASE.push({id:uid(),nom,lot,cat:CATS.includes(cat)?cat:CATS[0],u:u||"U",prix,desc});added++}
+      if(z){if(u)z.u=u;if(prix)z.prix=prix;if(desc)z.desc=desc;if(lot)z.lot=lot;if(catOk)z.cat=catOk;if(Object.keys(cl).length)z.cl=Object.assign({},z.cl,cl);upd++}
+      else{BASE.push({id:uid(),nom,lot,cat:catOk||catList()[0],u:u||"U",prix,desc,cl});added++}
     }
   });
   saveBase();libList();libEdit();
   if(!sheets)return toast("Aucune colonne « Désignation » trouvée dans ce fichier.",4000);
-  toast(`Import terminé : ${added} article(s) ajouté(s), ${upd} mis à jour.`,4000);
+  toast(`Import terminé : ${added} article(s) ajouté(s), ${upd} mis à jour${newCats?`, ${newCats} catégorie(s) créée(s)`:""}.`,4000);
 }
 async function exportLibXlsx(){
   if(!needLib("ExcelJS"))return;
   const wb=new ExcelJS.Workbook(),ws=wb.addWorksheet("Bibliothèque",{views:[{state:"frozen",ySplit:1}]});
-  ws.columns=[{header:"Lot",width:26},{header:"Désignation",width:48},{header:"Catégorie",width:22},{header:"U",width:7},{header:"Prix HT",width:12},{header:"Descriptif",width:80}];
+  ws.columns=[{header:"Lot",width:26},{header:"Désignation",width:48},{header:"Catégorie",width:22},{header:"U",width:7},{header:"Prix HT",width:12},{header:"Descriptif",width:80},...CLAUSES.flatMap(([g,fs])=>fs.map(([k,l])=>({header:fs.length>1?g+" — "+l:l,width:50})))];
   ws.getRow(1).font={bold:true,name:"Arial",size:10};
-  BASE.slice().sort((a,b)=>(a.lot||"~").localeCompare(b.lot||"~","fr")||a.nom.localeCompare(b.nom,"fr")).forEach(a=>{const r=ws.addRow([a.lot,a.nom,a.cat,a.u,a.prix,a.desc]);r.font={name:"Arial",size:10};r.getCell(5).numFmt='#,##0.00 "€"';r.getCell(6).alignment={wrapText:true,vertical:"top"};r.getCell(2).alignment={wrapText:true,vertical:"top"}});
-  ws.autoFilter="A1:F1";
+  BASE.slice().sort((a,b)=>(a.lot||"~").localeCompare(b.lot||"~","fr")||a.nom.localeCompare(b.nom,"fr")).forEach(a=>{const r=ws.addRow([a.lot,a.nom,a.cat,a.u,a.prix,a.desc,...CL_KEYS.map(k=>(a.cl||{})[k]||"")]);r.font={name:"Arial",size:10};r.getCell(5).numFmt='#,##0.00 "€"';r.getCell(6).alignment={wrapText:true,vertical:"top"};r.getCell(2).alignment={wrapText:true,vertical:"top"}});
+  ws.autoFilter={from:"A1",to:{row:1,column:6+CL_KEYS.length}};
   await saveFile(`Bibliothèque Prescrire ${today().replace(/\//g,"-")}.xlsx`,new Blob([await wb.xlsx.writeBuffer()],{type:XLSX_MIME}));
 }
 
@@ -1481,17 +1722,31 @@ async function exportDocx(lotIds){
   b+=wP(wRun("Sommaire",{b:true,sz:28}),{br:true,sp:[0,240]});
   b+=`<w:p><w:r><w:fldChar w:fldCharType="begin" w:dirty="true"/></w:r><w:r><w:instrText xml:space="preserve"> TOC \\o "1-2" \\h \\z \\u </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t xml:space="preserve">Le sommaire se met à jour à l'ouverture. Sinon : clic droit, puis « Mettre à jour les champs ».</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r></w:p>`;
   let first=true;
-  if(P.dispo){b+=wP(wRun("Dispositions générales"),{style:"Heading1",br:true});b+=wParas(P.dispo);first=false}
+  const TAB="<w:r><w:tab/></w:r>";
+  const hd=(nr,txt,style,o={})=>wP(wRun(nr)+TAB+wRun(txt)+(o.pse?wRun("   (PSE)",{color:"8A5A00"}):""),Object.assign({style},o.br?{br:true}:{}));
+  const clW=(n,flat,box)=>{const c=clOf(n);let i=0,h="";
+    CLAUSES.forEach(([g,fs])=>{const f=fs.filter(([k])=>c[k]);if(!f.length)return;
+      if(!flat)h+=wP(wRun(g),{style:"ClauseTitre"});
+      f.forEach(([k,l])=>String(c[k]).split(/\n+/).filter(t=>t.trim()).forEach((t,j)=>{
+        h+=wP((j===0?wRun(LET(i++)+")")+TAB+(fs.length>1||flat?wRun(l+" : ",{b:true}):""):TAB)+wRun(t),{style:box?"GenClause":"Clause"})}))});
+    return h};
+  const genW=(g,isLot)=>{const k=isLot?"lot":"sous-lot";if(!(g.intro||"").trim()&&!clCount(g))return"";
+    return wP(wRun("Généralités du "+k),{style:"GenTitre"})+((g.intro||"").trim()?wParas(g.intro,{style:"Gen"}):"")+
+      (clCount(g)?wP(wRun("Clauses communes à toutes les prestations du "+k),{style:"GenSousTitre"})+clW(g,true,true):"")};
+  if(P.dispo){b+=hd("","Dispositions générales","Heading1",{br:true});b+=wParas(P.dispo,{style:"Corps"});first=false}
   const rec=arr=>arr.map(n=>{const nr=IDX[n.id].nr;
-    if(n.kind==="g")return wP(wRun(nr+"  "+n.nom),{style:"Heading2"})+(n.intro?wParas(n.intro,{style:"Intro"}):"")+rec(n.children);
-    let h=wP(wRun(nr+"  "+(n.nom||"Prestation sans nom"))+(n.pse?wRun("   (PSE)",{color:"8A5A00"}):""),{style:"Heading3"});
-    if(n.desc)h+=wParas(n.desc);
-    if(n.lieux.length)h+=wP(wRun("Localisation : ",{b:true})+wRun(locTxt(n)),{style:"Meta"});
-    if(n.finOn&&n.fin)h+=wP(wRun("Finition : ",{b:true})+wRun(n.fin),{style:"Meta"});
-    h+=wP(wRun("Unité de compte : ",{b:true})+wRun(n.u)+(n.pse?wRun(" · Prestation supplémentaire éventuelle, chiffrée à part."):""),{style:"Meta"});
+    if(n.kind==="g")return hd(nr,n.nom,"Heading2")+genW(n,false)+rec(n.children);
+    let h=hd(nr,n.nom||"Prestation sans nom","Heading3",{pse:n.pse});
+    if(n.desc)h+=wParas(n.desc,{style:"Corps"});
+    h+=clW(n,false,false);
+    const meta=[];
+    if(n.lieux.length)meta.push(wRun("Localisation : ",{b:true})+wRun(locTxt(n)));
+    if(n.finOn&&n.fin)meta.push(wRun("Finition : ",{b:true})+wRun(n.fin));
+    meta.push(wRun("Unité de compte : ",{b:true})+wRun(n.u)+(n.pse?wRun(" · Prestation supplémentaire éventuelle, chiffrée à part."):""));
+    meta.forEach(m=>{h+=wP(m,{style:"Meta"})});
     return h;
   }).join("");
-  lots.forEach(l=>{b+=wP(wRun("Lot "+IDX[l.id].nr+" — "+l.nom),{style:"Heading1",br:true});first=false;if(l.intro)b+=wParas(l.intro,{style:"Intro"});b+=rec(l.children)});
+  lots.forEach(l=>{b+=hd(IDX[l.id].nr,l.nom,"Heading1",{br:true});first=false;b+=genW(l,true);b+=rec(l.children)});
   const NS='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
   const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${b}<w:sectPr><w:headerReference w:type="default" r:id="rId10"/><w:headerReference w:type="first" r:id="rId12"/><w:footerReference w:type="first" r:id="rId13"/><w:footerReference w:type="default" r:id="rId11"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1418" w:right="1247" w:bottom="1418" w:left="1247" w:header="567" w:footer="567" w:gutter="0"/><w:titlePg/></w:sectPr></w:body></w:document>`;
   const hdr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}>${wP(wRun((P.nom||"")+" — CCTP — "+indTxt()),{style:"Header"})}</w:hdr>`;
@@ -1500,11 +1755,17 @@ async function exportDocx(lotIds){
   const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ${NS}>
 <w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Arial" w:cs="Arial"/><w:sz w:val="20"/><w:szCs w:val="20"/><w:lang w:val="fr-FR"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="80" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>
 <w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/><w:pPr><w:jc w:val="both"/></w:pPr></w:style>
-${st("Heading1","heading 1",'<w:keepNext/><w:spacing w:before="0" w:after="240"/><w:pBdr><w:bottom w:val="single" w:sz="8" w:space="4" w:color="1B2430"/></w:pBdr><w:jc w:val="left"/><w:outlineLvl w:val="0"/>','<w:b/><w:caps/><w:color w:val="1D4F91"/><w:sz w:val="28"/><w:szCs w:val="28"/>')}
-${st("Heading2","heading 2",'<w:keepNext/><w:spacing w:before="320" w:after="120"/><w:jc w:val="left"/><w:outlineLvl w:val="1"/>','<w:b/><w:sz w:val="24"/><w:szCs w:val="24"/>')}
-${st("Heading3","heading 3",'<w:keepNext/><w:spacing w:before="240" w:after="60"/><w:jc w:val="left"/><w:outlineLvl w:val="2"/>','<w:b/><w:sz w:val="21"/><w:szCs w:val="21"/>')}
-${st("Meta","Prescrire - mention",'<w:spacing w:before="0" w:after="20"/><w:jc w:val="left"/>','<w:color w:val="4A5563"/><w:sz w:val="18"/><w:szCs w:val="18"/>')}
-${st("Intro","Prescrire - généralités",'<w:spacing w:after="120"/>','<w:i/>')}
+${st("Heading1","heading 1",'<w:keepNext/><w:spacing w:before="0" w:after="200"/><w:pBdr><w:bottom w:val="single" w:sz="12" w:space="4" w:color="1B2430"/></w:pBdr><w:tabs><w:tab w:val="left" w:pos="964"/></w:tabs><w:ind w:left="964" w:hanging="964"/><w:jc w:val="left"/><w:outlineLvl w:val="0"/>','<w:b/><w:caps/><w:color w:val="1D4F91"/><w:sz w:val="28"/><w:szCs w:val="28"/>')}
+${st("Heading2","heading 2",'<w:keepNext/><w:spacing w:before="320" w:after="100"/><w:pBdr><w:bottom w:val="single" w:sz="4" w:space="2" w:color="1B2430"/></w:pBdr><w:tabs><w:tab w:val="left" w:pos="964"/></w:tabs><w:ind w:left="964" w:hanging="964"/><w:jc w:val="left"/><w:outlineLvl w:val="1"/>','<w:b/><w:sz w:val="23"/><w:szCs w:val="23"/>')}
+${st("Heading3","heading 3",'<w:keepNext/><w:spacing w:before="220" w:after="40"/><w:tabs><w:tab w:val="left" w:pos="964"/></w:tabs><w:ind w:left="964" w:hanging="964"/><w:jc w:val="left"/><w:outlineLvl w:val="2"/>','<w:b/><w:sz w:val="20"/><w:szCs w:val="20"/>')}
+${st("Corps","Prescrire - texte",'<w:spacing w:after="60"/><w:ind w:left="964"/><w:jc w:val="both"/>','')}
+${st("ClauseTitre","Prescrire - groupe de clauses",'<w:keepNext/><w:spacing w:before="100" w:after="20"/><w:ind w:left="964"/><w:jc w:val="left"/>','<w:b/><w:i/><w:color w:val="3D4754"/><w:sz w:val="18"/><w:szCs w:val="18"/>')}
+${st("Clause","Prescrire - alinéa",'<w:spacing w:after="30"/><w:tabs><w:tab w:val="left" w:pos="1324"/></w:tabs><w:ind w:left="1324" w:hanging="360"/>','')}
+${st("Meta","Prescrire - mention",'<w:spacing w:before="60" w:after="20"/><w:ind w:left="964"/><w:jc w:val="left"/>','<w:color w:val="4A5563"/><w:sz w:val="17"/><w:szCs w:val="17"/>')}
+${st("GenTitre","Prescrire - généralités, titre",'<w:keepNext/><w:spacing w:before="160" w:after="40"/><w:ind w:left="964"/><w:shd w:val="clear" w:color="auto" w:fill="F2F4F7"/><w:jc w:val="left"/>','<w:b/><w:caps/><w:spacing w:val="10"/><w:color w:val="5B6674"/><w:sz w:val="16"/><w:szCs w:val="16"/>')}
+${st("Gen","Prescrire - généralités",'<w:spacing w:after="40"/><w:ind w:left="964"/><w:shd w:val="clear" w:color="auto" w:fill="F2F4F7"/>','<w:i/>')}
+${st("GenSousTitre","Prescrire - clauses communes",'<w:keepNext/><w:spacing w:before="60" w:after="20"/><w:ind w:left="964"/><w:shd w:val="clear" w:color="auto" w:fill="F2F4F7"/><w:jc w:val="left"/>','<w:b/><w:sz w:val="18"/><w:szCs w:val="18"/>')}
+${st("GenClause","Prescrire - clause commune",'<w:spacing w:after="30"/><w:tabs><w:tab w:val="left" w:pos="1324"/></w:tabs><w:ind w:left="1324" w:hanging="360"/><w:shd w:val="clear" w:color="auto" w:fill="F2F4F7"/>','')}
 ${st("Header","header",'<w:pBdr><w:bottom w:val="single" w:sz="4" w:space="4" w:color="9AA3AE"/></w:pBdr><w:jc w:val="left"/>','<w:color w:val="5B6674"/><w:sz w:val="16"/><w:szCs w:val="16"/>')}
 ${st("Footer","footer",'<w:jc w:val="left"/>','<w:color w:val="5B6674"/><w:sz w:val="16"/><w:szCs w:val="16"/>')}
 ${st("TOC1","toc 1",'<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9402"/></w:tabs><w:spacing w:before="120" w:after="40"/><w:jc w:val="left"/>','<w:b/>')}
@@ -1695,6 +1956,39 @@ let lastTitle="";
 function winTitle(){if(!T)return;const t=`${S.fichier||S.projet.nom||"Prescrire"}${S.dirty?" •":""} — Prescrire`;if(t!==lastTitle){lastTitle=t;try{T.window.getCurrentWindow().setTitle(t)}catch(e){}}}
 $("#p-nom").oninput=e=>{S.projet.nom=e.target.value;save();renderOut()};
 if(!T)window.addEventListener("beforeunload",e=>{if(S&&S.dirty){e.preventDefault();e.returnValue=""}});
+/* Colonnes : largeurs réglables, colonnes repliables ; préférences de ce poste */
+const KEY_UI="prescrire-colonnes",UI_DEF={w1:300,w3:560,fold:[]};
+let UI=(()=>{try{return Object.assign({},UI_DEF,JSON.parse(localStorage.getItem(KEY_UI)||"{}"))}catch(e){return{...UI_DEF}}})();
+const saveUI=()=>{try{localStorage.setItem(KEY_UI,JSON.stringify(UI))}catch(e){}};
+const narrow=()=>matchMedia("(max-width: 1100px)").matches;
+function layoutCols(){
+  const f=k=>UI.fold.includes(k),cols=$("#cols");
+  [1,2,3].forEach(k=>$("#col"+k).classList.toggle("folded",f(k)));
+  if(narrow()){cols.style.gridTemplateColumns="";return}
+  const flex=!f(2)?2:!f(3)?3:!f(1)?1:2;
+  const w=k=>f(k)?"36px":k===flex?"minmax(0,1fr)":(k===1?UI.w1:k===3?UI.w3:400)+"px";
+  cols.style.gridTemplateColumns=`${w(1)} 10px ${w(2)} 10px ${w(3)}`;
+  document.querySelector('[data-split="1"]').classList.toggle("off",f(1)||flex===1);
+  document.querySelector('[data-split="2"]').classList.toggle("off",f(3)||flex===3);
+}
+function clampW(){const W=$("#cols").clientWidth||1400;UI.w1=Math.max(200,Math.min(UI.w1,W-UI.w3-360,720));UI.w3=Math.max(300,Math.min(UI.w3,W-UI.w1-360,1100))}
+document.addEventListener("click",e=>{
+  const a=e.target.closest("[data-fold]"),b=e.target.closest("[data-unfold]");
+  if(a){const k=+a.dataset.fold;if(!UI.fold.includes(k))UI.fold.push(k);saveUI();layoutCols()}
+  if(b){const k=+b.dataset.unfold;UI.fold=UI.fold.filter(x=>x!==k);saveUI();layoutCols()}
+});
+document.querySelectorAll(".split").forEach(sp=>{
+  const which=+sp.dataset.split;
+  sp.addEventListener("pointerdown",e=>{if(sp.classList.contains("off"))return;e.preventDefault();sp.setPointerCapture(e.pointerId);sp.classList.add("drag");document.body.classList.add("resizing");
+    const x0=e.clientX,w10=UI.w1,w30=UI.w3;
+    const mv=ev=>{const dx=ev.clientX-x0;if(which===1)UI.w1=w10+dx;else UI.w3=w30-dx;clampW();layoutCols()};
+    const up=()=>{sp.classList.remove("drag");document.body.classList.remove("resizing");sp.removeEventListener("pointermove",mv);sp.removeEventListener("pointerup",up);saveUI()};
+    sp.addEventListener("pointermove",mv);sp.addEventListener("pointerup",up)});
+  sp.addEventListener("dblclick",()=>{UI.w1=UI_DEF.w1;UI.w3=UI_DEF.w3;clampW();saveUI();layoutCols()});
+  sp.addEventListener("keydown",e=>{if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;e.preventDefault();const d=(e.key==="ArrowRight"?16:-16);
+    if(which===1)UI.w1+=d;else UI.w3-=d;clampW();saveUI();layoutCols()});
+});
+window.addEventListener("resize",()=>{clampW();layoutCols()});
 function boot(){reindex();recalcAll();renderHead();renderTree();$("#v-lots").setAttribute("aria-pressed",S.view==="lots");$("#v-lieux").setAttribute("aria-pressed",S.view==="lieux");setTab(S.tab||"cctp");renderFiche();persist()}
 async function drainPending(){const list=await inv("take_pending").catch(()=>[]);const p=list&&list[list.length-1];if(p)guardDirty("Ouvrir",()=>openPath(p))}
 async function initApp(){
@@ -1702,7 +1996,7 @@ async function initApp(){
   $("#b-saveas").hidden=false;
   try{
     DIRS=await inv("app_dirs");ME=await inv("whoami");CFG_PATH=pjoin(DIRS.config,"reglages.json");
-    CFG=JSON.parse(await inv("read_text",{path:CFG_PATH}).catch(()=>"{}")||"{}");
+    CFG=JSON.parse(await inv("read_text",{path:CFG_PATH}).catch(()=>"{}")||"{}");if(CFG.nom)ME=CFG.nom;
     await loadSharedLib(null);
     if(S.chemin)takeLock(S.chemin);
   }catch(e){LIB_ERR=String(e);toast("Bibliothèque injoignable : "+e,8000)}
@@ -1719,6 +2013,7 @@ async function initApp(){
 }
 loadAll();
 boot();
+clampW();layoutCols();
 if(T)initApp();
 </script>
 

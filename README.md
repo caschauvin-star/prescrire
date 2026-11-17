@@ -8,10 +8,14 @@ Prescrire réunit en un seul outil la bibliothèque de prescriptions, le CCTP et
 
 - **Lots, sous-lots et prestations** organisés par glisser-déposer, numérotation automatique.
 - **Fiche prestation** reliée à une bibliothèque d'articles, avec autocomplétion. Toute nouvelle prestation y est ajoutée.
+- **Descriptif détaillé** en trois groupes de clauses (préalables, exécution, limites de prestation), imprimés en alinéas a), b), c)… ; clauses communes au niveau du lot ou du sous-lot ; phrases types.
+- **Catégories** modifiables, communes à la bibliothèque.
+- **État de rédaction** de chaque prestation (en rédaction, à relire, validée, à réviser), visible en couleur dans l'arborescence et reporté sur les lots ; filtre par état ; auteur et date de chaque changement.
+- **Colonnes** redimensionnables et repliables.
 - **Lieux** par niveau, avec surface, périmètre et hauteur. Les quantités acceptent des formules (`P*H-4` pour les murs d'une pièce, ouvertures déduites) et se ventilent par pièce.
 - **CCTP et DPGF** affichés par lots ou par lieux, avec un récapitulatif HT / TVA / TTC.
 - **Prestations supplémentaires éventuelles (PSE)** chiffrées à part.
-- **Exports** : CCTP en Word (page de garde, sommaire) ; DPGF en Excel, version maître d'ouvrage avec prix ou version entreprises avec prix unitaires vides et totaux par formules.
+- **Exports** : CCTP en Word (page de garde, sommaire, numérotation en marge) ; DPGF en Excel, version maître d'ouvrage avec prix ou version entreprises avec prix unitaires vides et totaux par formules.
 - **Analyse des offres** : import des DPGF remplies par les entreprises, comparaison ligne par ligne avec l'estimation, écarts signalés.
 - **Indices de DCE** : figer un indice et voir ce qui a changé depuis.
 - **Travail en agence** : bibliothèque partagée sur un dossier réseau, fusion des modifications de plusieurs postes, verrou signalant un projet déjà ouvert.
