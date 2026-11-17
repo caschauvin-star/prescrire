@@ -88,7 +88,22 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .row.g .nm{font-family:var(--f-label);font-weight:600;letter-spacing:.01em}
 .row.g0 .nm{text-transform:uppercase;font-size:12.5px;letter-spacing:.04em}
 .row .amt{font-family:var(--f-mono);font-size:11px;color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
-.row.p .dot{width:9px;height:9px;border-radius:50%;background:var(--s-grey);flex:none;margin:0 3px}
+.row.p .dot{width:9px;height:9px;flex:none;margin:0 3px;background:transparent!important}
+.row .note{flex:none;color:var(--muted);display:inline-flex}
+.row mark{background:var(--warn-soft);color:inherit;border-radius:2px}
+.tree-search{padding:6px 12px;border-bottom:1px solid var(--line-soft)}
+.tree-search input{width:100%;border:1px solid var(--line);border-radius:4px;padding:5px 8px;background:var(--paper);font-size:13px}
+.notebox textarea{background:var(--warn-soft)!important;border-color:var(--line)}
+.coefhint{font-size:12px;color:var(--muted)}
+.dpgf td.tv{text-align:center;font-family:var(--f-mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+.dpgf td.tv.x{color:var(--ink);font-weight:600}
+.dpgf tr.tvr td{color:var(--muted);font-size:12px;border-bottom:0;padding-top:2px;padding-bottom:2px}
+.dpgf tr.ttcl td{font-weight:600;border-bottom:1px solid var(--line)}
+.dpgf tr.ratio td{color:var(--muted);font-size:12px}
+.upd{display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--accent-soft);border:1px solid var(--accent);border-radius:6px;padding:8px 12px;font-size:13px}
+.upd b{color:var(--accent)}
+.hist{display:flex;gap:2px}
+.hist .btn{padding:4px 7px;display:inline-flex;align-items:center}
 .row.st-validee{background:var(--bg-ok)}.row.p.st-validee .dot{background:var(--s-ok)}
 .row.st-relecture{background:var(--bg-orange)}.row.p.st-relecture .dot{background:var(--s-orange)}
 .row.st-reviser{background:var(--bg-red)}.row.p.st-reviser .dot{background:var(--s-red)}.row.p.st-reviser .nm{font-weight:600}
@@ -369,6 +384,8 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
       <span class="p-meta" id="p-meta"></span>
     </div>
     <div class="top-actions">
+      <span class="hist"><button class="btn" id="b-undo" title="Annuler (Cmd+Z)" aria-label="Annuler" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg></button><button class="btn" id="b-redo" title="Rétablir (Cmd+Maj+Z)" aria-label="Rétablir" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 000 12h3"/></svg></button></span>
+      <span class="sep"></span>
       <button class="btn" id="b-new">Nouveau…</button>
       <button class="btn" id="b-open">Ouvrir…</button>
       <button class="btn" id="b-save">Enregistrer</button>
@@ -381,6 +398,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
     </div>
   </header>
 
+  <div class="upd" id="upd" hidden></div>
   <div class="cols" id="cols">
     <section class="col" id="col1" aria-label="Lots et prestations">
       <button class="vbar" data-unfold="1" title="Afficher la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>Lots et prestations</span></button>
@@ -392,6 +410,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
       </div>
       <div class="tree-stat" id="tree-stat" aria-label="Avancement de la rédaction"></div>
       <div class="tree-filter" id="tree-filter" hidden></div>
+      <div class="tree-search"><input type="search" id="tq" placeholder="Rechercher une prestation…" aria-label="Rechercher dans les lots et prestations"></div>
       <div class="col-b">
         <ul class="tree" id="tree"></ul>
         <p class="tree-hint">Glissez une ligne pour la déplacer : au-dessus ou en dessous d'une ligne pour la placer avant ou après, au milieu d'un lot pour l'y ranger.</p>
@@ -441,6 +460,8 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
 <input type="file" id="file" hidden>
 
 <script src="vendor/exceljs.min.js"></script>
+<script src="vendor/pdfmake.min.js"></script>
+<script src="vendor/vfs_fonts.js"></script>
 <script src="vendor/jszip.min.js"></script>
 <script>
 /* ======================================================================
@@ -448,6 +469,9 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
    ====================================================================== */
 const CATS_DEF=["Fourniture et pose","Fourniture seule","Pose seule","Dépose / démolition","Préparation de support","Prestation forfaitaire","Essais et contrôles"];
 let CATS=null,CATS_MAJ=0;
+const APP_VERSION="0.10.0",GITHUB_REPO="caschauvin-star/prescrire";
+const TAUX=[20,10,5.5];
+const fmtT=t=>String(t).replace(".",",")+" %";
 const UNITES=["U","ens.","ft","m²","ml","m³","kg","h"];
 /* Descriptif détaillé : alinéas ajoutés au CCTP à la suite du descriptif */
 const CLAUSES=[
@@ -546,7 +570,7 @@ function presta(nom,q,o={}){
   else ks.forEach(l=>{const v=q[l];if(typeof v==="string")n.qlx[l]=v;else n.ql[l]=v});
   return n;
 }
-function emptyProject(){return{v:6,projet:{nom:"Nouvelle opération",moa:"",adresse:"",moe:"",phase:"DCE",indice:"A",dispo:""},lieux:lieuxDef(false),tree:[grp("Lot 1",[])],sel:null,tab:"cctp",view:"lots",lot:"recap",lieu:null,olot:"synth",open:{},tva:20,offres:[],indices:[],fichier:null,dirty:false}}
+function emptyProject(){return{v:6,projet:{nom:"Nouvelle opération",moa:"",adresse:"",moe:"",phase:"DCE",indice:"A",dispo:"",tva:20,surf:"",surfType:"SHAB"},lieux:lieuxDef(false),tree:[grp("Lot 1",[])],sel:null,tab:"cctp",view:"lots",lot:"recap",lieu:null,olot:"synth",open:{},offres:[],indices:[],fichier:null,dirty:false}}
 function demoProject(){
   S=emptyProject();
   Object.assign(S.projet,{nom:"Réhabilitation d'une maison de ville",moa:"Exemple : M. et Mme Martin",adresse:"12 rue des Tanneurs, Vienne",moe:"Votre agence",phase:"DCE",indice:"A",
@@ -569,10 +593,10 @@ function demoProject(){
 function walkP(arr,fn){arr.forEach(n=>n.kind==="g"?walkP(n.children,fn):fn(n))}
 function migrate(s){
   s.v=6;
-  s.projet=Object.assign({nom:"",moa:"",adresse:"",moe:"",phase:"DCE",indice:"A",dispo:""},s.projet||{});
+  s.projet=Object.assign({nom:"",moa:"",adresse:"",moe:"",phase:"DCE",indice:"A",dispo:"",tva:s.tva||20,surf:"",surfType:"SHAB"},s.projet||{});delete s.tva;
   s.lieux=(Array.isArray(s.lieux)?s.lieux:[]).map(l=>typeof l==="string"?{nom:l,niv:"",s:"",p:"",h:""}:Object.assign({nom:"",niv:"",s:"",p:"",h:""},l)).filter(l=>l.nom);
   s.tree=Array.isArray(s.tree)?s.tree:[];
-  Object.assign(s,{offres:s.offres||[],indices:s.indices||[],open:s.open||{},tva:s.tva??20,tab:s.tab||"cctp",view:s.view||"lots",lot:s.lot||"recap",olot:s.olot||"synth"});
+  Object.assign(s,{offres:s.offres||[],indices:s.indices||[],open:s.open||{},tab:s.tab||"cctp",view:s.view||"lots",lot:s.lot||"recap",olot:s.olot||"synth"});
   delete s.db;
   (function wg(a){a.forEach(g=>{if(g.kind==="g"){g.cl=clOf(g);wg(g.children)}})})(s.tree);
   walkP(s.tree,n=>{
@@ -596,7 +620,7 @@ function loadAll(){
   const src=p||old;
   if(src&&Array.isArray(src.tree)){S=migrate(src)}else demoProject();
 }
-function save(){S.dirty=true;persist()}
+function save(){S.dirty=true;persist();if(typeof hPush==="function"){clearTimeout(hT);hT=setTimeout(hPush,500)}}
 function persist(){try{localStorage.setItem(KEY_P,JSON.stringify(S))}catch(e){}renderMeta()}
 /* ======================================================================
    Bibliothèque partagée : chaque article porte sa date de modification ;
@@ -749,23 +773,30 @@ function qBtns(lieu,target){const li=LO(lieu);if(!li)return"";let h="";
 function grpState(g){const a=flatP([g]);if(!a.length)return"";const has=k=>a.some(n=>(n.etat||"redaction")===k);
   return has("reviser")?"reviser":has("relecture")?"relecture":a.every(n=>n.etat==="validee")?"validee":""}
 const GRP_TITLE={reviser:"Contient une prestation à réviser",relecture:"Contient une prestation prête pour relecture",validee:"Toutes les prestations sont validées"};
+let TQ="";
 function renderTree(){
   reindex();
-  const F=S.filtre||null,keep=n=>n.kind==="p"?(n.etat||"redaction")===F:n.children.some(keep);
-  const rec=arr=>arr.filter(n=>!F||keep(n)).map(n=>{
-    const x=IDX[n.id],g=n.kind==="g",closed=g&&!F&&S.open[n.id]===false;
+  const F=S.filtre||null,W=norm(TQ).split(/\s+/).filter(Boolean);
+  const qm=n=>{const t=norm((IDX[n.id]?IDX[n.id].nr+" ":"")+n.nom+" "+(n.desc||"")+" "+(n.note||""));return W.every(w=>t.includes(w))};
+  const okF=n=>!F||(n.etat||"redaction")===F;
+  /* une prestation est montrée si elle passe le filtre d'état et la recherche (ou si un lot parent correspond) */
+  const keep=(n,par)=>n.kind==="p"?okF(n)&&(!W.length||par||qm(n)):n.children.some(c=>keep(c,par||(W.length&&qm(n))));
+  const active=F||W.length;
+  const rec=(arr,par)=>arr.filter(n=>!active||keep(n,par)).map(n=>{
+    const x=IDX[n.id],g=n.kind==="g",closed=g&&!active&&S.open[n.id]===false,pm=par||(W.length&&g&&qm(n));
     const amt=g?baseT(n):lineT(n),gs=g?grpState(n):"";
-    return `<li><div class="row ${g?"g "+(gs?"st-"+gs:""):"p st-"+(n.etat||"redaction")} ${g&&x.depth===0?"g0":""} ${S.sel===n.id?"sel":""}" draggable="true" title="${esc(g?(GRP_TITLE[gs]||""):(ETATS.find(e=>e[0]===(n.etat||"redaction"))||ETATS[0])[1])}" data-id="${n.id}" style="--d:${x.depth}">`+
+    return `<li><div class="row ${g?"g "+(gs?"st-"+gs:""):"p st-"+(n.etat||"redaction")} ${g&&x.depth===0?"g0":""} ${S.sel===n.id?"sel":""}" draggable="true" title="${esc(g?(GRP_TITLE[gs]||""):(ETATS.find(e=>e[0]===(n.etat||"redaction"))||ETATS[0])[1]+(n.note&&n.note.trim()?"\nNote : "+n.note.trim():""))}" data-id="${n.id}" style="--d:${x.depth}">`+
       (g?`<button class="car" data-tog="${n.id}" aria-label="${closed?"Déplier":"Replier"}">${closed?"▸":"▾"}</button>`:`<span class="dot"></span>`)+
-      `<span class="num">${x.nr}</span><span class="nm">${esc(n.nom||"Sans titre")}</span>${!g&&n.pse?'<span class="pse">PSE</span>':""}<span class="amt">${amt?nf.format(amt):""}</span></div>`+
-      (g&&!closed&&n.children.length?`<ul>${rec(n.children)}</ul>`:"")+`</li>`;
+      `<span class="num">${x.nr}</span><span class="nm">${W.length?hl(n.nom||"Sans titre",W):esc(n.nom||"Sans titre")}</span>${!g&&n.note&&n.note.trim()?'<span class="note" aria-label="Note interne"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16v12H8l-4 4z"/></svg></span>':""}${!g&&n.pse?'<span class="pse">PSE</span>':""}<span class="amt">${amt?nf.format(amt):""}</span></div>`+
+      (g&&!closed&&n.children.length?`<ul>${rec(n.children,pm)}</ul>`:"")+`</li>`;
   }).join("");
-  $("#tree").innerHTML=rec(S.tree);
+  $("#tree").innerHTML=rec(S.tree,false)||(active?`<li class="tree-hint">Aucune prestation ne correspond.</li>`:"");
   const all=flatP(S.tree),cnt=k=>all.filter(n=>(n.etat||"redaction")===k).length;
   $("#tree-stat").innerHTML=all.length?ETATS.map(([k,l])=>`<button data-filtre="${k}" aria-pressed="${F===k}" ${cnt(k)||F===k?"":"disabled"} title="${F===k?"Tout afficher":"Afficher seulement : "+esc(l.toLowerCase())}"><i class="c-${k}"></i>${cnt(k)} ${{redaction:"en rédaction",relecture:"à relire",validee:"validée"+(cnt(k)>1?"s":""),reviser:"à réviser"}[k]}</button>`).join(""):"";
   $("#tree-filter").hidden=!F;
   if(F)$("#tree-filter").innerHTML=`Filtre : ${esc((ETATS.find(e=>e[0]===F)||["",""])[1].toLowerCase())} · <button class="link" data-filtre="${F}">tout afficher</button>`;
 }
+$("#tq").addEventListener("input",e=>{TQ=e.target.value;renderTree()});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-filtre]");if(!b||!b.closest("#tree-stat,#tree-filter"))return;
   S.filtre=S.filtre===b.dataset.filtre?null:b.dataset.filtre;persist();renderTree()});
 $("#tree").addEventListener("click",e=>{
@@ -883,6 +914,12 @@ function withName(fn){
 }
 function etatMeta(n){if(!n.etatLe)return"";const l=(ETATS.find(e=>e[0]===(n.etat||"redaction"))||ETATS[0])[1];
   return`${esc(l)}${n.etatPar?" par "+esc(n.etatPar):""} le ${esc(new Date(n.etatLe).toLocaleString("fr-FR",{day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"}))}`}
+function coefHint(n){return n.prixOrig!=null?`Prix actualisé ${pf.format(num(n.coef))} % · origine ${eur(n.prixOrig)} · <button class="link" id="f-coefoff">revenir au prix d'origine</button>`:""}
+const projTva=()=>{const t=num(S&&S.projet&&S.projet.tva);return TAUX.includes(t)?t:20};
+const tvaOf=n=>n.tva!=null&&n.tva!==""&&TAUX.includes(num(n.tva))?num(n.tva):projTva();
+/* Montants HT par taux de TVA, pour un ensemble de nœuds (base ou PSE) */
+function tvaBreak(arr,pse){const m=new Map();walkP(arr,n=>{if(!!n.pse!==pse)return;const t=tvaOf(n);m.set(t,(m.get(t)||0)+lineT(n))});return TAUX.filter(t=>m.has(t)).map(t=>[t,m.get(t)])}
+const tvaSum=br=>br.reduce((s,[t,b])=>s+b*t/100,0);
 function lieuChips(n){
   let h="",last=null;
   S.lieux.forEach(l=>{if(l.niv!==last){last=l.niv;h+=`<span class="niv">${esc(l.niv||"Général")}</span>`}
@@ -921,7 +958,8 @@ function renderFiche(){
       <div class="f"><label for="g-intro">Généralités (texte d'introduction du CCTP)</label><textarea id="g-intro" rows="5" placeholder="Prescriptions communes à l'ensemble du ${isLot?"lot":"sous-lot"} : documents de référence, DTU applicables, interfaces avec les autres lots…">${esc(n.intro)}</textarea></div>
       <p class="hint" style="margin:6px 0 0">Clauses communes à toutes les prestations du ${isLot?"lot":"sous-lot"} : elles s'impriment une seule fois, dans l'encadré de généralités, au lieu d'être répétées dans chaque article.</p>
       ${clFields(n)}
-      <div class="actions" style="border-top:1px solid var(--line);padding-top:14px"><button class="btn danger" id="f-del">Supprimer ${isLot?"le lot":"le sous-lot"}</button></div></div>`;
+      <div class="actions" style="border-top:1px solid var(--line);padding-top:14px"><button class="btn" id="g-coef">Coefficient sur les prix…</button><span style="flex:1"></span><button class="btn danger" id="f-del">Supprimer ${isLot?"le lot":"le sous-lot"}</button></div></div>`;
+    $("#g-coef").onclick=()=>openCoef(n);
     bindCl(el,n);
     $("#g-nom").oninput=e=>{n.nom=e.target.value;el.querySelector("h3").textContent=n.nom||"Sans titre";commit()};
     $("#g-intro").oninput=e=>{n.intro=e.target.value;save();renderOut()};
@@ -964,13 +1002,21 @@ function renderFiche(){
       <div class="f"><label for="f-qte">${multi?"Quantité · somme des lieux":"Quantité"}</label>
         <input type="text" inputmode="decimal" class="numin ${multi?"locked":""}" id="f-qte" value="${esc(multi?fmtIn(n.qte):(n.qx||fmtIn(n.qte)))}" ${multi?'readonly title="Calculée à partir des quantités par lieu"':""} placeholder="Nombre ou formule">
         <div class="qres" id="f-qres">${qresHTML(n)}</div></div>
-      <div class="f"><label for="f-prix">Prix unitaire HT (€)</label><input type="text" inputmode="decimal" class="numin" id="f-prix" value="${esc(fmtIn(n.prix))}"></div>
+      <div class="f"><label for="f-prix">Prix unitaire HT (€)</label><input type="text" inputmode="decimal" class="numin" id="f-prix" value="${esc(fmtIn(n.prix))}">
+        <div class="coefhint" id="f-coef">${coefHint(n)}</div></div>
+    </div>
+    <div class="grid2">
+      <div class="f"><label for="f-tva">TVA</label><select id="f-tva"><option value="">TVA du projet (${fmtT(projTva())})</option>${TAUX.map(t=>`<option value="${t}" ${n.tva!=null&&num(n.tva)===t?"selected":""}>${fmtT(t)}</option>`).join("")}</select></div>
+      <div></div>
     </div>
     <div class="total"><span class="hint">Total HT de la ligne</span><b id="f-tot">${eur(lineT(n))}</b></div>
     <label class="chk"><input type="checkbox" id="f-pse" ${n.pse?"checked":""}> Prestation supplémentaire éventuelle (PSE) : chiffrée à part, hors montant de base</label>
     </section>
     <section class="fs"><h4 class="fs-h">Finition</h4>
       <div class="fin"><input type="checkbox" id="f-finon" ${n.finOn?"checked":""} aria-label="Préciser une finition"><input type="text" id="f-fin" value="${esc(n.fin)}" placeholder="Ex. aspect velours, teinte au choix de l'architecte" ${n.finOn?"":"disabled"}></div>
+    </section>
+    <section class="fs notebox"><h4 class="fs-h">Notes internes <small>jamais imprimées ni exportées</small></h4>
+      <div class="f"><textarea id="f-note" rows="3" aria-label="Notes internes" placeholder="Points à vérifier, questions au BET, remarques de relecture…">${esc(n.note||"")}</textarea></div>
     </section>
     </div>
     <div class="actions" style="border-top:1px solid var(--line);padding-top:14px">
@@ -997,7 +1043,10 @@ function renderFiche(){
     const out=el.querySelector(`[data-qlr="${CSS.escape(l)}"]`);if(out)out.innerHTML=n.qlx[l]?(r.err?'<span class="err">erreur</span>':"= "+qf.format(r.v)+" "+esc(n.u)):esc(n.u);
     $("#f-qte").value=fmtIn(n.qte);$("#ql-sum").textContent=qf.format(num(n.qte));upd()});
   el.onclick=(e=>{const b=e.target.closest("[data-qins]");if(!b)return;const t=$("#"+b.dataset.qt);if(!t||t.readOnly)return;t.value=b.dataset.qins;t.dispatchEvent(new Event("input"));t.focus()});
-  $("#f-prix").oninput=e=>{n.prix=e.target.value.trim()===""?"":num(e.target.value);upd()};
+  $("#f-prix").oninput=e=>{n.prix=e.target.value.trim()===""?"":num(e.target.value);if(n.prixOrig!=null){delete n.prixOrig;delete n.coef;$("#f-coef").innerHTML=""}upd()};
+  $("#f-tva").onchange=e=>{n.tva=e.target.value===""?null:num(e.target.value);save();renderOut()};
+  $("#f-note").oninput=e=>{n.note=e.target.value;save();renderTree()};
+  {const b=$("#f-coefoff");if(b)b.onclick=()=>{n.prix=n.prixOrig;delete n.prixOrig;delete n.coef;commit();renderFiche()}}
   $("#f-lieux").onclick=e=>{const c=e.target.closest(".chip");if(!c)return;toggleLieu(n,c.dataset.l);commit();renderFiche();
     const q=$("#fiche").querySelector(`[data-ql="${CSS.escape(c.dataset.l)}"]`);if(q){q.focus();q.select()}};
   $("#f-glieux").onclick=openLieux;
@@ -1096,10 +1145,17 @@ function cctpHTML(){
 }
 function dpgfRows(arr,pse){
   return arr.map(n=>{const nr=IDX[n.id].nr;
-    if(n.kind==="g")return hasMode(n,pse)?`<tr class="grp"><td class="n">${nr}</td><td colspan="5">${esc(n.nom)}</td></tr>${dpgfRows(n.children,pse)}`:"";
+    if(n.kind==="g")return hasMode(n,pse)?`<tr class="grp"><td class="n">${nr}</td><td colspan="6">${esc(n.nom)}</td></tr>${dpgfRows(n.children,pse)}`:"";
     if(!!n.pse!==pse)return"";
-    return`<tr class="art ${S.sel===n.id?"sel":""}" data-id="${n.id}"><td class="n">${nr}</td><td>${esc(n.nom||"Prestation sans nom")}${n.lieux.length?`<div class="hint">${esc(locTxt(n))}</div>`:""}</td><td class="c">${esc(n.u)}</td><td class="r">${n.qte===""?"":qf.format(num(n.qte))}</td><td class="r ${num(n.prix)?"":"zero"}">${nf.format(num(n.prix))}</td><td class="r">${nf.format(lineT(n))}</td></tr>`;
+    return`<tr class="art ${S.sel===n.id?"sel":""}" data-id="${n.id}"><td class="n">${nr}</td><td>${esc(n.nom||"Prestation sans nom")}${n.lieux.length?`<div class="hint">${esc(locTxt(n))}</div>`:""}</td><td class="c">${esc(n.u)}</td><td class="r">${n.qte===""?"":qf.format(num(n.qte))}</td><td class="r ${num(n.prix)?"":"zero"}">${nf.format(num(n.prix))}</td><td class="r">${nf.format(lineT(n))}</td><td class="tv ${n.tva!=null&&n.tva!==""?"x":""}" title="${n.tva!=null&&n.tva!==""?"Taux propre à cette prestation":"TVA du projet"}">${fmtT(tvaOf(n))}</td></tr>`;
   }).join("");
+}
+/* Lignes de sous-total HT, TVA par taux et TTC */
+function tvaRowsHTML(arr,pse,label){
+  const br=tvaBreak(arr,pse),ht=br.reduce((s,[,b])=>s+b,0),tv=tvaSum(br);
+  return`<tr class="st"><td></td><td colspan="4">${label} HT</td><td class="r">${nf.format(ht)}</td><td></td></tr>`+
+    br.map(([t,b])=>`<tr class="tvr"><td></td><td colspan="4">TVA ${fmtT(t)} sur ${nf.format(b)} € HT</td><td class="r">${nf.format(b*t/100)}</td><td></td></tr>`).join("")+
+    `<tr class="ttcl"><td></td><td colspan="4">${label} TTC</td><td class="r">${nf.format(ht+tv)}</td><td></td></tr>`;
 }
 function dpgfLieux(){
   const L=byLieu();
@@ -1124,21 +1180,26 @@ function dpgfLieux(){
 function dpgfLots(){
   if(S.lot!=="recap"&&!IDX[S.lot])S.lot="recap";
   const bar=`<div class="lotbar">${S.tree.map(l=>`<button class="chip" data-lot="${l.id}" aria-pressed="${S.lot===l.id}">${IDX[l.id].nr} ${esc(l.nom)}</button>`).join("")}<button class="chip" data-lot="recap" aria-pressed="${S.lot==="recap"}">Récapitulatif</button></div>`;
-  const head=`<thead><tr><th>N°</th><th>Désignation</th><th class="c">U</th><th class="r">Qté</th><th class="r">PU HT</th><th class="r">Total HT</th></tr></thead>`;
+  const head=`<thead><tr><th>N°</th><th>Désignation</th><th class="c">U</th><th class="r">Qté</th><th class="r">PU HT</th><th class="r">Total HT</th><th class="c">TVA</th></tr></thead>`;
   let body;
   if(S.lot==="recap"){
-    const ht=S.tree.reduce((s,l)=>s+baseT(l),0),pt=S.tree.reduce((s,l)=>s+pseT(l),0),tva=ht*S.tva/100;
+    const ht=S.tree.reduce((s,l)=>s+baseT(l),0),pt=S.tree.reduce((s,l)=>s+pseT(l),0);
+    const bb=tvaBreak(S.tree,false),bp=tvaBreak(S.tree,true),tv=tvaSum(bb),tp=tvaSum(bp),P=S.projet,surf=num(P.surf);
+    const rates=TAUX.filter(t=>bb.some(x=>x[0]===t)||bp.some(x=>x[0]===t)),g=(br,t)=>(br.find(x=>x[0]===t)||[0,0])[1];
     body=`<table class="dpgf"><thead><tr><th>Lot</th><th>Désignation</th><th class="r">Base HT</th>${pt?'<th class="r">PSE HT</th>':""}</tr></thead><tbody>`+
       S.tree.map(l=>`<tr class="art" data-lot="${l.id}"><td class="n">${IDX[l.id].nr}</td><td>${esc(l.nom)}</td><td class="r">${eur(baseT(l))}</td>${pt?`<td class="r">${pseT(l)?eur(pseT(l)):""}</td>`:""}</tr>`).join("")+
-      `<tr class="tot st"><td></td><td>Total HT</td><td class="r">${eur(ht)}</td>${pt?`<td class="r">${eur(pt)}</td>`:""}</tr>
-       <tr class="tot"><td></td><td>TVA <select id="tva" aria-label="Taux de TVA">${[20,10,5.5].map(v=>`<option value="${v}" ${v==S.tva?"selected":""}>${String(v).replace(".",",")} %</option>`).join("")}</select></td><td class="r">${eur(tva)}</td>${pt?`<td class="r">${eur(pt*S.tva/100)}</td>`:""}</tr>
-       <tr class="ttc"><td></td><td>Total TTC</td><td class="r">${eur(ht+tva)}</td>${pt?`<td class="r">${eur(pt*(1+S.tva/100))}</td>`:""}</tr>
-       ${pt?`<tr class="tot"><td></td><td>Total base + PSE TTC</td><td class="r" colspan="2">${eur((ht+pt)*(1+S.tva/100))}</td></tr>`:""}</tbody></table>`;
+      `<tr class="tot st"><td></td><td>Total HT</td><td class="r">${eur(ht)}</td>${pt?`<td class="r">${eur(pt)}</td>`:""}</tr>`+
+      rates.map(t=>`<tr class="tvr"><td></td><td>TVA ${fmtT(t)} sur ${nf.format(g(bb,t))} € HT${pt&&g(bp,t)?` (PSE : ${nf.format(g(bp,t))} €)`:""}</td><td class="r">${eur(g(bb,t)*t/100)}</td>${pt?`<td class="r">${g(bp,t)?eur(g(bp,t)*t/100):""}</td>`:""}</tr>`).join("")+
+      `<tr class="tot"><td></td><td>Total TVA</td><td class="r">${eur(tv)}</td>${pt?`<td class="r">${eur(tp)}</td>`:""}</tr>
+       <tr class="ttc"><td></td><td>Total TTC</td><td class="r">${eur(ht+tv)}</td>${pt?`<td class="r">${eur(pt+tp)}</td>`:""}</tr>
+       ${pt?`<tr class="tot"><td></td><td>Total base + PSE TTC</td><td class="r" colspan="2">${eur(ht+tv+pt+tp)}</td></tr>`:""}
+       ${surf?`<tr class="ratio"><td></td><td>Ratio sur ${qf.format(surf)} m² ${esc(P.surfType||"SHAB")}</td><td class="r">${nf.format(ht/surf)} € HT/m²</td>${pt?`<td></td>`:""}</tr>`:`<tr class="ratio"><td></td><td colspan="${pt?3:2}">Renseignez une surface de référence dans la fenêtre Projet pour afficher le coût au m².</td></tr>`}
+       <tr class="ratio"><td></td><td colspan="${pt?3:2}">TVA par défaut du projet : <select id="tva" aria-label="TVA par défaut du projet">${TAUX.map(v=>`<option value="${v}" ${v===projTva()?"selected":""}>${fmtT(v)}</option>`).join("")}</select> · les prestations réglées sur un autre taux le gardent.</td></tr></tbody></table>`;
   }else{
     const l=IDX[S.lot].n,pse=hasMode(l,true);
-    body=`<table class="dpgf">${head}<tbody><tr class="lot"><td class="n">${IDX[l.id].nr}</td><td colspan="5">${esc(l.nom)}</td></tr>${dpgfRows(l.children,false)}
-      <tr class="st"><td></td><td colspan="4">Sous-total lot ${IDX[l.id].nr}</td><td class="r">${nf.format(baseT(l))}</td></tr>
-      ${pse?`<tr class="psehead"><td></td><td colspan="5">Prestations supplémentaires éventuelles</td></tr>${dpgfRows(l.children,true)}<tr class="st"><td></td><td colspan="4">Sous-total PSE lot ${IDX[l.id].nr}</td><td class="r">${nf.format(pseT(l))}</td></tr>`:""}</tbody></table>`;
+    body=`<table class="dpgf">${head}<tbody><tr class="lot"><td class="n">${IDX[l.id].nr}</td><td colspan="6">${esc(l.nom)}</td></tr>${dpgfRows(l.children,false)}
+      ${tvaRowsHTML(l.children,false,"Sous-total lot "+IDX[l.id].nr)}
+      ${pse?`<tr class="psehead"><td></td><td colspan="6">Prestations supplémentaires éventuelles</td></tr>${dpgfRows(l.children,true)}${tvaRowsHTML(l.children,true,"Sous-total PSE lot "+IDX[l.id].nr)}`:""}</tbody></table>`;
   }
   return bar+`<div class="tblwrap">${body}</div>`;
 }
@@ -1149,7 +1210,7 @@ function renderOut(){
   if(!S.tree.length){o.innerHTML=`<div class="empty">Aucun lot pour l'instant.</div>`;return}
   if(S.tab==="cctp"){o.innerHTML=`<article class="cctp" id="cctp">${S.view==="lieux"?cctpLieuxHTML():cctpHTML()}</article>`;return}
   o.innerHTML=S.view==="lieux"?dpgfLieux():dpgfLots();
-  const tv=$("#tva");if(tv)tv.onchange=e=>{S.tva=+e.target.value;save();renderOut()};
+  const tv=$("#tva");if(tv)tv.onchange=e=>{S.projet.tva=+e.target.value;save();renderOut()};
 }
 $("#out").addEventListener("click",e=>{
   if(S.tab==="off")return;
@@ -1171,8 +1232,8 @@ function dpgfTSV(){
     else if(!!n.pse===pse)L.push(`${nr}\t${(n.nom||"").replace(/\t/g," ")}\t${n.u}\t${n.qte===""?"":String(num(n.qte)).replace(".",",")}\t${tsvN(n.prix)}\t${tsvN(lineT(n))}`)});
   S.tree.forEach(l=>{const nr=IDX[l.id].nr;L.push(`${nr}\tLOT ${nr} — ${l.nom.toUpperCase()}\t\t\t\t`);rec(l.children,false);L.push(`\tSous-total lot ${nr}\t\t\t\t${tsvN(baseT(l))}`);
     if(hasMode(l,true)){L.push(`\tPrestations supplémentaires éventuelles\t\t\t\t`);rec(l.children,true);L.push(`\tSous-total PSE lot ${nr}\t\t\t\t${tsvN(pseT(l))}`)}L.push("")});
-  const ht=S.tree.reduce((s,l)=>s+baseT(l),0);
-  L.push(`\tTotal HT\t\t\t\t${tsvN(ht)}`,`\tTVA ${String(S.tva).replace(".",",")} %\t\t\t\t${tsvN(ht*S.tva/100)}`,`\tTotal TTC\t\t\t\t${tsvN(ht*(1+S.tva/100))}`);
+  const ht=S.tree.reduce((s,l)=>s+baseT(l),0),br=tvaBreak(S.tree,false);
+  L.push(`\tTotal HT\t\t\t\t${tsvN(ht)}`,...br.map(([t,b])=>`\tTVA ${fmtT(t)} sur ${tsvN(b)} € HT\t\t\t\t${tsvN(b*t/100)}`),`\tTotal TTC\t\t\t\t${tsvN(ht+tvaSum(br))}`);
   return L.join("\n");
 }
 $("#b-copy").onclick=async()=>{
@@ -1241,7 +1302,8 @@ async function saveProject(saveAs){
 function projectData(){const used=new Set();walkP(S.tree,n=>{const a=baseOf(n);if(a)used.add(a.id)});
   return JSON.stringify({format:"prescrire-projet",version:8,enregistre:new Date().toISOString(),projet:S,bibliotheque:BASE.filter(a=>used.has(a.id))},null,1)}
 async function writeProject(path){
-  try{const c=JSON.parse(projectData());delete c.projet.chemin;await inv("write_text",{path,content:JSON.stringify(c,null,1)});S.dirty=false;S.fichier=pbase(path);persist();touchLock(path);toast("Projet enregistré.")}
+  try{const old=await inv("read_text",{path}).catch(()=>null);if(old)await inv("write_text",{path:path+".precedent",content:old}).catch(()=>{});
+    const c=JSON.parse(projectData());delete c.projet.chemin;await inv("write_text",{path,content:JSON.stringify(c,null,1)});S.dirty=false;S.fichier=pbase(path);persist();touchLock(path);toast("Projet enregistré.")}
   catch(e){toast("Enregistrement impossible : "+e,6000)}
 }
 /* Verrou : signale aux autres postes qu'un projet est ouvert */
@@ -1313,6 +1375,8 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#modal").hidden
 document.addEventListener("keydown",e=>{
   if(!(e.metaKey||e.ctrlKey)||e.altKey)return;const k=e.key.toLowerCase();
   if(k==="s"){e.preventDefault();saveProject(e.shiftKey)}
+  else if((k==="z"||k==="y")&&$("#modal").hidden){const t=e.target,ed=t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+    if(ed)return;e.preventDefault();hGo(k==="y"||e.shiftKey?1:-1)}
   else if(k==="o"&&$("#modal").hidden){e.preventDefault();$("#b-open").click()}
   else if(k==="e"&&$("#modal").hidden){e.preventDefault();openExport()}
 });
@@ -1332,15 +1396,23 @@ function openProjet(){
     <div class="grid2"><div class="f"><label for="pj-moe">Maître d'œuvre</label><input type="text" id="pj-moe" value="${esc(P.moe)}" placeholder="Nom de l'agence"></div>
       <div class="grid2"><div class="f"><label for="pj-ph">Phase</label><select id="pj-ph">${PHASES.map(p=>`<option ${p===P.phase?"selected":""}>${p}</option>`).join("")}</select></div>
       <div class="f"><label for="pj-ind">Indice en cours</label><input type="text" id="pj-ind" value="${esc(P.indice)}"></div></div></div>
+    <div class="grid2"><div class="f"><label for="pj-tva">TVA par défaut</label><select id="pj-tva">${TAUX.map(t=>`<option value="${t}" ${t===projTva()?"selected":""}>${fmtT(t)}</option>`).join("")}</select></div>
+      <div class="grid2"><div class="f"><label for="pj-surf">Surface de réf. (m²)</label><input type="text" inputmode="decimal" class="numin" id="pj-surf" value="${esc(fmtIn(P.surf))}" placeholder="Ex. 124,5"></div>
+      <div class="f"><label for="pj-st">Type</label><select id="pj-st">${["SHAB","Surface de plancher","Surface utile","Surface"].map(t=>`<option ${t===(P.surfType||"SHAB")?"selected":""}>${t}</option>`).join("")}</select></div></div></div>
+    <div><button class="btn" id="pj-coef">Appliquer un coefficient à tous les prix du projet…</button></div>
     <div class="f"><label for="pj-me">Votre nom <span class="hint" style="text-transform:none;letter-spacing:0;font-weight:400">· ${T?"par défaut, celui de votre session":"enregistré dans ce navigateur"}, noté quand vous changez l'état d'une prestation</span></label><input type="text" id="pj-me" value="${esc(myName())}" placeholder="${T?esc(ME):"Nom ou initiales"}"></div>
     <div class="f"><label for="pj-dispo">Dispositions générales (en tête du CCTP, communes à tous les lots)</label><textarea id="pj-dispo" rows="6" placeholder="Objet du CCTP, documents de référence, obligations communes des entreprises…">${esc(P.dispo)}</textarea></div>
     <fieldset><legend>Indices du dossier</legend>
       <p class="hint" style="margin:0 0 6px">Figer un indice enregistre une copie du dossier tel qu'il est diffusé. Vous pourrez ensuite voir ce qui a changé.</p>
       <div class="idx-list">${idx}</div>
       <div><button class="btn" id="pj-freeze">Figer l'indice ${esc(P.indice||"A")} et passer à l'indice ${esc(nextIndice(P.indice))}</button></div></fieldset>`,
-    `<button class="btn primary" data-m="close">Fermer</button>`,{onClose:()=>{renderHead();renderOut()}});
+    `<span class="x-sum">Prescrire ${APP_VERSION}</span><button class="btn primary" data-m="close">Fermer</button>`,{onClose:()=>{renderHead();renderOut();renderFiche()}});
   const bind=(id,k)=>$(id).oninput=e=>{P[k]=e.target.value;save()};
   $("#pj-me").onchange=e=>setMyName(e.target.value);
+  $("#pj-tva").onchange=e=>{P.tva=+e.target.value;save()};
+  $("#pj-surf").oninput=e=>{P.surf=e.target.value.trim()===""?"":num(e.target.value);save()};
+  $("#pj-st").onchange=e=>{P.surfType=e.target.value;save()};
+  $("#pj-coef").onclick=()=>{closeModal();openCoef(null)};
   bind("#pj-nom","nom");bind("#pj-moa","moa");bind("#pj-adr","adresse");bind("#pj-moe","moe");bind("#pj-ind","indice");bind("#pj-dispo","dispo");
   $("#pj-ph").onchange=e=>{P.phase=e.target.value;save()};
   $("#pj-freeze").onclick=()=>{
@@ -1367,6 +1439,7 @@ function showDiff(id){
     if((o.desc||"")!==(n.desc||""))ch.push("Descriptif modifié");if(clSig(o)!==clSig(n))ch.push("Descriptif détaillé modifié");
     if((o.lieux||[]).join("|")!==n.lieux.join("|"))ch.push(`Localisation : ${(o.lieux||[]).join(", ")||"aucune"} → ${n.lieux.join(", ")||"aucune"}`);
     if(!!o.pse!==!!n.pse)ch.push(n.pse?"Passée en PSE":"Sortie des PSE");
+    if((o.tva??null)!==(n.tva??null))ch.push(`TVA : ${o.tva!=null?fmtT(o.tva):"du projet"} → ${n.tva!=null?fmtT(n.tva):"du projet"}`);
     if((o.fin||"")!==(n.fin||"")||!!o.finOn!==!!n.finOn)ch.push("Finition modifiée");
     if(nrOld.get(n.id)!==IDX[n.id].nr)ch.push(`Numéro : ${nrOld.get(n.id)} → ${IDX[n.id].nr}`);
     if(ch.length)mod.push([n,ch]);mapOld.delete(n.id)});
@@ -1604,11 +1677,12 @@ async function exportLibXlsx(){
    Export : DPGF Excel et CCTP Word
    ====================================================================== */
 function sheetName(t,used){let n=t.replace(/[\[\]:*?\/\\]/g,"-").slice(0,31).trim(),b=n,k=2;while(used.has(n.toLowerCase())){n=b.slice(0,27).trim()+" ("+k++ +")"}used.add(n.toLowerCase());return n}
-async function exportXlsx(mode,lotIds,withRecap){
-  if(!needLib("ExcelJS"))return;
+async function exportXlsx(mode,lotIds,withRecap,recapIds){
+  if(!needLib("ExcelJS"))return null;
   reindex();
   const lots=S.tree.filter(l=>lotIds.includes(l.id));
-  if(!lots.length&&!withRecap)return toast("Choisissez au moins un lot ou le récapitulatif.");
+  if(!lots.length&&!withRecap){toast("Choisissez au moins un lot ou le récapitulatif.");return null}
+  const PCT='0.0%',rateCrit=t=>t/100;
   const cons=mode==="cons",P=S.projet;
   const wb=new ExcelJS.Workbook();wb.creator="Prescrire";wb.calcProperties.fullCalcOnLoad=true;
   const MONEY='#,##0.00 "€"',QTY='#,##0.##',FONT="Arial",ink="FF1B2430",band="FFE6EAEE",pseFill="FFFBEFD5",input="FFFFF6D5",thin={style:"thin",color:{argb:"FFC9D0D8"}};
@@ -1622,77 +1696,94 @@ async function exportXlsx(mode,lotIds,withRecap){
   lots.forEach(l=>{
     const nr=IDX[l.id].nr,name=sheetName("Lot "+nr+" "+l.nom,used);
     const ws=wb.addWorksheet(name,{pageSetup:page,views:[{state:"frozen",ySplit:7}]});foot(ws);
-    ws.columns=[{width:11},{width:50},{width:26},{width:7},{width:10},{width:13},{width:15},{width:12,hidden:true}];
+    ws.columns=[{width:11},{width:50},{width:26},{width:7},{width:10},{width:13},{width:15},{width:8},{width:12,hidden:true}];
+    ws.dataValidations.add("H8:H2000",{type:"decimal",operator:"between",allowBlank:true,formulae:[0,0.3],showErrorMessage:true,errorTitle:"Taux de TVA",error:"Saisissez un pourcentage : 20 %, 10 % ou 5,5 %."});
     const put=mkPut(ws);
     put(1,[P.nom],{size:14,bold:true});put(2,[sub]);put(3,[title+" · "+indTxt()],{bold:true});
     put(4,["Lot "+nr+" — "+l.nom.toUpperCase()],{bold:true,size:12});
     put(5,[cons?"Entreprise : ":"Établi le "+today()]);
-    if(cons){const c=ws.getCell("B6");c.value="Les cases jaunes (PU HT) sont à compléter par l'entreprise ; les totaux se calculent automatiquement.";c.font={name:FONT,size:9,italic:true,color:{argb:"FF5B6674"}}}
-    const H=put(7,["N°","Désignation","Localisation","U","Qté","PU HT","Total HT","Réf."],{bold:true,fill:band});
+    if(cons){const c=ws.getCell("B6");c.value="Les cases jaunes (PU HT) sont à compléter par l'entreprise ; les totaux se calculent automatiquement. Le taux de TVA d'une ligne (colonne TVA) peut être corrigé si nécessaire.";c.font={name:FONT,size:9,italic:true,color:{argb:"FF5B6674"}}}
+    const H=put(7,["N°","Désignation","Localisation","U","Qté","PU HT","Total HT","TVA","Réf."],{bold:true,fill:band});
     H.eachCell(c=>{c.border={bottom:{style:"medium",color:{argb:ink}}};c.alignment={vertical:"middle",horizontal:c.col>=4?"center":"left"}});
     let r=8;
     const rec=(arr,pse)=>arr.forEach(n=>{
       if(n.kind==="g"){if(hasMode(n,pse)){put(r,[IDX[n.id].nr,n.nom],{bold:true,italic:true});r++;rec(n.children,pse)}return}
       if(!!n.pse!==pse)return;
-      const row=put(r,[IDX[n.id].nr,n.nom||"Prestation sans nom",locTxt(n),n.u,n.qte===""?null:num(n.qte),null,null,n.id]);
-      const pu=row.getCell(6),t=row.getCell(7);
+      const row=put(r,[IDX[n.id].nr,n.nom||"Prestation sans nom",locTxt(n),n.u,n.qte===""?null:num(n.qte),null,null,tvaOf(n)/100,n.id]);
+      const pu=row.getCell(6),t=row.getCell(7),tv=row.getCell(8);tv.numFmt=PCT;tv.alignment={horizontal:"center",vertical:"top"};
       if(cons){pu.value=null;pu.fill={type:"pattern",pattern:"solid",fgColor:{argb:input}}}else pu.value=num(n.prix);
       t.value={formula:`IF(F${r}="","",E${r}*F${r})`,result:cons?"":lineT(n)};
-      row.getCell(5).numFmt=QTY;pu.numFmt=MONEY;t.numFmt=MONEY;row.getCell(8).font={name:FONT,size:8,color:{argb:"FF9AA3AE"}};
+      row.getCell(5).numFmt=QTY;pu.numFmt=MONEY;t.numFmt=MONEY;row.getCell(9).font={name:FONT,size:8,color:{argb:"FF9AA3AE"}};
       for(let i=1;i<=7;i++){const c=row.getCell(i);c.alignment={vertical:"top",wrapText:i===2||i===3,horizontal:i===4?"center":undefined};c.border={bottom:thin}}
+      tv.border={bottom:thin};
       r++;
     });
+    /* Bloc de totaux : HT, TVA par taux (SOMME.SI sur la colonne TVA), total TVA, TTC */
+    const totals=(a,b,label,pse)=>{
+      const br=tvaBreak(l.children,pse),ht=br.reduce((x,[,v])=>x+v,0),o={};
+      const st=put(r,[null,label+" HT"],{bold:true});
+      st.getCell(7).value={formula:b>a?`SUM(G${a}:G${b-1})`:"0",result:cons?0:ht};st.getCell(7).numFmt=MONEY;
+      for(let i=1;i<=8;i++)st.getCell(i).border={top:{style:"thin",color:{argb:ink}}};
+      o.ht=r;r++;o.rates={};const first=r;
+      TAUX.forEach(t=>{const x=put(r,[null,"TVA à "+fmtT(t)],{italic:true});x.getCell(6).value=rateCrit(t);x.getCell(6).numFmt=PCT;
+        const v=(br.find(z=>z[0]===t)||[0,0])[1]*t/100;
+        x.getCell(7).value={formula:b>a?`F${r}*SUMIF(H${a}:H${b-1},F${r},G${a}:G${b-1})`:"0",result:cons?0:v};x.getCell(7).numFmt=MONEY;o.rates[t]=r;r++});
+      const tt=put(r,[null,"Total TVA"]);tt.getCell(7).value={formula:`SUM(G${first}:G${r-1})`,result:cons?0:tvaSum(br)};tt.getCell(7).numFmt=MONEY;o.tva=r;r++;
+      const tc=put(r,[null,label+" TTC"],{bold:true});tc.getCell(7).value={formula:`G${o.ht}+G${o.tva}`,result:cons?0:ht+tvaSum(br)};tc.getCell(7).numFmt=MONEY;
+      for(let i=1;i<=8;i++)tc.getCell(i).border={top:{style:"thin",color:{argb:ink}},bottom:{style:"thin",color:{argb:ink}}};
+      o.ttc=r;r++;return o};
     const start=r;rec(l.children,false);
-    const st=put(r,[null,"Sous-total lot "+nr],{bold:true});
-    st.getCell(7).value={formula:r>start?`SUM(G${start}:G${r-1})`:"0",result:cons?0:baseT(l)};st.getCell(7).numFmt=MONEY;
-    for(let i=1;i<=7;i++)st.getCell(i).border={top:{style:"thin",color:{argb:ink}}};
-    const link={l,name,row:r,pseRow:null};r++;
+    const link={l,name,base:totals(start,r,"Sous-total lot "+nr,false),pse:null};
     if(hasMode(l,true)){
       r++;put(r,[null,"PRESTATIONS SUPPLÉMENTAIRES ÉVENTUELLES (PSE)"],{bold:true,fill:pseFill});r++;
       const ps=r;rec(l.children,true);
-      const sp=put(r,[null,"Sous-total PSE lot "+nr],{bold:true});
-      sp.getCell(7).value={formula:r>ps?`SUM(G${ps}:G${r-1})`:"0",result:cons?0:pseT(l)};sp.getCell(7).numFmt=MONEY;
-      for(let i=1;i<=7;i++)sp.getCell(i).border={top:{style:"thin",color:{argb:ink}}};
-      link.pseRow=r;r++;
+      link.pse=totals(ps,r,"Sous-total PSE lot "+nr,true);
     }
     links.push(link);
   });
   if(withRecap){
     const rc=wb.addWorksheet("Récapitulatif",{pageSetup:page});foot(rc);
-    const src=links.length?links:S.tree.map(l=>({l}));
-    const pse=links.length?anyPSE:S.tree.some(l=>hasMode(l,true));
-    rc.columns=[{width:10},{width:48},{width:18},{width:18}];
-    const put=mkPut(rc);
+    /* Lots du classeur : formules liées aux onglets. Récapitulatif seul (un fichier par lot) : montants en valeurs */
+    const src=links.length?links:S.tree.filter(l=>!recapIds||recapIds.includes(l.id)).map(l=>({l}));
+    const pse=src.some(({l})=>hasMode(l,true));
+    rc.columns=[{width:10},{width:44},{width:17},{width:15},{width:17},{width:17},{width:17}];
+    const put=mkPut(rc),cols=pse?7:5;
     put(1,[P.nom],{size:14,bold:true});put(2,[sub]);put(3,["Récapitulatif — "+title.slice(7)+" · "+indTxt()],{bold:true});
     put(4,[cons?"Entreprise : ":"Établi le "+today()]);
-    put(6,["Lot","Désignation","Montant HT",pse?"PSE HT":null],{bold:true,fill:band}).eachCell(c=>c.border={bottom:{style:"medium",color:{argb:ink}}});
+    put(6,["Lot","Désignation","Montant HT","TVA","Montant TTC",pse?"PSE HT":null,pse?"PSE TTC":null],{bold:true,fill:band}).eachCell(c=>c.border={bottom:{style:"medium",color:{argb:ink}}});
     let k=7;
-    const cell=(c,link,row,val)=>{if(link&&row)c.value={formula:`'${link.replace(/'/g,"''")}'!G${row}`,result:cons?0:val};else if(cons)c.fill={type:"pattern",pattern:"solid",fgColor:{argb:input}};else c.value=val;c.numFmt=MONEY};
-    src.forEach(({l,name,row,pseRow})=>{
-      const x=put(k,[IDX[l.id].nr,l.nom]);cell(x.getCell(3),name,row,baseT(l));
-      if(pse){if(hasMode(l,true))cell(x.getCell(4),name,pseRow,pseT(l))}
-      for(let i=1;i<=(pse?4:3);i++)x.getCell(i).border={bottom:thin};k++;
+    const ref=(name,row)=>`'${name.replace(/'/g,"''")}'!G${row}`;
+    const cell=(c,name,row,val)=>{if(name&&row)c.value={formula:ref(name,row),result:cons?0:val};else if(cons)c.fill={type:"pattern",pattern:"solid",fgColor:{argb:input}};else c.value=r2(val);c.numFmt=MONEY};
+    src.forEach(({l,name,base,pse:ps})=>{
+      const bb=tvaBreak(l.children,false),bp=tvaBreak(l.children,true);
+      const x=put(k,[IDX[l.id].nr,l.nom]);
+      cell(x.getCell(3),name,base&&base.ht,baseT(l));cell(x.getCell(4),name,base&&base.tva,tvaSum(bb));cell(x.getCell(5),name,base&&base.ttc,baseT(l)+tvaSum(bb));
+      if(pse&&hasMode(l,true)){cell(x.getCell(6),name,ps&&ps.ht,pseT(l));cell(x.getCell(7),name,ps&&ps.ttc,pseT(l)+tvaSum(bp))}
+      for(let i=1;i<=cols;i++)x.getCell(i).border={bottom:thin};k++;
     });
-    const ht=src.reduce((s,{l})=>s+baseT(l),0),pt=src.reduce((s,{l})=>s+pseT(l),0),last=k-1,rHT=k+1,rT=k+2,rTV=k+3,rTTC=k+4;
-    const a=put(rHT,[null,"Total HT"],{bold:true});a.getCell(3).value={formula:`SUM(C7:C${last})`,result:cons?0:ht};a.getCell(3).numFmt=MONEY;
-    const b=put(rT,[null,"Taux de TVA"]);b.getCell(3).value=S.tva/100;b.getCell(3).numFmt="0.0%";
-    const c=put(rTV,[null,"Montant TVA"]);c.getCell(3).value={formula:`C${rHT}*C${rT}`,result:cons?0:ht*S.tva/100};c.getCell(3).numFmt=MONEY;
-    const d=put(rTTC,[null,"Total TTC"],{bold:true,size:11});d.getCell(3).value={formula:`C${rHT}+C${rTV}`,result:cons?0:ht*(1+S.tva/100)};d.getCell(3).numFmt=MONEY;
-    if(pse){
-      a.getCell(4).value={formula:`SUM(D7:D${last})`,result:cons?0:pt};a.getCell(4).numFmt=MONEY;
-      c.getCell(4).value={formula:`D${rHT}*C${rT}`,result:cons?0:pt*S.tva/100};c.getCell(4).numFmt=MONEY;
-      d.getCell(4).value={formula:`D${rHT}+D${rTV}`,result:cons?0:pt*(1+S.tva/100)};d.getCell(4).numFmt=MONEY;
-    }
-    for(let i=1;i<=(pse?4:3);i++)d.getCell(i).border={top:{style:"medium",color:{argb:ink}}};
-    let nr=rTTC+2;
+    const last=k-1,rHT=k+1,ls=src.map(({l})=>l);
+    const bb=tvaBreak(ls,false),bp=tvaBreak(ls,true),ht=ls.reduce((s,l)=>s+baseT(l),0),pt=ls.reduce((s,l)=>s+pseT(l),0);
+    const a=put(rHT,[null,"Total"],{bold:true,size:11});
+    [3,4,5,6,7].slice(0,cols-2).forEach(i=>{const L="CDEFG"[i-3];a.getCell(i).value={formula:`SUM(${L}7:${L}${last})`,result:cons?0:[ht,tvaSum(bb),ht+tvaSum(bb),pt,pt+tvaSum(bp)][i-3]};a.getCell(i).numFmt=MONEY});
+    for(let i=1;i<=cols;i++)a.getCell(i).border={top:{style:"medium",color:{argb:ink}}};
+    /* Détail de la TVA par taux, tous lots confondus */
+    let nr=rHT+2;
+    put(nr,[null,"Détail de la TVA (base)"],{bold:true});nr++;
+    TAUX.forEach(t=>{const v=(bb.find(z=>z[0]===t)||[0,0])[1]*t/100;
+      const x=put(nr,[null,"TVA à "+fmtT(t)],{italic:true});const c=x.getCell(4);
+      if(src.every(z=>z.base))c.value={formula:src.map(z=>ref(z.name,z.base.rates[t])).join("+"),result:cons?0:v};else if(!cons)c.value=r2(v);
+      c.numFmt=MONEY;nr++});
+    nr++;
+    const surf=num(P.surf);
+    if(surf){const x=put(nr,[null,`Ratio au m² (${P.surfType||"SHAB"} : ${qf.format(surf)} m²)`]);x.getCell(3).value={formula:`C${rHT}/${String(surf)}`,result:cons?0:ht/surf};x.getCell(3).numFmt='#,##0.00 "€ HT/m²"';nr+=2}
     if(links.length&&links.length<S.tree.length){const n=rc.getCell(`B${nr}`);n.value="Récapitulatif limité aux lots inclus dans ce classeur.";n.font={name:FONT,size:9,italic:true,color:{argb:"FF5B6674"}};nr++}
     if(pse){const n=rc.getCell(`B${nr}`);n.value="Les PSE sont chiffrées à part et ne sont pas comprises dans le montant de base.";n.font={name:FONT,size:9,italic:true,color:{argb:"FF5B6674"}};nr++}
     if(cons)put(nr+2,[null,"Cachet et signature de l'entreprise :"]);
   }
   wb.views=[{activeTab:0}];
   const buf=await wb.xlsx.writeBuffer();
-  const scope=lots.length===S.tree.length?"":lots.length?" - lot"+(lots.length>1?"s ":" ")+lots.map(l=>IDX[l.id].nr).join(", "):" - récapitulatif";
-  await saveFile(`${slug(P.nom)} - DPGF ${cons?"consultation":"MOA"}${scope} - ind ${P.indice||"A"}.xlsx`,new Blob([buf],{type:XLSX_MIME}));
+  const scope=lots.length===S.tree.length?"":lots.length===1?" - lot "+IDX[lots[0].id].nr+" "+slug(lots[0].nom).slice(0,40):lots.length?" - lots "+lots.map(l=>IDX[l.id].nr).join(", "):" - récapitulatif";
+  return{name:`${slug(P.nom)} - DPGF ${cons?"consultation":"MOA"}${scope} - ind ${P.indice||"A"}.xlsx`,blob:new Blob([buf],{type:XLSX_MIME})};
 }
 
 /* CCTP au format Word (.docx), écrit directement en WordprocessingML */
@@ -1703,10 +1794,10 @@ function wP(content,o={}){const pp=(o.style?`<w:pStyle w:val="${o.style}"/>`:"")
   return`<w:p>${pp?`<w:pPr>${pp}</w:pPr>`:""}${content}</w:p>`}
 const wParas=(text,o)=>String(text||"").split(/\n+/).filter(t=>t.trim()).map(t=>wP(wRun(t),o)).join("");
 async function exportDocx(lotIds){
-  if(!needLib("JSZip"))return;
+  if(!needLib("JSZip"))return null;
   reindex();
   const P=S.projet,lots=S.tree.filter(l=>lotIds.includes(l.id));
-  if(!lots.length)return toast("Choisissez au moins un lot.");
+  if(!lots.length){toast("Choisissez au moins un lot.");return null}
   const all=lots.length===S.tree.length;
   let b="";
   b+=wP("",{sp:[2400,0]});
@@ -1781,22 +1872,139 @@ ${st("TOC2","toc 2",'<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9402"/><
   z.file("word/header1.xml",hdr);z.file("word/footer1.xml",ftr);
   z.file("word/header2.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}><w:p/></w:hdr>`);z.file("word/footer2.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr ${NS}><w:p/></w:ftr>`);
   const blob=await z.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
-  const scope=all?"":" - lot"+(lots.length>1?"s ":" ")+lots.map(l=>IDX[l.id].nr).join(", ");
-  await saveFile(`${slug(P.nom)} - CCTP${scope} - ind ${P.indice||"A"}.docx`,blob);
+  return{name:`${slug(P.nom)} - CCTP${cctpScope(lots)} - ind ${P.indice||"A"}.docx`,blob};
+}
+const cctpScope=lots=>lots.length===S.tree.length?"":lots.length===1?" - lot "+IDX[lots[0].id].nr+" "+slug(lots[0].nom).slice(0,40):" - lots "+lots.map(l=>IDX[l.id].nr).join(", ");
+
+/* CCTP au format PDF (pdfmake) : même hiérarchie que le Word, numéros en marge */
+async function exportPdf(lotIds){
+  if(!needLib("pdfMake"))return null;
+  reindex();
+  const P=S.projet,lots=S.tree.filter(l=>lotIds.includes(l.id));
+  if(!lots.length){toast("Choisissez au moins un lot.");return null}
+  const ACC="#1d4f91",INK="#1b2430",MUT="#5b6674",SOFT="#3d4754",GEN="#f2f4f7",NW=52;
+  const paras=(t,st)=>String(t||"").split(/\n+/).filter(x=>x.trim()).map(x=>({text:x,style:st}));
+  const head=(nr,txt,lvl,o={})=>{
+    const sz=[0,13,11.5,10][lvl];
+    const row={columns:[{width:NW,text:nr,bold:true,fontSize:sz,color:lvl===1?ACC:lvl===3?SOFT:INK},{width:"*",text:[{text:lvl===1?txt.toUpperCase():txt,bold:true,fontSize:sz,color:lvl===1?ACC:INK},o.pse?{text:"   (PSE)",color:"#8a5a00",fontSize:9}:""]}],columnGap:0};
+    const st=[];
+    if(lvl<=2)st.push({text:(nr?nr+"   ":"")+txt,tocItem:true,tocStyle:lvl===1?{bold:true}:{},tocMargin:lvl===1?[0,8,0,2]:[14,0,0,1],fontSize:0.1,color:"#ffffff",lineHeight:0.1});
+    st.push(row);
+    if(lvl<=2)st.push({canvas:[{type:"line",x1:0,y1:2,x2:515,y2:2,lineWidth:lvl===1?1.4:0.6,lineColor:INK}]});
+    return{stack:st,headlineLevel:lvl,margin:[0,lvl===1?0:lvl===2?16:11,0,lvl===3?2:6],pageBreak:o.br?"before":undefined}};
+  const clauses=(n,flat)=>{const c=clOf(n),out=[];let i=0;
+    CLAUSES.forEach(([g,fs])=>{const f=fs.filter(([k])=>c[k]);if(!f.length)return;
+      if(!flat)out.push({text:g,bold:true,italics:true,color:SOFT,fontSize:9,margin:[NW,5,0,1]});
+      f.forEach(([k,l])=>String(c[k]).split(/\n+/).filter(t=>t.trim()).forEach((t,j)=>out.push({columns:[{width:NW,text:""},{width:18,text:j?"":LET(i++)+")"},{width:"*",text:[j===0&&(fs.length>1||flat)?{text:l+" : ",bold:true}:"",t],alignment:"justify"}],columnGap:0,margin:[0,0,0,2]})))});
+    return out};
+  const gen=(g,isLot)=>{const k=isLot?"lot":"sous-lot";if(!(g.intro||"").trim()&&!clCount(g))return[];
+    const inner=[{text:"GÉNÉRALITÉS DU "+k.toUpperCase(),bold:true,fontSize:8,color:MUT,characterSpacing:0.6,margin:[0,0,0,3]},
+      ...String(g.intro||"").split(/\n+/).filter(x=>x.trim()).map(x=>({text:x,italics:true,margin:[0,0,0,3]})),
+      ...(clCount(g)?[{text:"Clauses communes à toutes les prestations du "+k,bold:true,fontSize:9,margin:[0,2,0,2]},...clauses(g,true).map(x=>(x.columns[0].width=0,x))]:[])];
+    return[{columns:[{width:NW,text:""},{width:"*",table:{widths:["*"],body:[[{stack:inner,fillColor:GEN,margin:[8,6,8,6]}]]},layout:"noBorders"}],columnGap:0,margin:[0,2,0,8]}]};
+  const art=n=>{const nr=IDX[n.id].nr,o=[head(nr,n.nom||"Prestation sans nom",3,{pse:n.pse})];
+    o.push(...paras(n.desc,"corps"));o.push(...clauses(n,false));
+    const meta=[];
+    if(n.lieux.length)meta.push({text:"Localisation : ",bold:true},locTxt(n),"   ");
+    if(n.finOn&&n.fin)meta.push({text:"Finition : ",bold:true},n.fin,"   ");
+    meta.push({text:"Unité de compte : ",bold:true},n.u||"");
+    if(n.pse)meta.push(" · Prestation supplémentaire éventuelle, chiffrée à part.");
+    o.push({text:meta,fontSize:8.5,color:"#4a5563",margin:[NW,4,0,2]});return o};
+  const rec=arr=>arr.flatMap(n=>n.kind==="g"?[head(IDX[n.id].nr,n.nom,2),...gen(n,false),...rec(n.children)]:art(n));
+  const content=[
+    {text:"",margin:[0,150,0,0]},
+    {text:P.nom||"Opération",fontSize:22,bold:true,alignment:"center",margin:[0,0,0,8]},
+    P.adresse?{text:P.adresse,fontSize:12,alignment:"center"}:"",
+    P.moa?{text:"Maître d'ouvrage : "+P.moa,fontSize:11,alignment:"center",margin:[0,6,0,0]}:"",
+    {text:"CAHIER DES CLAUSES TECHNIQUES PARTICULIÈRES",fontSize:15,bold:true,color:ACC,alignment:"center",margin:[0,90,0,8]},
+    {text:lots.length===S.tree.length?"Tous lots":lots.map(l=>"Lot "+IDX[l.id].nr+" — "+l.nom).join("\n"),fontSize:12,alignment:"center"},
+    {text:[P.phase,"Indice "+(P.indice||"A"),today()].filter(Boolean).join(" · "),fontSize:11,alignment:"center",margin:[0,90,0,0]},
+    P.moe?{text:"Maître d'œuvre : "+P.moe,fontSize:11,alignment:"center",margin:[0,6,0,0]}:"",
+    {toc:{title:{text:"Sommaire",fontSize:14,bold:true,margin:[0,0,0,12]},numberStyle:{fontSize:9.5},textStyle:{fontSize:9.5}},pageBreak:"before"}];
+  if(P.dispo)content.push(head("","Dispositions générales",1,{br:true}),...paras(P.dispo,"corps"));
+  lots.forEach(l=>{content.push(head(IDX[l.id].nr,l.nom,1,{br:true}),...gen(l,true),...rec(l.children))});
+  const dd={pageSize:"A4",pageMargins:[40,56,40,52],info:{title:"CCTP — "+(P.nom||""),author:P.moe||"Prescrire"},
+    defaultStyle:{fontSize:9.5,lineHeight:1.18,color:INK},styles:{corps:{alignment:"justify",margin:[NW,0,0,3]}},
+    header:p=>p===1?null:{columns:[{text:(P.nom||"")+" — CCTP",width:"*"},{text:indTxt(),width:"auto"}],fontSize:7.5,color:MUT,margin:[40,24,40,0]},
+    footer:(p,n)=>p===1?null:{columns:[{text:P.moe||"",width:"*"},{text:"Page "+p+" / "+n,width:"auto"}],fontSize:7.5,color:MUT,margin:[40,18,40,0]},
+    pageBreakBefore:(cur,after)=>cur.headlineLevel&&!cur.pageBreak&&after.length===0,
+    content};
+  const blob=await new Promise((ok,ko)=>{try{pdfMake.createPdf(dd).getBlob(ok)}catch(e){ko(e)}});
+  return{name:`${slug(P.nom)} - CCTP${cctpScope(lots)} - ind ${P.indice||"A"}.pdf`,blob};
 }
 
+/* Enregistre un ou plusieurs fichiers : un dossier à choisir dans l'appli, des téléchargements successifs dans le navigateur */
+async function saveMany(files){
+  files=files.filter(Boolean);if(!files.length)return;
+  if(files.length===1)return saveFile(files[0].name,files[0].blob);
+  if(T){
+    const dir=await T.dialog.open({directory:true,defaultPath:LASTDIR||(DIRS&&DIRS.documents)||undefined,title:`Dossier où enregistrer les ${files.length} fichiers`});
+    if(!dir)return false;
+    let ok=0;for(const f of files){try{await inv("write_b64",{path:pjoin(dir,f.name),data:await blobB64(f.blob)});ok++}catch(e){toast("Échec : "+f.name+" ("+e+")",6000)}}
+    LASTDIR=dir;toast(`${ok} fichier${ok>1?"s":""} enregistré${ok>1?"s":""} dans ${pbase(dir)}.`,4500);return true;
+  }
+  for(const f of files){if(await saveFile(f.name,f.blob)===false&&(await dlP))break;await new Promise(r=>setTimeout(r,400))}
+  return true;
+}
+/* Lance l'export choisi dans la fenêtre : un fichier, ou un fichier par lot */
+async function runExport(doc,type,ids,recap,split){
+  toast("Préparation de l'export…",60000);
+  const one=list=>doc==="dpgf"?exportXlsx(type,list,false):doc==="pdf"?exportPdf(list):exportDocx(list);
+  let files=[];
+  if(split){
+    for(const id of ids)files.push(await one([id]));
+    if(doc==="dpgf"&&recap)files.push(await exportXlsx(type,[],true,ids));
+  }else files.push(doc==="dpgf"?await exportXlsx(type,ids,recap):await one(ids));
+  $("#toast").hidden=true;
+  return saveMany(files);
+}
+
+/* Coefficient sur les prix (projet ou lot), réversible */
+function openCoef(scope){
+  reindex();
+  const arr=scope?flatP([scope]):flatP(S.tree),lab=scope?(IDX[scope.id].parent?"du sous-lot ":"du lot ")+IDX[scope.id].nr+" "+scope.nom:"de tout le projet";
+  const cur=arr.filter(n=>n.prixOrig!=null);
+  openModal("Coefficient sur les prix",`<p style="margin:0">Applique un pourcentage aux prix unitaires ${esc(lab)} (${arr.length} prestation${arr.length>1?"s":""}). Le prix d'origine est conservé : vous pourrez y revenir.</p>
+    <div class="f"><label for="cf-p">Variation en %</label><input type="text" inputmode="decimal" class="numin" id="cf-p" placeholder="Ex. 4 pour +4 %, -3 pour −3 %" style="max-width:220px"></div>
+    <p class="hint" id="cf-ex" style="margin:0"></p>
+    ${cur.length?`<p class="hint" style="margin:0">${cur.length} prestation${cur.length>1?"s ont":" a"} déjà un prix actualisé : le nouveau coefficient s'applique au prix d'origine, pas au prix actuel.</p>`:""}`,
+    `${cur.length?'<button class="btn" id="cf-reset">Revenir aux prix d\'origine</button><span style="flex:1"></span>':""}<button class="btn" data-m="cancel">Annuler</button><button class="btn primary" id="cf-ok">Appliquer</button>`);
+  const ex=()=>{const p=num($("#cf-p").value),a=arr.find(n=>num(n.prixOrig??n.prix));$("#cf-ex").textContent=a&&p?`Exemple : ${a.nom}, ${eur(num(a.prixOrig??a.prix))} → ${eur(r2(num(a.prixOrig??a.prix)*(1+p/100)))}`:""};
+  $("#cf-p").oninput=ex;
+  $("#cf-ok").onclick=()=>{const p=num($("#cf-p").value);if(!p){$("#cf-p").focus();return}
+    arr.forEach(n=>{if(n.prixOrig==null)n.prixOrig=num(n.prix);n.coef=p;n.prix=r2(n.prixOrig*(1+p/100))});closeModal();commit();renderFiche();toast(`Prix actualisés de ${pf.format(p)} % (${arr.length} prestations).`)};
+  const rs=$("#cf-reset");if(rs)rs.onclick=()=>{cur.forEach(n=>{n.prix=n.prixOrig;delete n.prixOrig;delete n.coef});closeModal();commit();renderFiche();toast("Prix d'origine rétablis.")};
+}
+
+/* Annuler / rétablir : instantanés du projet (hors réglages d'affichage) */
+const UIK=["sel","tab","view","lot","lieu","olot","open","filtre","dirty","fichier","chemin"];
+let HIST=[],HPOS=-1,hT=null;
+function snap(){const o=Object.assign({},S);UIK.forEach(k=>delete o[k]);return JSON.stringify(o)}
+function hReset(){HIST=[snap()];HPOS=0;hBtns()}
+function hPush(){hT=null;const s=snap();if(s===HIST[HPOS])return;HIST=HIST.slice(0,HPOS+1);HIST.push(s);if(HIST.length>100)HIST.shift();HPOS=HIST.length-1;hBtns()}
+function hBtns(){const u=$("#b-undo"),r=$("#b-redo");if(u)u.disabled=HPOS<=0;if(r)r.disabled=HPOS>=HIST.length-1}
+function hGo(d){
+  if(hT){clearTimeout(hT);hPush()}
+  const to=HPOS+d;if(to<0||to>=HIST.length)return toast(d<0?"Rien à annuler.":"Rien à rétablir.");
+  HPOS=to;const ui={};UIK.forEach(k=>ui[k]=S[k]);
+  S=Object.assign(JSON.parse(HIST[HPOS]),ui);S.dirty=true;reindex();if(S.sel&&!IDX[S.sel])S.sel=S.tree[0]?S.tree[0].id:null;
+  LIVE=null;persist();renderHead();renderTree();renderFiche();renderOut();hBtns();toast(d<0?"Annulé.":"Rétabli.",1200);
+}
+$("#b-undo").onclick=()=>hGo(-1);$("#b-redo").onclick=()=>hGo(1);
+
 /* Fenêtre d'export unique */
-const X={doc:"dpgf",type:"moa",scope:"all",lots:new Set(),recap:true};
+const X={doc:"dpgf",type:"moa",scope:"all",lots:new Set(),recap:true,split:false};
 function openExport(){
   reindex();
   if(!S.tree.length)return toast("Aucun lot à exporter.");
   if(!X.lots.size){const sel=S.sel&&IDX[S.sel]?rootOf(S.sel):null;if(sel)X.lots.add(sel.id)}
   [...X.lots].forEach(id=>{if(!IDX[id])X.lots.delete(id)});
-  if(S.tab==="cctp")X.doc="docx";else if(S.tab==="dpgf")X.doc="dpgf";
+  if(S.tab==="cctp"&&X.doc==="dpgf")X.doc="docx";else if(S.tab==="dpgf")X.doc="dpgf";
   openModal("Exporter",`
     <fieldset><legend>Document</legend><div class="optrow">
-      <label class="opt"><input type="radio" name="x-doc" value="dpgf" ${X.doc==="dpgf"?"checked":""}><span><b>DPGF</b><small>Classeur Excel, un onglet par lot</small></span></label>
-      <label class="opt"><input type="radio" name="x-doc" value="docx" ${X.doc==="docx"?"checked":""}><span><b>CCTP</b><small>Document Word avec page de garde et sommaire</small></span></label></div></fieldset>
+      <label class="opt"><input type="radio" name="x-doc" value="dpgf" ${X.doc==="dpgf"?"checked":""}><span><b>DPGF</b><small>Classeur Excel</small></span></label>
+      <label class="opt"><input type="radio" name="x-doc" value="docx" ${X.doc==="docx"?"checked":""}><span><b>CCTP Word</b><small>Modifiable, avec sommaire</small></span></label>
+      <label class="opt"><input type="radio" name="x-doc" value="pdf" ${X.doc==="pdf"?"checked":""}><span><b>CCTP PDF</b><small>Prêt à diffuser</small></span></label></div></fieldset>
     <fieldset id="x-dest"><legend>Destinataire</legend><div class="optrow">
       <label class="opt"><input type="radio" name="x-type" value="moa" ${X.type==="moa"?"checked":""}><span><b>Maître d'ouvrage</b><small>Prix et montants de l'estimation</small></span></label>
       <label class="opt"><input type="radio" name="x-type" value="cons" ${X.type==="cons"?"checked":""}><span><b>Entreprises</b><small>Prix unitaires vides, totaux par formules</small></span></label></div></fieldset>
@@ -1804,27 +2012,28 @@ function openExport(){
       <label class="opt"><input type="radio" name="x-scope" value="all" ${X.scope==="all"?"checked":""}><span><b>Tous les lots</b></span></label>
       <label class="opt"><input type="radio" name="x-scope" value="some" ${X.scope==="some"?"checked":""}><span><b>Lots choisis</b></span></label></div>
       <div class="lotlist" id="x-lots">${S.tree.map(l=>`<label><input type="checkbox" data-xl="${l.id}"><span class="n">${IDX[l.id].nr}</span><span>${esc(l.nom)}</span><span class="a">${nf.format(baseT(l))}</span></label>`).join("")}
-        <label class="recap-opt" id="x-recapl"><input type="checkbox" id="x-recap" ${X.recap?"checked":""}><span class="n">Σ</span><span>Récapitulatif (total HT, TVA, TTC)</span><span></span></label></div></fieldset>`,
+        <label class="recap-opt" id="x-recapl"><input type="checkbox" id="x-recap" ${X.recap?"checked":""}><span class="n">Σ</span><span>Récapitulatif (total HT, TVA, TTC)</span><span></span></label></div>
+      <label class="recap-opt" style="margin-top:8px"><input type="checkbox" id="x-split" ${X.split?"checked":""}><span></span><span><b>Un fichier par lot</b> <small class="hint">au lieu d'un seul document</small></span><span></span></label></fieldset>`,
     `<span class="x-sum" id="x-sum"></span><button class="btn" data-m="cancel">Annuler</button><button class="btn primary" id="x-go">Exporter</button>`,{focus:false});
   const body=$("#m-body");
   const sync=()=>{
-    const all=X.scope==="all",docx=X.doc==="docx";
+    const all=X.scope==="all",docx=X.doc!=="dpgf",split=$("#x-split").checked;
     $("#x-dest").hidden=docx;$("#x-recapl").hidden=docx;
     body.querySelectorAll("[data-xl]").forEach(c=>{c.checked=all||X.lots.has(c.dataset.xl);c.disabled=all;c.closest("label").style.opacity=all?.55:1});
     const ids=[...body.querySelectorAll("[data-xl]:checked")].map(c=>c.dataset.xl),rc=!docx&&$("#x-recap").checked;
     const parts=[...ids.map(id=>"Lot "+IDX[id].nr),...(rc?["Récapitulatif"]:[])],n=parts.length;
-    $("#x-sum").textContent=!n?"Rien de sélectionné":docx?`Un document Word : ${ids.length===S.tree.length?"tous les lots":parts.join(", ")}`:`Un classeur de ${n} onglet${n>1?"s":""} : ${parts.join(", ")}`;
+    const kind=X.doc==="pdf"?"PDF":"Word";
+    $("#x-sum").textContent=!n?"Rien de sélectionné":split?(docx?`${ids.length} fichier${ids.length>1?"s":""} ${kind}, un par lot`:`${ids.length} classeur${ids.length>1?"s":""}, un par lot${rc?", plus le récapitulatif":""}`):docx?`Un document ${kind} : ${ids.length===S.tree.length?"tous les lots":parts.join(", ")}`:`Un classeur de ${n} onglet${n>1?"s":""} : ${parts.join(", ")}`;
     $("#x-go").disabled=!(docx?ids.length:n);
   };
   body.onchange=e=>{const t=e.target;
     if(t.name==="x-doc")X.doc=t.value;if(t.name==="x-type")X.type=t.value;if(t.name==="x-scope")X.scope=t.value;
     if(t.dataset.xl)t.checked?X.lots.add(t.dataset.xl):X.lots.delete(t.dataset.xl);
-    if(t.id==="x-recap")X.recap=t.checked;sync()};
+    if(t.id==="x-recap")X.recap=t.checked;if(t.id==="x-split")X.split=t.checked;sync()};
   sync();
   $("#x-go").onclick=()=>{
-    const ids=[...body.querySelectorAll("[data-xl]:checked")].map(c=>c.dataset.xl),rc=$("#x-recap").checked;closeModal();
-    const p=X.doc==="docx"?exportDocx(ids):exportXlsx(X.type,ids,rc);
-    p.catch(e=>toast("Export impossible : "+(e&&e.message||e),5000));
+    const ids=[...body.querySelectorAll("[data-xl]:checked")].map(c=>c.dataset.xl),rc=$("#x-recap").checked,sp=$("#x-split").checked;closeModal();
+    runExport(X.doc,X.type,ids,rc,sp).catch(e=>toast("Export impossible : "+(e&&e.message||e),5000));
   };
 }
 $("#b-export").onclick=openExport;
@@ -1905,7 +2114,8 @@ async function importOffre(file){
     for(let r=hr+1;r<=ws.rowCount;r++){
       const raw=cv(ws.getCell("F"+r).value);if(raw===""||raw==null)continue;
       const v=num(raw);
-      let id=str(ws.getCell("H"+r).value);
+      let id=str(ws.getCell("I"+r).value);
+      if(!(id&&IDX[id]))id=str(ws.getCell("H"+r).value);
       if(!(id&&IDX[id]&&IDX[id].n.kind==="p")){
         const nr=str(ws.getCell("A"+r).value);if(!nr)continue;
         const hit=arts.find(n=>IDX[n.id].nr===nr&&(!lotNr||IDX[n.id].nr.startsWith(String(lotNr).padStart(2,"0"))));
@@ -1989,10 +2199,28 @@ document.querySelectorAll(".split").forEach(sp=>{
     if(which===1)UI.w1+=d;else UI.w3-=d;clampW();saveUI();layoutCols()});
 });
 window.addEventListener("resize",()=>{clampW();layoutCols()});
-function boot(){reindex();recalcAll();renderHead();renderTree();$("#v-lots").setAttribute("aria-pressed",S.view==="lots");$("#v-lieux").setAttribute("aria-pressed",S.view==="lieux");setTab(S.tab||"cctp");renderFiche();persist()}
+function boot(){setTimeout(hReset,0);reindex();recalcAll();renderHead();renderTree();$("#v-lots").setAttribute("aria-pressed",S.view==="lots");$("#v-lieux").setAttribute("aria-pressed",S.view==="lieux");setTab(S.tab||"cctp");renderFiche();persist()}
 async function drainPending(){const list=await inv("take_pending").catch(()=>[]);const p=list&&list[list.length-1];if(p)guardDirty("Ouvrir",()=>openPath(p))}
+const vnum=v=>String(v||"").replace(/^v/i,"").split(".").map(x=>parseInt(x,10)||0);
+const vNewer=(a,b)=>{const x=vnum(a),y=vnum(b);for(let i=0;i<3;i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
+async function checkUpdate(){
+  try{
+    const cur=(T.app&&T.app.getVersion)?await T.app.getVersion():APP_VERSION;
+    const r=await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`,{headers:{Accept:"application/vnd.github+json"}});
+    if(!r.ok)return;const j=await r.json(),v=String(j.tag_name||"").replace(/^v/i,"");
+    if(!v||!vNewer(v,cur))return;
+    let skip="";try{skip=localStorage.getItem("prescrire-maj-ignoree")||""}catch(e){}
+    if(skip===v)return;
+    const b=$("#upd"),url=j.html_url||`https://github.com/${GITHUB_REPO}/releases/latest`;
+    b.innerHTML=`<span><b>Prescrire ${esc(v)} est disponible</b> (vous avez la ${esc(cur)}).</span><button class="btn primary" id="upd-go">Télécharger</button><button class="link" id="upd-no">Plus tard</button>`;
+    b.hidden=false;
+    $("#upd-go").onclick=()=>{const o=T.opener;if(o&&o.openUrl)o.openUrl(url).catch(()=>{});else window.open(url,"_blank")};
+    $("#upd-no").onclick=()=>{try{localStorage.setItem("prescrire-maj-ignoree",v)}catch(e){}b.hidden=true};
+  }catch(e){}
+}
 async function initApp(){
   document.documentElement.classList.add("app-bureau");
+  setTimeout(checkUpdate,4000);
   $("#b-saveas").hidden=false;
   try{
     DIRS=await inv("app_dirs");ME=await inv("whoami");CFG_PATH=pjoin(DIRS.config,"reglages.json");

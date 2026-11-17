@@ -1,6 +1,6 @@
 [package]
 name = "prescrire"
-version = "0.9.0"
+version = "0.10.0"
 description = "Rédaction de CCTP et DPGF"
 license = "GPL-3.0-or-later"
 edition = "2021"
@@ -12,6 +12,7 @@ tauri-build = { version = "2", features = [] }
 tauri = { version = "2", features = [] }
 tauri-plugin-dialog = "2"
 tauri-plugin-single-instance = "2"
+tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
 base64 = "0.22"
 

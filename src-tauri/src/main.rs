@@ -118,6 +118,7 @@ fn main() {
             }
         }))
         .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_opener::init())
         .manage(Pending(Mutex::new(initial)))
         .invoke_handler(tauri::generate_handler![
             read_text, write_text, read_b64, write_b64, mtime, remove_file, app_dirs, whoami, take_pending
