@@ -27,7 +27,7 @@ jobs:
       matrix:
         os: [mac, windows]
         exclude:
-          - os: ${{ (github.event_name == 'workflow_dispatch' && !inputs.windows) && 'windows' || 'aucun' }}
+          - os: ${{ (github.event_name == 'workflow_dispatch' && format('{0}', inputs.windows) == 'false') && 'windows' || 'aucun' }}
         include:
           - os: mac
             platform: ${{ inputs.mac || 'macos-latest' }}
