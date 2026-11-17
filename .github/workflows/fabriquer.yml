@@ -9,6 +9,14 @@ on:
     branches: [main]
     paths-ignore: ["**.md", "LICENSE", ".github/**"]
   workflow_dispatch:
+    inputs:
+      mac:
+        description: "Machine Mac de GitHub (changer si macos-latest est saturé, ex. macos-15-intel)"
+        default: macos-latest
+      windows:
+        description: "Fabriquer aussi la version Windows"
+        type: boolean
+        default: true
 
 jobs:
   fabriquer:
@@ -17,10 +25,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [mac, windows]
+        exclude:
+          - os: ${{ (github.event_name == 'workflow_dispatch' && !inputs.windows) && 'windows' || 'aucun' }}
         include:
-          - platform: macos-latest
+          - os: mac
+            platform: ${{ inputs.mac || 'macos-latest' }}
             args: --target universal-apple-darwin
-          - platform: windows-latest
+          - os: windows
+            platform: windows-latest
             args: ""
     runs-on: ${{ matrix.platform }}
     steps:
@@ -30,7 +43,7 @@ jobs:
           node-version: 20
       - uses: dtolnay/rust-toolchain@stable
         with:
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          targets: ${{ matrix.os == 'mac' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
       - uses: swatinem/rust-cache@v2
         with:
           workspaces: "./src-tauri -> target"
