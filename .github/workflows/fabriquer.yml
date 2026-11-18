@@ -25,16 +25,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [mac, windows]
-        exclude:
-          - os: ${{ (github.event_name == 'workflow_dispatch' && format('{0}', inputs.windows) == 'false') && 'windows' || 'aucun' }}
-        include:
-          - os: mac
-            platform: ${{ inputs.mac || 'macos-15-intel' }}
-            args: --target universal-apple-darwin
-          - os: windows
-            platform: windows-latest
-            args: ""
+        # Mac toujours ; Windows sauf si on le décoche lors d'un lancement manuel
+        include: ${{ fromJSON(format('[{{"os":"mac","platform":"{0}","args":"--target universal-apple-darwin"}}{1}]', inputs.mac || 'macos-15-intel', (github.event_name == 'workflow_dispatch' && format('{0}', inputs.windows) == 'false') && '' || ',{"os":"windows","platform":"windows-latest","args":""}')) }}
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v4
