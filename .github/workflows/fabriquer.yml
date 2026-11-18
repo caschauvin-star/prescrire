@@ -11,8 +11,8 @@ on:
   workflow_dispatch:
     inputs:
       mac:
-        description: "Machine Mac de GitHub (changer si macos-latest est saturé, ex. macos-15-intel)"
-        default: macos-latest
+        description: "Machine Mac de GitHub (ex. macos-15-intel, ou macos-latest)"
+        default: macos-15-intel
       windows:
         description: "Fabriquer aussi la version Windows"
         type: boolean
@@ -30,7 +30,7 @@ jobs:
           - os: ${{ (github.event_name == 'workflow_dispatch' && format('{0}', inputs.windows) == 'false') && 'windows' || 'aucun' }}
         include:
           - os: mac
-            platform: ${{ inputs.mac || 'macos-latest' }}
+            platform: ${{ inputs.mac || 'macos-15-intel' }}
             args: --target universal-apple-darwin
           - os: windows
             platform: windows-latest
