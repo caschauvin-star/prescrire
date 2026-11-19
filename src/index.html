@@ -82,6 +82,8 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .row{display:flex;align-items:center;gap:6px;padding:4px 10px 4px calc(10px + var(--d,0) * 16px);cursor:pointer;border-top:2px solid transparent;border-bottom:2px solid transparent;user-select:none}
 .row:hover{background:var(--line-soft)}
 .row.sel{background:var(--accent-soft);box-shadow:inset 0 0 0 2px var(--accent)}
+.row.msel{background:var(--accent-soft)!important;box-shadow:inset 3px 0 0 var(--accent)}
+.row.msel.sel{box-shadow:inset 0 0 0 2px var(--accent)}
 .row .car{width:14px;flex:none;color:var(--muted);font-size:10px;text-align:center;border:0;background:none;padding:0;cursor:pointer}
 .row .num{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);flex:none;font-variant-numeric:tabular-nums}
 .row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -104,7 +106,7 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 @media (max-width:560px){.nomrow{grid-template-columns:1fr}}
 .oldp{display:inline-flex;align-items:center;gap:3px;font-family:var(--f-label);font-size:10.5px;font-weight:600;letter-spacing:.03em;text-transform:none;color:var(--warn);background:var(--warn-soft);border-radius:10px;padding:0 7px;line-height:17px;white-space:nowrap}
 .oldhint{font-size:12px;color:var(--warn);margin-top:4px}
-.idea{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--panel);font-size:16px;line-height:1;text-decoration:none;flex:none;margin-left:auto;cursor:pointer}
+.idea{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:var(--panel);font-size:16px;line-height:1;text-decoration:none;flex:none;cursor:pointer}
 .idea:hover{border-color:var(--accent);background:var(--accent-soft)}
 .finchk{display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;user-select:none}
 .dpgf td.fin{font-size:12.5px}
@@ -139,6 +141,7 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .tree-stat button:disabled{opacity:.5;cursor:default}
 .tree-filter{padding:6px 12px;font-size:12px;color:var(--accent);background:var(--accent-soft);border-bottom:1px solid var(--line-soft)}
 .tree-stat{display:flex;gap:10px;flex-wrap:wrap;padding:6px 12px;border-bottom:1px solid var(--line-soft);font-size:11.5px;color:var(--muted)}
+.tree-stat .stat-sub{flex-basis:100%;font-size:11px;color:var(--muted);padding-left:6px}
 .tree-stat span{display:flex;gap:5px;align-items:center;font-variant-numeric:tabular-nums}
 .tree-stat i,.et i{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
 .c-redaction{background:var(--s-grey)}.c-relecture{background:var(--s-orange)}.c-validee{background:var(--s-ok)}.c-reviser{background:var(--s-red)}
@@ -250,19 +253,21 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .fx-title .where{font-size:12px;color:var(--muted)}
 .fx .lb{font-family:var(--f-label);font-weight:600;font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink);white-space:nowrap}
 .fx .lb .link{font-family:var(--f-body);text-transform:none;letter-spacing:0;font-weight:400;margin-left:6px}
-.frow{display:grid;grid-template-columns:auto minmax(0,1fr) auto minmax(90px,32%);gap:10px 14px;align-items:center}
-.frow.one{grid-template-columns:auto minmax(0,1fr)}
+.frow{display:grid;grid-template-columns:96px minmax(0,1fr) auto minmax(70px,22%);gap:10px 14px;align-items:center}
+.frow>.lb:first-child{text-align:right}
+.frow.one{grid-template-columns:96px minmax(0,1fr)}
+.frow.desc{margin-top:14px}
 .frow.top{align-items:start}.frow.top .lb{padding-top:6px}
 .fx .ff{border:1px solid transparent;background:transparent;border-radius:4px;padding:5px 7px;min-width:0;width:100%;transition:border-color .15s,background-color .15s;color:var(--ink)}
 .fx .ff:hover,.fx .ff:focus{border-color:var(--line);background:var(--paper);outline:none}
 .fx .ff:focus-visible{border-color:var(--accent)}
 .fx textarea.ff{resize:vertical;line-height:1.45}
 .fx select.ff{appearance:none;-webkit-appearance:none;padding:5px 24px 5px 7px;background-repeat:no-repeat;background-position:right 7px center;background-size:11px}
-.fx select.ff:hover,.fx select.ff:focus{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6674' stroke-width='2.4'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
+.fx select.ff:hover,.fx select.ff:focus{background:var(--paper) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6674' stroke-width='2.4'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 7px center/11px}
 .fx .tvasel select{appearance:none;-webkit-appearance:none;border-color:transparent;background-color:transparent;padding-right:20px;background-repeat:no-repeat;background-position:right 5px center;background-size:10px}
 .fx .tvasel select:hover,.fx .tvasel select:focus{border-color:var(--line);background-color:var(--soft);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b6674' stroke-width='2.4'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")}
 .fx ::placeholder{color:var(--ph);font-style:italic;opacity:1}
-.fx .libhint{margin-top:-14px;padding-left:72px}
+.fx .libhint{margin-top:2px;padding-left:110px}
 .fx .ac-list{top:100%}
 .finrow{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:10px;align-items:center}
 .finrow input[type=checkbox]{width:16px;height:16px;margin:0;accent-color:var(--accent)}
@@ -317,6 +322,27 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .fx-notes .nh span{font-size:12px}
 .fx-notes .fx-title .where{color:var(--note-ink)}
 .fx-notes textarea{flex:1;min-height:340px;border:0;outline:none;resize:none;padding:0 2px;font-size:15px;line-height:28px;color:var(--ink);background-color:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,var(--note-line) 27px,var(--note-line) 28px);background-attachment:local}
+.msel-list{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:6px;max-height:260px;overflow:auto;background:var(--soft)}
+.msel-list li{display:flex;gap:8px;align-items:baseline;padding:5px 10px;border-bottom:1px solid var(--line-soft);cursor:pointer;font-size:13px}
+.msel-list li:last-child{border-bottom:0}
+.msel-list li:hover{background:var(--accent-soft)}
+.msel-list .n{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);flex:none}
+.msel-list .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msel-list .a{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.mrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.mrow .lb{font-family:var(--f-label);font-weight:600;font-size:12.5px;letter-spacing:.07em;text-transform:uppercase;min-width:110px}
+.mrow select{border:1px solid var(--line);border-radius:4px;padding:4px 6px;background:var(--soft);max-width:100%}
+.imptree,.imptree ul{list-style:none;margin:0;padding:0}
+.imptree{max-height:46vh;overflow:auto;border:1px solid var(--line);border-radius:6px;padding:6px 8px;background:var(--soft)}
+.imptree label{display:flex;gap:8px;align-items:center;padding:2px 0;cursor:pointer;font-size:13px}
+.imptree .n{font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+.aglogo{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.aglogo img{max-width:180px;max-height:70px;border:1px solid var(--line-soft);border-radius:4px;background:#fff;padding:4px}
+.about{display:flex;flex-direction:column;gap:10px;max-width:62ch}
+.about p{margin:0}
+.about .ab-h{font-family:var(--f-label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.about .ab-cep{font-family:var(--f-label);font-weight:600;font-size:17px;letter-spacing:.04em}
+.about .ab-sig{font-style:italic}
 .vbox{border:1px solid var(--line);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:var(--soft)}
 .vbox-h{display:flex;gap:10px;align-items:center}
 .vbox-h b{font-family:var(--f-label);font-size:13px;letter-spacing:.04em;white-space:nowrap}
@@ -338,7 +364,7 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .shareopt svg{flex:none;color:var(--accent)}
 .shareopt span{display:flex;flex-direction:column}
 .shareopt small{color:var(--muted);font-size:12px}
-@media (max-width:620px){.frow{grid-template-columns:auto minmax(0,1fr)}.qp,.nat{grid-template-columns:1fr}.qp .pu{justify-self:start;align-items:flex-start}}
+@media (max-width:620px){.frow{grid-template-columns:auto minmax(0,1fr)}.frow>.lb:first-child{text-align:left}.fx .libhint{padding-left:0}.qp,.nat{grid-template-columns:1fr}.qp .pu{justify-self:start;align-items:flex-start}}
 
 /* Sortie */
 .tabs{display:flex;gap:2px}
@@ -531,11 +557,14 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
       <button class="btn" id="b-save">Enregistrer</button>
       <button class="btn" id="b-saveas" hidden>Enregistrer sous…</button>
       <span class="sep"></span>
+      <button class="btn" id="b-agence">Agence</button>
       <button class="btn" id="b-proj">Projet</button>
+      <span class="sep"></span>
       <button class="btn" id="b-lieux">Lieux</button>
       <button class="btn" id="b-cats">Catégories</button>
       <button class="btn" id="b-lib">Bibliothèque</button>
     </div>
+    <span class="sep" style="width:1px;align-self:stretch;background:var(--line);margin:4px 2px 4px auto"></span>
     <a class="idea" id="b-idea" href="https://github.com/caschauvin-star/prescrire/issues/new" target="_blank" rel="noopener" title="Proposer une amélioration ou signaler un problème" aria-label="Proposer une amélioration ou signaler un problème">💡</a>
   </header>
 
@@ -548,6 +577,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
         <button class="btn" id="b-lot">+ Lot</button>
         <button class="btn" id="b-slot">+ Sous-lot</button>
         <button class="btn primary" id="b-presta">+ Prestation</button>
+        <button class="btn" id="b-implots" title="Importer des lots, sous-lots ou prestations d'un autre projet" aria-label="Importer des lots d'un autre projet" style="display:inline-flex;align-items:center;padding:4px 7px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11"/><path d="M7.5 9.5L12 14l4.5-4.5"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg></button>
       </div>
       <div class="tree-stat" id="tree-stat" aria-label="Avancement de la rédaction"></div>
       <div class="tree-filter" id="tree-filter" hidden></div>
@@ -585,7 +615,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
         <button class="btn" id="b-copy">Copier</button>
         <label class="finchk" id="o-finl" hidden><input type="checkbox" id="o-fin"> Prestations avec finition</label>
         <span style="flex:1"></span>
-        <button class="btn primary" id="b-export">Exporter…</button>
+        <button class="btn primary" id="b-export" title="Publier le CCTP, la DPGF ou le tableau des choix (Cmd+E)">Publier…</button>
       </div>
       <div class="col-b" id="out"></div>
     </section>
@@ -611,12 +641,13 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
    ====================================================================== */
 const CATS_DEF=["Fourniture et pose","Fourniture seule","Pose seule","Dépose / démolition","Préparation de support","Prestation forfaitaire","Essais et contrôles"];
 let CATS=null,CATS_MAJ=0;
-const APP_VERSION="0.12.0",GITHUB_REPO="caschauvin-star/prescrire";
+const APP_VERSION="0.13.0",GITHUB_REPO="caschauvin-star/prescrire";
 const TAUX=[20,10,5.5];
 /* Intitulé complet d'une prestation : nom + précision propre au projet (ex. « 120 x 220 ») */
 const ttl=n=>{const a=(n.nom||"").trim(),b=(n.prec||"").trim();return b?(a?a+" "+b:b):a};
 const fmtT=t=>String(t).replace(".",",")+" %";
-const UNITES=["U","ens.","ft","m²","ml","m³","kg","h"];
+const UNITES=["U","ens.","for.","m²","ml","m³","kg","h"];
+const fixU=u=>u==="ft"?"for.":u;
 /* Descriptif détaillé : alinéas ajoutés au CCTP à la suite du descriptif */
 const CLAUSES=[
  ["Clauses préalables",[["support","Pour le support","État et réception du support : planéité, siccité, tolérances, préparations restant à la charge du lot…"],["entrepreneur","Pour l'entrepreneur","Avant intervention : échantillons, fiches techniques, avis techniques, plans d'exécution à soumettre au maître d'œuvre…"]]],
@@ -634,7 +665,7 @@ const LIEUX_DEF=[["","Toutes pièces"],["RDC","Entrée",6.2,10.4,2.5],["RDC","S�
   ["R+1","Circulation",7.8,14.4,2.5],["R+1","Chambre 1",13.2,14.8,2.5],["R+1","Chambre 2",11.6,13.8,2.5],["R+1","Salle de bains",6.4,10.2,2.5],["Combles","Combles",48,28,""],["Extérieur","Façades"],["Extérieur","Extérieurs"]];
 /* Bibliothèque d'exemple : prix indicatifs HT, à remplacer par vos propres bordereaux */
 const DB_DEF=[
- ["Généralités","Protection des ouvrages conservés","Prestation forfaitaire","ft",650,"Protection par film polyane et panneaux des sols, menuiseries et équipements conservés pendant toute la durée du chantier, dépose en fin de travaux."],
+ ["Généralités","Protection des ouvrages conservés","Prestation forfaitaire","for.",650,"Protection par film polyane et panneaux des sols, menuiseries et équipements conservés pendant toute la durée du chantier, dépose en fin de travaux."],
  ["Démolition – Dépose","Dépose de cloison en carreaux de plâtre","Dépose / démolition","m²",28,"Dépose soignée de cloison en carreaux de plâtre ou briques plâtrières, y compris huisseries, réseaux encastrés neutralisés et évacuation des gravats."],
  ["Démolition – Dépose","Dépose de revêtement de sol carrelé","Dépose / démolition","m²",22,"Dépose de carrelage et de sa chape ou de son mortier de pose, mise à nu du support et évacuation."],
  ["Démolition – Dépose","Dépose de menuiserie extérieure","Dépose / démolition","U",85,"Dépose de menuiserie extérieure existante, dormant compris, avec soin pour préserver les tableaux et l'appui."],
@@ -669,7 +700,7 @@ const DB_DEF=[
  ["Peinture","Peinture acrylique murs 2 couches","Fourniture et pose","m²",18,"Peinture acrylique en phase aqueuse, deux couches sur impression, travaux de finition B selon NF DTU 59.1."],
  ["Peinture","Peinture plafonds 2 couches","Fourniture et pose","m²",20,"Peinture acrylique mate pour plafonds, deux couches sur impression."],
  ["Peinture","Lasure sur boiseries extérieures","Fourniture et pose","m²",26,"Lasure microporeuse en trois couches sur boiseries extérieures préalablement égrenées et dégraissées."],
- ["Généralités","Réception des supports et essais","Essais et contrôles","ft",350,"Constat contradictoire de l'état des supports avant intervention, essais de fonctionnement et remise du dossier des ouvrages exécutés."]
+ ["Généralités","Réception des supports et essais","Essais et contrôles","for.",350,"Constat contradictoire de l'état des supports avant intervention, essais de fonctionnement et remise du dossier des ouvrages exécutés."]
 ];
 
 /* ======================================================================
@@ -696,7 +727,7 @@ function toast(m,ms){const t=$("#toast");t.textContent=m;t.hidden=false;clearTim
    ====================================================================== */
 const KEY_P="prescrire-projet",KEY_B="prescrire-bibliotheque",KEY_OLD="prescrire-v1";
 let S,BASE,LIVE=null;
-const normBase=a=>(Array.isArray(a)?a:[]).filter(x=>x&&x.nom).map(x=>({id:x.id||uid(),nom:String(x.nom),lot:x.lot||"",cat:x.cat||catList()[0],u:x.u||"U",prix:num(x.prix),desc:x.desc||"",cl:clOf(x),maj:x.maj||0,par:x.par||"",prixMaj:x.prixMaj||x.maj||0}));
+const normBase=a=>(Array.isArray(a)?a:[]).filter(x=>x&&x.nom).map(x=>({id:x.id||uid(),nom:String(x.nom),lot:x.lot||"",cat:x.cat||catList()[0],u:fixU(x.u||"U"),prix:num(x.prix),desc:x.desc||"",cl:clOf(x),maj:x.maj||0,par:x.par||"",prixMaj:x.prixMaj||x.maj||0}));
 /* Exemples de descriptif détaillé */
 const DEMO_CL={
  "Peinture acrylique murs 2 couches":{support:"Supports réceptionnés secs, sains et dépoussiérés, humidité inférieure à 5 %. Les rebouchages importants restent à la charge du lot plâtrerie.",entrepreneur:"Présentation d'un échantillon de chaque teinte sur 1 m² pour validation par l'architecte avant exécution.",realisation:"Application à la brosse ou au rouleau, température ambiante supérieure à 8 °C, respect des temps de séchage entre couches.",finalisation:"Nettoyage des projections sur menuiseries, sols et appareillages ; retouches après passage des autres corps d'état.",limites:"Les menuiseries extérieures et les boiseries sont traitées au lot Menuiseries."},
@@ -744,7 +775,7 @@ function migrate(s){
   delete s.db;
   (function wg(a){a.forEach(g=>{if(g.kind==="g"){g.cl=clOf(g);wg(g.children)}})})(s.tree);
   walkP(s.tree,n=>{
-    n.lieux=n.lieux||[];n.ql=n.ql||{};n.qlx=n.qlx||{};n.qx=n.qx||"";n.pse=!!n.pse;n.cl=clOf(n);n.etat=ETATS.some(e=>e[0]===n.etat)?n.etat:"redaction";
+    n.u=fixU(n.u);n.lieux=n.lieux||[];n.ql=n.ql||{};n.qlx=n.qlx||{};n.qx=n.qx||"";n.pse=!!n.pse;n.cl=clOf(n);n.etat=ETATS.some(e=>e[0]===n.etat)?n.etat:"redaction";
     n.lieux.forEach(l=>{if(!s.lieux.some(z=>z.nom===l))s.lieux.push({nom:l,niv:"",s:"",p:"",h:""})});
     if(n.lieux.length>1&&!Object.keys(n.ql).length){const q=num(n.qte),k=n.lieux.length;
       if(Number.isInteger(q)){const b=Math.floor(q/k);n.lieux.forEach((l,i)=>n.ql[l]=b+(i<q-b*k?1:0))}
@@ -835,16 +866,21 @@ async function reloadLib(force){
 let IDX={};
 function reindex(){
   IDX={};
-  (function walk(arr,parent,prefix,depth){arr.forEach((n,i)=>{
-    const nr=prefix?prefix+"."+(i+1):String(i+1).padStart(2,"0");
-    IDX[n.id]={n,parent,arr,i,nr,depth};
-    if(n.kind==="g")walk(n.children,n,nr,depth+1);
-  })})(S.tree,null,"",0);
-  /* variantes : on écarte les rattachements devenus invalides (prestation déplacée dans un autre lot, variante supprimée) */
+  /* variantes : on écarte d'abord les rattachements devenus invalides (prestation déplacée dans un autre lot, variante supprimée) */
   S.tree.forEach(l=>{if(l.kind!=="g")return;const vs=varsOf(l),ids=new Set(vs.map(v=>v.id));
     walkP(l.children,n=>{if(n.vid&&!ids.has(n.vid))delete n.vid;if(n.vid)n.pse=false});
     if(vs.length){const base=new Set(flatP([l]).filter(n=>!n.vid).map(n=>n.id));vs.forEach(v=>{v.rempl=(v.rempl||[]).filter(id=>base.has(id))})}});
+  /* numérotation : les prestations de variante sont numérotées à part (03.V1.1…) pour que la base reste continue */
+  (function walk(arr,parent,prefix,depth){let c=0;arr.forEach((n,i)=>{
+    const isv=n.kind==="p"&&n.vid;if(!isv)c++;
+    const nr=isv?"":prefix?prefix+"."+c:String(c).padStart(2,"0");
+    IDX[n.id]={n,parent,arr,i,nr,depth};
+    if(n.kind==="g")walk(n.children,n,nr,depth+1);
+  })})(S.tree,null,"",0);
+  S.tree.forEach(l=>{if(l.kind!=="g"||!l.vars||!l.vars.length)return;const counts={};
+    walkP(l.children,n=>{if(!n.vid||!IDX[n.id])return;const k=l.vars.findIndex(v=>v.id===n.vid)+1;counts[k]=(counts[k]||0)+1;IDX[n.id].nr=IDX[l.id].nr+".V"+k+"."+counts[k]})});
 }
+
 const lineT=n=>num(n.qte)*num(n.prix);
 /* Variantes exigées : l.vars=[{id,nom,rempl:[ids des prestations de base remplacées]}] ; une prestation de variante porte n.vid */
 const baseT=n=>n.kind==="p"?(n.pse||n.vid?0:lineT(n)):n.children.reduce((s,c)=>s+baseT(c),0);
@@ -945,7 +981,7 @@ function renderTree(){
   const rec=(arr,par)=>arr.filter(n=>!active||keep(n,par)).map(n=>{
     const x=IDX[n.id],g=n.kind==="g",closed=g&&!active&&S.open[n.id]===false,pm=par||(W.length&&g&&qm(n));
     const amt=g?baseT(n):lineT(n),gs=g?grpState(n):"";
-    return `<li><div class="row ${g?"g "+(gs?"st-"+gs:""):"p st-"+(n.etat||"redaction")} ${g&&x.depth===0?"g0":""} ${S.sel===n.id?"sel":""}" draggable="true" title="${esc(g?(GRP_TITLE[gs]||""):(ETATS.find(e=>e[0]===(n.etat||"redaction"))||ETATS[0])[1]+(n.note&&n.note.trim()?"\nNote : "+n.note.trim():""))}" data-id="${n.id}" style="--d:${x.depth}">`+
+    return `<li><div class="row ${g?"g "+(gs?"st-"+gs:""):"p st-"+(n.etat||"redaction")} ${g&&x.depth===0?"g0":""} ${S.sel===n.id?"sel":""} ${MSEL.has(n.id)?"msel":""}" draggable="true" title="${esc(g?(GRP_TITLE[gs]||""):(ETATS.find(e=>e[0]===(n.etat||"redaction"))||ETATS[0])[1]+(n.note&&n.note.trim()?"\nNote : "+n.note.trim():""))}" data-id="${n.id}" style="--d:${x.depth}">`+
       (g?`<button class="car" data-tog="${n.id}" aria-label="${closed?"Déplier":"Replier"}">${closed?"▸":"▾"}</button>`:`<span class="dot"></span>`)+
       `<span class="num">${x.nr}</span><span class="nm">${W.length?hl((g?n.nom:ttl(n))||"Sans titre",W):esc((g?n.nom:ttl(n))||"Sans titre")}</span>${!g&&n.note&&n.note.trim()?'<span class="note" aria-label="Note interne"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16v12H8l-4 4z"/></svg></span>':""}${!g&&n.pse?'<span class="pse">PSE</span>':""}${!g&&n.vid&&varOfP(n)?`<span class="pse vtag" title="${esc(vLabel(rootOf(n.id),varOfP(n)))}">V${vNum(rootOf(n.id),varOfP(n))}</span>`:""}<span class="amt">${amt?nf.format(amt):""}</span></div>`+
       (g&&!closed&&n.children.length?`<ul>${rec(n.children,pm)}</ul>`:"")+`</li>`;
@@ -953,6 +989,8 @@ function renderTree(){
   $("#tree").innerHTML=rec(S.tree,false)||(active?`<li class="tree-hint">Aucune prestation ne correspond.</li>`:"");
   const all=flatP(S.tree),cnt=k=>all.filter(n=>(n.etat||"redaction")===k).length;
   $("#tree-stat").innerHTML=all.length?ETATS.map(([k,l])=>`<button data-filtre="${k}" aria-pressed="${F===k}" ${cnt(k)||F===k?"":"disabled"} title="${F===k?"Tout afficher":"Afficher seulement : "+esc(l.toLowerCase())}"><i class="c-${k}"></i>${cnt(k)} ${{redaction:"en rédaction",relecture:"à relire",validee:"validée"+(cnt(k)>1?"s":""),reviser:"à réviser"}[k]}</button>`).join(""):"";
+  {const np=all.filter(n=>n.pse&&!n.vid).length,nv=all.filter(n=>n.vid).length;
+    if(np||nv)$("#tree-stat").insertAdjacentHTML("beforeend",`<span class="stat-sub">dont ${[np?np+" en PSE":"",nv?nv+" en variante"+(nv>1?"s":""):""].filter(Boolean).join(" · ")}</span>`)}
   $("#tree-filter").hidden=!F;
   if(F)$("#tree-filter").innerHTML=`Filtre : ${esc((ETATS.find(e=>e[0]===F)||["",""])[1].toLowerCase())} · <button class="link" data-filtre="${F}">tout afficher</button>`;
 }
@@ -962,8 +1000,20 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-filtre]");
 $("#tree").addEventListener("click",e=>{
   const t=e.target.closest("[data-tog]");
   if(t){const id=t.dataset.tog;S.open[id]=S.open[id]===false;persist();renderTree();return}
-  const r=e.target.closest(".row");if(r)select(r.dataset.id);
+  const r=e.target.closest(".row");if(!r)return;
+  const id=r.dataset.id,n=IDX[id]&&IDX[id].n;
+  if(n&&n.kind==="p"&&(e.metaKey||e.ctrlKey)){
+    if(!MSEL.size&&S.sel&&IDX[S.sel]&&IDX[S.sel].n.kind==="p")MSEL.add(S.sel);
+    MSEL.has(id)?MSEL.delete(id):MSEL.add(id);ANCH=id;
+    if(MSEL.size<=1){const one=[...MSEL][0]||id;MSEL.clear();return select(one)}
+    S.sel=id;renderTree();renderFiche();return}
+  if(n&&n.kind==="p"&&e.shiftKey){
+    const a=ANCH&&IDX[ANCH]?ANCH:(S.sel&&IDX[S.sel]&&IDX[S.sel].n.kind==="p"?S.sel:null);
+    if(a){const vis=[...treeEl.querySelectorAll(".row.p")].map(x=>x.dataset.id),i=vis.indexOf(a),j=vis.indexOf(id);
+      if(i>-1&&j>-1){MSEL=new Set(vis.slice(Math.min(i,j),Math.max(i,j)+1));if(MSEL.size>1){S.sel=id;renderTree();renderFiche();return}MSEL.clear()}}}
+  MSEL.clear();ANCH=id;select(id);
 });
+let MSEL=new Set(),ANCH=null;
 let dragId=null;
 const treeEl=$("#tree");
 treeEl.addEventListener("dragstart",e=>{const r=e.target.closest(".row");if(!r)return;dragId=r.dataset.id;r.classList.add("dragging");e.dataTransfer.effectAllowed="move";try{e.dataTransfer.setData("text/plain",dragId)}catch(_){}});
@@ -974,8 +1024,10 @@ function zone(e,r){
   if(t.kind==="g"){if(y<.28)return"before";if(y>.72&&!(t.children.length&&S.open[t.id]!==false))return"after";return"in"}
   return y<.5?"before":"after";
 }
+const dragSet=()=>dragId&&MSEL.size>1&&MSEL.has(dragId)?[...MSEL]:null;
 function validDrop(tid,z){
   if(!dragId||tid===dragId||isDesc(tid,dragId))return false;
+  const ds=dragSet();if(ds&&(ds.includes(tid)||ds.some(id=>isDesc(tid,id))))return false;
   const d=IDX[dragId].n,t=IDX[tid];
   if(z!=="in"&&!t.parent&&d.kind==="p")return false;
   return true;
@@ -990,12 +1042,50 @@ treeEl.addEventListener("drop",e=>{
   const r=e.target.closest(".row");if(!r||!dragId)return;
   e.preventDefault();const tid=r.dataset.id,z=zone(e,r);clearDrop();
   if(!validDrop(tid,z))return;
-  const src=IDX[dragId];src.arr.splice(src.i,1);reindex();
+  const ds=dragSet(),nodes=ds?flatP(S.tree).filter(n=>ds.includes(n.id)):[IDX[dragId].n];
+  nodes.forEach(n=>{const x=IDX[n.id];x.arr.splice(x.arr.indexOf(n),1)});reindex();
   const t=IDX[tid];
-  if(z==="in"){t.n.children.push(src.n);S.open[t.n.id]=true}
-  else t.arr.splice(t.i+(z==="after"?1:0),0,src.n);
+  if(z==="in"){t.n.children.push(...nodes);S.open[t.n.id]=true}
+  else t.arr.splice(t.arr.indexOf(t.n)+(z==="after"?1:0),0,...nodes);
+  if(ds)toast(nodes.length+" prestations déplacées. Cmd+Z pour annuler.",3000);
   dragId=null;commit();renderFiche();
 });
+/* Import de lots, sous-lots ou prestations d'un autre projet (.caz) */
+$("#b-implots").onclick=()=>pickFile(".caz,.json",file=>{const r=new FileReader();r.onload=()=>openImportLots(r.result,file.name);r.readAsText(file)});
+function openImportLots(text,fname){
+  let d;try{d=JSON.parse(text)}catch(e){return toast("Ce fichier n'est pas un projet Prescrire lisible.")}
+  const p=d&&d.format==="prescrire-projet"?d.projet:d;
+  if(!p||!Array.isArray(p.tree)||!p.tree.length)return toast("Ce fichier n'est pas un projet Prescrire, ou il ne contient aucun lot.");
+  const src=migrate(JSON.parse(JSON.stringify(p))),lib=normBase(d.bibliotheque||p.db||[]);
+  const nr={};(function w(a,pre){a.forEach((n,i)=>{const k=pre?pre+"."+(i+1):String(i+1).padStart(2,"0");nr[n.id]=k;if(n.kind==="g")w(n.children,k)})})(src.tree,"");
+  const tg=targetGroup(),lot=tg?rootOf(tg.id):null;
+  const li=(arr,d)=>arr.map(n=>`<li><label style="padding-left:${d*18}px"><input type="checkbox" data-il="${n.id}"><span class="n">${esc(nr[n.id])}</span>${n.kind==="g"?`<b>${esc(n.nom)}</b>`:esc(ttl(n)||"Prestation sans nom")}</label>${n.kind==="g"?`<ul>${li(n.children,d+1)}</ul>`:""}</li>`).join("");
+  openModal("Importer des lots d'un autre projet",`<p style="margin:0">Depuis « ${esc(src.projet.nom||fname)} ». Cochez ce que vous voulez reprendre : descriptifs, clauses, prix, unités et finitions sont conservés ; les quantités et la localisation, propres à l'autre opération, ne le sont pas.</p>
+    <ul class="imptree">${li(src.tree,0)}</ul>
+    <fieldset><legend>Destination</legend><div class="optrow">
+      <label class="opt"><input type="radio" name="il-dest" value="end" ${lot?"":"checked"}><span><b>À la fin du projet</b><small>Les lots cochés deviennent de nouveaux lots</small></span></label>
+      ${lot?`<label class="opt"><input type="radio" name="il-dest" value="in" checked><span><b>Dans le lot ${esc(IDX[lot.id].nr+" "+lot.nom)}</b><small>Les lots cochés deviennent des sous-lots</small></span></label>`:""}</div></fieldset>`,
+    `<span class="x-sum" id="il-sum">Rien de coché</span><button class="btn" data-m="cancel">Annuler</button><button class="btn primary" id="il-go" disabled>Importer</button>`,{focus:false,wide:true});
+  const body=$("#m-body"),byId={};(function w(a,par){a.forEach(n=>{byId[n.id]={n,par};if(n.kind==="g")w(n.children,n)})})(src.tree,null);
+  const box=id=>body.querySelector(`[data-il="${CSS.escape(id)}"]`);
+  const sync=()=>{const c=[...body.querySelectorAll("[data-il]:checked")].map(x=>byId[x.dataset.il].n).filter(n=>n.kind==="p").length;$("#il-sum").textContent=c?`${c} prestation${c>1?"s":""} cochée${c>1?"s":""}`:"Rien de coché";$("#il-go").disabled=!body.querySelector("[data-il]:checked")};
+  body.onchange=e=>{const id=e.target.dataset.il;if(!id)return;const n=byId[id].n,on=e.target.checked;
+    if(n.kind==="g")walkAll(n,z=>{const b=box(z.id);if(b){b.checked=on;b.indeterminate=false}});
+    let par=byId[id].par;while(par){const kids=par.children.map(z=>box(z.id)),all=kids.every(b=>b.checked),any=kids.some(b=>b.checked||b.indeterminate),pb=box(par.id);pb.checked=all;pb.indeterminate=!all&&any;par=byId[par.id].par}
+    sync()};
+  $("#il-go").onclick=()=>{
+    const on=id=>{const b=box(id);return b&&(b.checked||b.indeterminate)};
+    const pick=arr=>arr.filter(n=>on(n.id)).map(n=>{
+      if(n.kind==="g"){const g=Object.assign({},n,{id:uid(),children:pick(n.children)});delete g.vars;return g}
+      const c=JSON.parse(JSON.stringify(n));c.id=uid();Object.assign(c,{qte:"",qx:"",ql:{},qlx:{},lieux:[],etat:"redaction"});["vid","etatPar","etatLe","note","prixOrig","coef"].forEach(k=>delete c[k]);return c});
+    const nodes=pick(src.tree);if(!nodes.length)return;
+    const inLot=(document.querySelector('input[name="il-dest"]:checked')||{}).value==="in"&&lot;
+    if(inLot){lot.children.push(...nodes);S.open[lot.id]=true}else S.tree.push(...nodes);
+    let added=0;lib.forEach(a=>{if(!BASE.some(z=>norm(z.nom)===norm(a.nom))){BASE.push(a);added++}});if(added)saveBase();
+    let np=0;nodes.forEach(n=>walkAll(n,z=>{if(z.kind==="p")np++}));
+    closeModal();select(nodes[0].id,true);toast(`${np} prestation${np>1?"s":""} importée${np>1?"s":""}${inLot?" dans le lot "+IDX[lot.id].nr:""}. Les quantités et la localisation sont à saisir.`,5000)};
+}
+function walkAll(n,fn){fn(n);if(n.kind==="g")n.children.forEach(c=>walkAll(c,fn))}
 function targetGroup(){if(!S.sel||!IDX[S.sel])return null;const x=IDX[S.sel];return x.n.kind==="g"?x.n:x.parent}
 $("#b-lot").onclick=()=>{const g=grp("Nouveau lot",[]);S.tree.push(g);select(g.id,true);setTimeout(()=>{const i=$("#g-nom");if(i){i.focus();i.select()}},0)};
 $("#b-slot").onclick=()=>{const t=targetGroup();if(!t)return toast("Sélectionnez d'abord un lot.");const g=grp("Nouveau sous-lot",[]);t.children.push(g);S.open[t.id]=true;select(g.id,true);setTimeout(()=>{const i=$("#g-nom");if(i){i.focus();i.select()}},0)};
@@ -1110,6 +1200,8 @@ function qresHTML(n){
 }
 function renderFiche(){
   armedDel=false;
+  [...MSEL].forEach(id=>{if(!IDX[id]||IDX[id].n.kind!=="p")MSEL.delete(id)});
+  if(MSEL.size>1)return renderMulti();
   const el=$("#fiche"),x=S.sel&&IDX[S.sel];
   if(!x){$("#fiche-h").textContent="Fiche";el.innerHTML=tabBand("Fiche")+`<div class="empty">Sélectionnez une prestation dans la colonne de gauche, ou créez un lot avec « + Lot ».</div>`;return}
   const n=x.n,anc=ancestors(n.id);
@@ -1126,8 +1218,12 @@ function renderFiche(){
       <p class="hint" style="margin:6px 0 0">Clauses communes à toutes les prestations du ${isLot?"lot":"sous-lot"} : elles s'impriment une seule fois, dans l'encadré de généralités, au lieu d'être répétées dans chaque article.</p>
       ${clFields(n)}
       ${isLot?varsHTML(n):""}
-      <div class="actions" style="border-top:1px solid var(--line);padding-top:14px"><button class="btn" id="g-coef">Coefficient sur les prix…</button><span style="flex:1"></span><button class="btn danger" id="f-del">Supprimer ${isLot?"le lot":"le sous-lot"}</button></div></div>`;
+      <div class="actions" style="border-top:1px solid var(--line);padding-top:14px"><button class="btn" id="g-dup">Dupliquer ${isLot?"le lot":"le sous-lot"}</button><button class="btn" id="g-coef">Coefficient sur les prix…</button><span style="flex:1"></span><button class="btn danger" id="f-del">Supprimer ${isLot?"le lot":"le sous-lot"}</button></div></div>`;
     $("#g-coef").onclick=()=>openCoef(n);
+    $("#g-dup").onclick=()=>{const map={},c=JSON.parse(JSON.stringify(n));
+      walkAll(c,z=>{const o=z.id;z.id=uid();map[o]=z.id});
+      if(c.vars){c.vars=c.vars.map(v=>{const nv=Object.assign({},v,{id:uid(),rempl:(v.rempl||[]).map(id=>map[id]).filter(Boolean)});map[v.id]=nv.id;return nv});walkAll(c,z=>{if(z.vid)z.vid=map[z.vid]})}
+      c.nom=(c.nom||"")+" (copie)";x.arr.splice(x.i+1,0,c);S.open[c.id]=true;select(c.id,true);toast((isLot?"Lot":"Sous-lot")+" dupliqué avec ses "+countP(c)+" prestations.",3500)};
     if(isLot)bindVars(n);
     bindCl(el,n);
     $("#g-nom").oninput=e=>{n.nom=e.target.value;el.querySelector("h3").textContent=n.nom||"Sans titre";commit()};
@@ -1158,14 +1254,13 @@ function renderFiche(){
         <label class="lb" for="f-prec" title="Propre à ce projet : n'est pas enregistrée dans la bibliothèque">Précision :</label>
         <input type="text" class="ff" id="f-prec" value="${esc(n.prec||"")}" placeholder="ex. 120 x 220" autocomplete="off">
       </div>
-      <div class="libhint" id="f-lib"></div>
       <div class="frow">
         <label class="lb" for="f-cat">Catégorie :</label>
         <select class="ff" id="f-cat">${[...new Set([...catList(),n.cat].filter(Boolean))].map(c=>`<option ${c===n.cat?"selected":""}>${esc(c)}</option>`).join("")}</select>
         <label class="lb" for="f-u">Unité :</label>
         <select class="ff" id="f-u">${[...new Set([...UNITES,n.u])].map(u=>`<option ${u===n.u?"selected":""}>${esc(u)}</option>`).join("")}</select>
       </div>
-      <div class="frow one top">
+      <div class="frow one top desc">
         <label class="lb" for="f-desc">Descriptif :</label>
         <div><textarea class="ff" id="f-desc" rows="4" placeholder="Description de l'ouvrage : nature, matériaux, performances…">${esc(n.desc)}</textarea>
         ${nc?`<div class="hint" style="padding-left:7px">+ ${nc} clause${nc>1?"s":""} au descriptif détaillé</div>`:""}</div>
@@ -1175,6 +1270,7 @@ function renderFiche(){
         <label class="lb" for="f-finon">Finition :</label>
         <input type="text" class="ff" id="f-fin" aria-label="Finition" value="${esc(n.fin)}" placeholder="ex. aspect velours, teinte au choix de l'architecte" ${n.finOn?"":"disabled"}>
       </div>
+      <div class="libhint" id="f-lib"></div>
     </div>
     <div class="fx-etat" role="radiogroup" aria-label="État de la prestation">
       <span class="lb">État :</span>
@@ -1276,6 +1372,36 @@ function renderFiche(){
   $("#f-fin").oninput=e=>{n.fin=e.target.value;save();renderOut()};
   $("#f-dup").onclick=()=>{const c=JSON.parse(JSON.stringify(n));c.id=uid();x.arr.splice(IDX[n.id].i+1,0,c);select(c.id,true);toast("Prestation dupliquée.")};
   bindDel(n,1);
+}
+/* Fiche de la sélection multiple : actions groupées (une seule étape d'annulation chacune) */
+function renderMulti(){
+  reindex();
+  const el=$("#fiche"),ids=flatP(S.tree).map(n=>n.id).filter(id=>MSEL.has(id)),ns=ids.map(id=>IDX[id].n),tot=ns.reduce((s,n)=>s+lineT(n),0);
+  const groups=[];(function w(a,d){a.forEach(n=>{if(n.kind==="g"){groups.push([n,d]);w(n.children,d+1)}})})(S.tree,0);
+  el.innerHTML=tabBand(`Sélection · ${ns.length} prestations`)+`<div class="fiche">
+    <p class="hint" style="margin:0">Cmd (ou Ctrl) + clic pour ajouter ou retirer une prestation · Maj + clic pour une plage · un clic simple pour revenir à une seule fiche.</p>
+    <ul class="msel-list">${ns.map(n=>`<li data-goto1="${n.id}"><span class="n">${esc(IDX[n.id].nr)}</span><span class="nm">${esc(ttl(n)||"Prestation sans nom")}</span>${n.pse?'<span class="pse">PSE</span>':""}<span class="a">${nf.format(lineT(n))}</span></li>`).join("")}</ul>
+    <div class="total"><span class="hint">Total HT de la sélection</span><b>${eur(tot)}</b></div>
+    <section class="fs"><h4 class="fs-h">Actions groupées</h4>
+      <div class="mrow"><span class="lb">État :</span>${ETATS.map(([k,l])=>`<button class="er er-${k}" data-met="${k}"><i class="c-${k}"></i>${k==="redaction"?"En cours":k==="relecture"?"À relire":l}</button>`).join("")}</div>
+      <div class="mrow"><label class="lb" for="m-tva">TVA :</label><select id="m-tva"><option value="-">— choisir —</option><option value="">TVA du projet (${fmtT(projTva())})</option>${TAUX.map(t=>`<option value="${t}">${fmtT(t)}</option>`).join("")}</select></div>
+      <div class="mrow"><span class="lb">Nature :</span><button class="btn" data-mnat="base">Base</button><button class="btn" data-mnat="pse">PSE</button></div>
+      <div class="mrow"><label class="lb" for="m-dest">Déplacer vers :</label><select id="m-dest"><option value="">— choisir un lot ou sous-lot —</option>${groups.map(([g,d])=>`<option value="${g.id}">${"\u00a0\u00a0".repeat(d)}${esc(IDX[g.id].nr+" "+g.nom)}</option>`).join("")}</select><button class="btn" id="m-move">Déplacer</button></div>
+    </section>
+    <div class="actions" style="border-top:1px solid var(--line);padding-top:14px"><button class="btn" id="m-clear">Tout désélectionner</button><span style="flex:1"></span><button class="btn danger" id="m-del">Supprimer les ${ns.length} prestations</button></div></div>`;
+  const done=msg=>{commit();renderFiche();toast(msg+" Cmd+Z pour annuler.",3500)};
+  el.querySelectorAll("[data-met]").forEach(b=>b.onclick=()=>withName(()=>{const k=b.dataset.met,now=Date.now();ns.forEach(n=>{if(n.etat!==k){n.etat=k;n.etatPar=myName();n.etatLe=now}});done(`${ns.length} prestations passées à l'état « ${b.textContent.trim()} ».`)}));
+  $("#m-tva").onchange=e=>{const v=e.target.value;if(v==="-")return;ns.forEach(n=>n.tva=v===""?null:num(v));done(`TVA appliquée à ${ns.length} prestations.`)};
+  el.querySelectorAll("[data-mnat]").forEach(b=>b.onclick=()=>{const pse=b.dataset.mnat==="pse";ns.forEach(n=>{n.pse=pse;delete n.vid});done(`${ns.length} prestations passées en ${pse?"PSE":"base"}.`)});
+  $("#m-move").onclick=()=>{const gid=$("#m-dest").value;if(!gid)return $("#m-dest").focus();const g=IDX[gid].n;
+    if(ns.some(n=>isDesc(gid,n.id)))return;
+    ns.forEach(n=>{const x=IDX[n.id];x.arr.splice(x.arr.indexOf(n),1)});g.children.push(...ns);S.open[gid]=true;
+    ancestors(gid).forEach(a=>S.open[a.id]=true);done(`${ns.length} prestations déplacées vers ${IDX[gid]?IDX[gid].nr:""} ${g.nom}.`)};
+  $("#m-clear").onclick=()=>{MSEL.clear();renderTree();renderFiche()};
+  let armed=false;$("#m-del").onclick=e=>{if(!armed){armed=true;e.target.classList.add("armed");e.target.textContent="Confirmer la suppression";return}
+    const first=IDX[ids[0]];ns.forEach(n=>{const x=IDX[n.id];x.arr.splice(x.arr.indexOf(n),1)});MSEL.clear();
+    reindex();S.sel=first&&first.parent&&IDX[first.parent.id]?first.parent.id:(S.tree[0]&&S.tree[0].id)||null;done(`${ns.length} prestations supprimées.`)};
+  el.querySelectorAll("[data-goto1]").forEach(li=>li.onclick=()=>{MSEL.clear();select(li.dataset.goto1)});
 }
 function bindDel(n,cnt){
   const b=$("#f-del");
@@ -1499,7 +1625,7 @@ function dpgfFin(){
   if(!cnt)return bar+`<div class="empty">Aucune finition renseignée${S.lot==="recap"?"":" dans ce lot"}. Cochez « Finition » dans la fiche d'une prestation pour la faire apparaître ici.</div>`;
   return bar+`<div class="tblwrap"><table class="dpgf"><thead><tr><th>N°</th><th>Désignation</th><th>Finition prévue</th><th class="c">U</th><th class="r">Qté</th></tr></thead><tbody>`+
     lots.filter(hasFin).map(l=>`<tr class="lot"><td class="n">${IDX[l.id].nr}</td><td colspan="4">${esc(l.nom)}</td></tr>${finRows(l.children)}`).join("")+
-    `</tbody></table></div><p class="hint" style="padding:0 12px">${cnt} prestation${cnt>1?"s":""} avec finition. Pour la maîtrise d'ouvrage : Exporter… › Tableau des choix (sans prix).</p>`;
+    `</tbody></table></div><p class="hint" style="padding:0 12px">${cnt} prestation${cnt>1?"s":""} avec finition. Pour la maîtrise d'ouvrage : Publier… › Tableau des choix (sans prix).</p>`;
 }
 function dpgfLots(){
   if(S.lot!=="recap"&&!IDX[S.lot])S.lot="recap";
@@ -1744,7 +1870,7 @@ $("#b-new").onclick=()=>{
   $("#m-foot").onclick=e=>{const b=e.target.closest("[data-m]");if(!b)return;if(b.dataset.m==="cancel")return closeModal();
     const v=document.querySelector('input[name="nw"]:checked').value;closeModal();
     if(v==="from")return guardDirty("Créer",()=>pickFile(".caz,.json",(file)=>{const r=new FileReader();r.onload=()=>newFromText(r.result,file.name);r.readAsText(file)}));
-    guardDirty("Créer",async()=>{await releaseLock();if(v==="demo")demoProject();else{S=emptyProject();S.sel=S.tree[0].id}LIVE=null;S.dirty=false;boot();toast(v==="demo"?"Projet d'exemple chargé.":"Nouveau projet créé.")})};
+    guardDirty("Créer",async()=>{await releaseLock();if(v==="demo")demoProject();else{S=emptyProject();S.sel=S.tree[0].id;const ag=getAg();if(ag.nom)S.projet.moe=ag.nom}LIVE=null;S.dirty=false;boot();toast(v==="demo"?"Projet d'exemple chargé.":"Nouveau projet créé.")})};
 };
 
 /* ======================================================================
@@ -1759,13 +1885,16 @@ function openModal(title,body,foot,o={}){
 }
 function closeModal(){$("#modal").hidden=true;$("#m-body").innerHTML="";const f=onModalClose;onModalClose=null;if(f)f()}
 $("#modal").addEventListener("mousedown",e=>{if(e.target.id==="modal")closeModal()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#modal").hidden){e.preventDefault();closeModal()}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#modal").hidden){e.preventDefault();closeModal();return}
+  if(e.key==="Escape"&&MSEL.size){const t=e.target;if(t&&/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))return;e.preventDefault();MSEL.clear();renderTree();renderFiche()}});
 document.addEventListener("keydown",e=>{
   if(!(e.metaKey||e.ctrlKey)||e.altKey)return;const k=e.key.toLowerCase();
   if(k==="s"){e.preventDefault();saveProject(e.shiftKey)}
   else if((k==="z"||k==="y")&&$("#modal").hidden){const t=e.target,ed=t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
     if(ed)return;e.preventDefault();hGo(k==="y"||e.shiftKey?1:-1)}
   else if(k==="o"&&$("#modal").hidden){e.preventDefault();$("#b-open").click()}
+  else if(k==="a"&&$("#modal").hidden){const t=e.target,ed=t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));if(ed)return;
+    const vis=[...treeEl.querySelectorAll(".row.p")].map(r=>r.dataset.id);if(vis.length<2)return;e.preventDefault();MSEL=new Set(vis);S.sel=vis[0];ANCH=vis[0];renderTree();renderFiche();toast(vis.length+" prestations sélectionnées.",1500)}
   else if(k==="e"&&$("#modal").hidden){e.preventDefault();openExport()}
 });
 $("#m-foot").addEventListener("click",e=>{const b=e.target.closest('[data-m="cancel"],[data-m="close"]');if(b)closeModal()});
@@ -1788,15 +1917,15 @@ function openProjet(){
       <div class="grid2"><div class="f"><label for="pj-surf">Surface de réf. (m²)</label><input type="text" inputmode="decimal" class="numin" id="pj-surf" value="${esc(fmtIn(P.surf))}" placeholder="Ex. 124,5"></div>
       <div class="f"><label for="pj-st">Type</label><select id="pj-st">${["SHAB","Surface de plancher","Surface utile","Surface"].map(t=>`<option ${t===(P.surfType||"SHAB")?"selected":""}>${t}</option>`).join("")}</select></div></div></div>
     <div><button class="btn" id="pj-coef">Appliquer un coefficient à tous les prix du projet…</button></div>
-    <div class="f"><label for="pj-me">Votre nom <span class="hint" style="text-transform:none;letter-spacing:0;font-weight:400">· ${T?"par défaut, celui de votre session":"enregistré dans ce navigateur"}, noté quand vous changez l'état d'une prestation</span></label><input type="text" id="pj-me" value="${esc(myName())}" placeholder="${T?esc(ME):"Nom ou initiales"}"></div>
     <div class="f"><label for="pj-dispo">Dispositions générales (en tête du CCTP, communes à tous les lots)</label><textarea id="pj-dispo" rows="6" placeholder="Objet du CCTP, documents de référence, obligations communes des entreprises…">${esc(P.dispo)}</textarea></div>
     <fieldset><legend>Indices du dossier</legend>
       <p class="hint" style="margin:0 0 6px">Figer un indice enregistre une copie du dossier tel qu'il est diffusé. Vous pourrez ensuite voir ce qui a changé.</p>
       <div class="idx-list">${idx}</div>
       <div><button class="btn" id="pj-freeze">Figer l'indice ${esc(P.indice||"A")} et passer à l'indice ${esc(nextIndice(P.indice))}</button></div></fieldset>`,
-    `<span class="x-sum">Prescrire ${APP_VERSION}</span><button class="btn primary" data-m="close">Fermer</button>`,{onClose:()=>{renderHead();renderOut();renderFiche()}});
+    `<span class="x-sum"><button class="link" id="pj-about">À propos de Prescrire ${APP_VERSION}</button></span><button class="btn primary" data-m="close">Fermer</button>`,{onClose:()=>{renderHead();renderOut();renderFiche()}});
+  $("#pj-about").onclick=()=>{onModalClose=null;closeModal();renderHead();renderOut();renderFiche();openAbout(false)};
   const bind=(id,k)=>$(id).oninput=e=>{P[k]=e.target.value;save()};
-  $("#pj-me").onchange=e=>setMyName(e.target.value);
+
   $("#pj-tva").onchange=e=>{P.tva=+e.target.value;save()};
   $("#pj-surf").oninput=e=>{P.surf=e.target.value.trim()===""?"":num(e.target.value);save()};
   $("#pj-st").onchange=e=>{P.surfType=e.target.value;save()};
@@ -2013,7 +2142,7 @@ function libEdit(){
 }
 const cv=v=>{if(v==null)return"";if(typeof v==="object"){if(v instanceof Date)return v.toLocaleDateString("fr-FR");if("result" in v)return v.result??"";if(v.richText)return v.richText.map(r=>r.text).join("");if(v.text)return v.text;if("formula" in v)return"";}return v};
 const str=v=>String(cv(v)??"").trim();
-const normU=u=>{const t=norm(u).replace(/\./g,"");return({m2:"m²","m²":"m²",m3:"m³","m³":"m³",ml:"ml",u:"U",un:"U",unite:"U",ens:"ens.",ensemble:"ens.",ft:"ft",forfait:"ft",f:"ft",kg:"kg",h:"h",heure:"h"})[t]||(u?String(u).trim():"")};
+const normU=u=>{const t=norm(u).replace(/\./g,"");return({m2:"m²","m²":"m²",m3:"m³","m³":"m³",ml:"ml",u:"U",un:"U",unite:"U",ens:"ens.",ensemble:"ens.",ft:"for.",for:"for.",forfait:"for.",f:"for.",kg:"kg",h:"h",heure:"h"})[t]||(u?String(u).trim():"")};
 async function importLibXlsx(file){
   if(!needLib("ExcelJS"))return;
   const wb=new ExcelJS.Workbook();await wb.xlsx.load(await file.arrayBuffer());
@@ -2210,7 +2339,10 @@ async function exportDocx(lotIds){
   if(!lots.length){toast("Choisissez au moins un lot.");return null}
   const all=lots.length===S.tree.length;
   let b="";
-  b+=wP("",{sp:[2400,0]});
+  const AG=getAg();
+  const EMU=914400/96,lw=AG.logo?Math.min(180,AG.lw*80/(AG.lh||1),AG.lw):0,lh=AG.logo?lw*(AG.lh||1)/(AG.lw||1):0;
+  if(AG.logo)b+=`<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="600" w:after="1200"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${Math.round(lw*EMU)}" cy="${Math.round(lh*EMU)}"/><wp:docPr id="1" name="Logo"/><a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:nvPicPr><pic:cNvPr id="0" name="logo.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rId20"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${Math.round(lw*EMU)}" cy="${Math.round(lh*EMU)}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>`;
+  else b+=wP("",{sp:[2400,0]});
   b+=wP(wRun(P.nom||"Opération",{b:true,sz:44}),{jc:"center",sp:[0,200]});
   if(P.adresse)b+=wP(wRun(P.adresse,{sz:24}),{jc:"center"});
   if(P.moa)b+=wP(wRun("Maître d'ouvrage : "+P.moa,{sz:22}),{jc:"center",sp:[120,0]});
@@ -2220,6 +2352,7 @@ async function exportDocx(lotIds){
   b+=wP("",{sp:[1600,0]});
   b+=wP(wRun([P.phase,"Indice "+(P.indice||"A"),today()].filter(Boolean).join(" · "),{sz:22}),{jc:"center"});
   if(P.moe)b+=wP(wRun("Maître d'œuvre : "+P.moe,{sz:22}),{jc:"center",sp:[120,0]});
+  {const l=agLines(AG);if(l.length)b+=wP(wRun(l.join("\n"),{sz:18,color:"5B6674"}),{jc:"center",sp:[60,0]})}
   b+=wP(wRun("Sommaire",{b:true,sz:28}),{br:true,sp:[0,240]});
   b+=`<w:p><w:r><w:fldChar w:fldCharType="begin" w:dirty="true"/></w:r><w:r><w:instrText xml:space="preserve"> TOC \\o "1-2" \\h \\z \\u </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t xml:space="preserve">Le sommaire se met à jour à l'ouverture. Sinon : clic droit, puis « Mettre à jour les champs ».</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r></w:p>`;
   let first=true;
@@ -2253,7 +2386,7 @@ async function exportDocx(lotIds){
   const varsW=l=>varsOf(l).map((v,k)=>{const it=varItems(l,v),rm=varRempl(l,v);if(!it.length)return"";
     return hd(IDX[l.id].nr+".V"+(k+1),vLabel(l,v),"Heading2")+wP(wRun(rm.length?"Cette variante remplace les prestations : "+rm.map(n=>IDX[n.id].nr+" "+ttl(n)).join(" ; ")+".":"Variante chiffrée à part.",{i:true}),{style:"Corps"})+it.map(artW).join("")}).join("");
   lots.forEach(l=>{b+=hd(IDX[l.id].nr,l.nom,"Heading1",{br:true});first=false;b+=genW(l,true);b+=rec(l.children);b+=varsW(l)});
-  const NS='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"';
+  const NS='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"';
   const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${b}<w:sectPr><w:headerReference w:type="default" r:id="rId10"/><w:headerReference w:type="first" r:id="rId12"/><w:footerReference w:type="first" r:id="rId13"/><w:footerReference w:type="default" r:id="rId11"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1418" w:right="1247" w:bottom="1418" w:left="1247" w:header="567" w:footer="567" w:gutter="0"/><w:titlePg/></w:sectPr></w:body></w:document>`;
   const hdr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}>${wP(wRun((P.nom||"")+" — CCTP — "+indTxt()),{style:"Header"})}</w:hdr>`;
   const ftr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr ${NS}><w:p><w:pPr><w:pStyle w:val="Footer"/><w:tabs><w:tab w:val="right" w:pos="9412"/></w:tabs></w:pPr>${wRun(P.moe||"")}<w:r><w:tab/></w:r>${wRun("Page ")}<w:fldSimple w:instr=" PAGE "><w:r><w:t>1</w:t></w:r></w:fldSimple>${wRun(" / ")}<w:fldSimple w:instr=" NUMPAGES "><w:r><w:t>1</w:t></w:r></w:fldSimple></w:p></w:ftr>`;
@@ -2278,10 +2411,11 @@ ${st("TOC1","toc 1",'<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9402"/><
 ${st("TOC2","toc 2",'<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9402"/></w:tabs><w:spacing w:after="20"/><w:ind w:left="300"/><w:jc w:val="left"/>','')}
 </w:styles>`;
   const z=new JSZip();
-  z.file("[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/header2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`);
+  z.file("[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/header2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`);
   z.file("_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>`);
   z.file("docProps/core.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xe("CCTP — "+(P.nom||""))}</dc:title><dc:creator>${xe(P.moe||"Prescrire")}</dc:creator><dcterms:created xsi:type="dcterms:W3CDTF">${new Date().toISOString().slice(0,19)}Z</dcterms:created></cp:coreProperties>`);
-  z.file("word/_rels/document.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId10" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/><Relationship Id="rId11" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/><Relationship Id="rId12" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header2.xml"/><Relationship Id="rId13" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer2.xml"/></Relationships>`);
+  z.file("word/_rels/document.xml.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/><Relationship Id="rId10" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/><Relationship Id="rId11" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/><Relationship Id="rId12" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header2.xml"/><Relationship Id="rId13" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer2.xml"/>${AG.logo?'<Relationship Id="rId20" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/logo.png"/>':""}</Relationships>`);
+  if(AG.logo)z.file("word/media/logo.png",AG.logo.split(",")[1],{base64:true});
   z.file("word/document.xml",doc);z.file("word/styles.xml",styles);
   z.file("word/settings.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings ${NS}><w:updateFields w:val="true"/><w:defaultTabStop w:val="708"/><w:themeFontLang w:val="fr-FR"/></w:settings>`);
   z.file("word/header1.xml",hdr);z.file("word/footer1.xml",ftr);
@@ -2329,7 +2463,7 @@ async function exportPdf(lotIds){
   const varsP=l=>varsOf(l).flatMap((v,k)=>{const it=varItems(l,v),rm=varRempl(l,v);if(!it.length)return[];
     return[head(IDX[l.id].nr+".V"+(k+1),vLabel(l,v),2),{text:rm.length?"Cette variante remplace les prestations : "+rm.map(n=>IDX[n.id].nr+" "+ttl(n)).join(" ; ")+".":"Variante chiffrée à part.",italics:true,style:"corps"},...it.flatMap(art)]});
   const content=[
-    {text:"",margin:[0,150,0,0]},
+    ...(()=>{const ag=getAg();return ag.logo?[{image:ag.logo,fit:[180,80],alignment:"center",margin:[0,40,0,70]}]:[{text:"",margin:[0,150,0,0]}]})(),
     {text:P.nom||"Opération",fontSize:22,bold:true,alignment:"center",margin:[0,0,0,8]},
     P.adresse?{text:P.adresse,fontSize:12,alignment:"center"}:"",
     P.moa?{text:"Maître d'ouvrage : "+P.moa,fontSize:11,alignment:"center",margin:[0,6,0,0]}:"",
@@ -2337,6 +2471,7 @@ async function exportPdf(lotIds){
     {text:lots.length===S.tree.length?"Tous lots":lots.map(l=>"Lot "+IDX[l.id].nr+" — "+l.nom).join("\n"),fontSize:12,alignment:"center"},
     {text:[P.phase,"Indice "+(P.indice||"A"),today()].filter(Boolean).join(" · "),fontSize:11,alignment:"center",margin:[0,90,0,0]},
     P.moe?{text:"Maître d'œuvre : "+P.moe,fontSize:11,alignment:"center",margin:[0,6,0,0]}:"",
+    ...(()=>{const ag=getAg(),l=agLines(ag);return l.length?[{text:l.join("\n"),fontSize:9,color:"#5b6674",alignment:"center",margin:[0,4,0,0]}]:[]})(),
     {toc:{title:{text:"Sommaire",fontSize:14,bold:true,margin:[0,0,0,12]},numberStyle:{fontSize:9.5},textStyle:{fontSize:9.5}},pageBreak:"before"}];
   if(P.dispo)content.push(head("","Dispositions générales",1,{br:true}),...paras(P.dispo,"corps"));
   lots.forEach(l=>{content.push(head(IDX[l.id].nr,l.nom,1,{br:true}),...gen(l,true),...rec(l.children),...varsP(l))});
@@ -2456,6 +2591,53 @@ function bindVars(l){
   el.querySelectorAll("[data-vdel]").forEach(b=>{let armed=false;b.onclick=()=>{if(!armed){armed=true;b.classList.add("armed");b.textContent="Confirmer";return}
     const id=b.dataset.vdel;walkP(l.children,n=>{if(n.vid===id)delete n.vid});l.vars=varsOf(l).filter(v=>v.id!==id);commit();renderFiche();toast("Variante supprimée : ses prestations reviennent dans la solution de base.",4500)}});
 }
+/* Agence : réglages propres à ce poste (application) ou à ce navigateur */
+const KEY_AG="prescrire-agence";
+function getAg(){if(T)return CFG.agence||{};try{return JSON.parse(localStorage.getItem(KEY_AG)||"{}")}catch(e){return{}}}
+async function setAg(a){if(T){CFG.agence=a;try{await inv("write_text",{path:CFG_PATH,content:JSON.stringify(CFG,null,1)})}catch(e){}}else{try{localStorage.setItem(KEY_AG,JSON.stringify(a))}catch(e){toast("Logo trop lourd pour ce navigateur.")}}}
+const agLines=a=>[a.adresse,[a.tel,a.mail].filter(Boolean).join(" · ")].filter(x=>(x||"").trim());
+function openAgence(){
+  const A=Object.assign({nom:"",adresse:"",tel:"",mail:"",logo:"",lw:0,lh:0},getAg());
+  const draw=()=>`<p class="hint" style="margin:0">Ces réglages sont propres à ${T?"ce poste":"ce navigateur"}. Ils s'impriment sur la page de garde du CCTP (Word et PDF) et remplissent le maître d'œuvre des nouveaux projets.</p>
+    <div class="f"><label for="ag-nom">Nom de l'agence</label><input type="text" id="ag-nom" value="${esc(A.nom)}" placeholder="Ex. Atelier Chauvin Architecte"></div>
+    <div class="f"><label for="ag-adr">Adresse</label><input type="text" id="ag-adr" value="${esc(A.adresse)}"></div>
+    <div class="grid2"><div class="f"><label for="ag-tel">Téléphone</label><input type="text" id="ag-tel" value="${esc(A.tel)}"></div><div class="f"><label for="ag-mail">E-mail</label><input type="text" id="ag-mail" value="${esc(A.mail)}"></div></div>
+    <div class="f"><label>Logo</label><div class="aglogo">${A.logo?`<img src="${A.logo}" alt="Logo de l'agence">`:'<span class="hint">Aucun logo</span>'}<button class="btn" id="ag-lpick">${A.logo?"Changer…":"Choisir une image…"}</button>${A.logo?'<button class="link" id="ag-ldel">retirer</button>':""}</div></div>
+    <div class="f"><label for="ag-me">Votre nom <span class="hint" style="text-transform:none;letter-spacing:0;font-weight:400">· ${T?"par défaut, celui de votre session":"enregistré dans ce navigateur"}, noté quand vous changez l'état d'une prestation</span></label><input type="text" id="ag-me" value="${esc(myName())}" placeholder="${T?esc(ME):"Nom ou initiales"}"></div>`;
+  openModal("Agence",draw(),`<button class="btn primary" data-m="close">Fermer</button>`,{focus:false});
+  const bind=()=>{
+    const f=(id,k)=>$(id).oninput=e=>{A[k]=e.target.value;setAg(A)};
+    f("#ag-nom","nom");f("#ag-adr","adresse");f("#ag-tel","tel");f("#ag-mail","mail");
+    $("#ag-me").onchange=e=>setMyName(e.target.value);
+    $("#ag-lpick").onclick=()=>pickFile(".png,.jpg,.jpeg",file=>{const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{
+      const k=Math.min(1,600/im.naturalWidth),c=document.createElement("canvas");c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);
+      c.getContext("2d").drawImage(im,0,0,c.width,c.height);A.logo=c.toDataURL("image/png");A.lw=c.width;A.lh=c.height;setAg(A);$("#m-body").innerHTML=draw();bind()};
+      im.onerror=()=>toast("Image illisible.");im.src=r.result};r.readAsDataURL(file)});
+    const d=$("#ag-ldel");if(d)d.onclick=()=>{A.logo="";A.lw=A.lh=0;setAg(A);$("#m-body").innerHTML=draw();bind()};
+  };bind();
+}
+$("#b-agence").onclick=openAgence;
+/* Texte d'accueil (première ouverture de l'application) et fenêtre « À propos » */
+function aboutHTML(){
+  return`<div class="about">
+    <p class="ab-h">Avertissement</p>
+    <p>Prescrire est un outil libre et en source ouverte. Il n'a pas vocation à être commercialisé.</p>
+    <p class="ab-cep">CEPENDAAAAAAAAAAAAAAANT !…</p>
+    <p>Si votre caractère aimable vous incite à encourager l'auteur de ces lignes, mais que votre bras n'est pas assez long pour lui taper amicalement sur l'épaule depuis votre siège, vous pouvez envoyer un pâté, un saucisson, une bouteille de Beaujolais ou toute autre victuaille propre à encourager la convivialité. L'auteur s'engage à réceptionner sans réserve l'ouvrage livré, et à en jouir conformément à sa destination avec les êtres humains présents autour de lui à cette occasion, à votre bonne santé.</p>
+    <p class="ab-sig">Amitiés,<br>Casimir Chauvin</p>
+    <p class="hint">Relisez toujours vos pièces écrites : Prescrire est un bon assistant, pas un bureau de contrôle. Il est fourni tel quel, sans garantie, sous licence GPL v3.<br>Pour écrire à l'auteur, proposer une idée ou signaler un problème : le bouton 💡 en haut à droite, ou le dépôt <a href="https://github.com/${GITHUB_REPO}" target="_blank" rel="noopener" id="ab-repo">github.com/${GITHUB_REPO}</a>.</p>
+    <p class="hint">Prescrire ${APP_VERSION}</p></div>`;
+}
+function openAbout(first){
+  openModal(first?"Bienvenue dans Prescrire":"À propos de Prescrire",aboutHTML(),`<button class="btn primary" data-m="close">${first?"C'est parti !":"Fermer"}</button>`,{focus:false});
+  const a=$("#ab-repo");if(a&&T)a.onclick=e=>{e.preventDefault();openUrlExt(a.href)};
+}
+async function firstLaunch(){
+  if(!T)return; /* à l'installation de l'application seulement */
+  if(CFG.accueil)return;
+  CFG.accueil=APP_VERSION;try{await inv("write_text",{path:CFG_PATH,content:JSON.stringify(CFG,null,1)})}catch(e){}
+  if($("#modal").hidden)openAbout(true);
+}
 /* Coefficient sur les prix (projet ou lot), réversible */
 function openCoef(scope){
   reindex();
@@ -2513,7 +2695,7 @@ function checkHTML(ids,doc,type){
   if(!n)return`<div class="xcheck ok">✓ Contrôle avant diffusion : aucun oubli détecté.</div>`;
   return`<details class="xcheck"><summary>⚠ Contrôle avant diffusion : ${n} point${n>1?"s":""} à vérifier</summary>`+
     L.map(([,l,a])=>`<div class="grp"><b>${l} (${a.length})</b><ul>${a.map(x=>`<li><button data-goto="${x.id}"><span class="n">${esc(x.nr)}</span>${esc(x.nom)}</button></li>`).join("")}</ul></div>`).join("")+
-    `<p class="hint" style="margin:8px 0 0">Cliquez sur une ligne pour ouvrir sa fiche. Vous pouvez exporter quand même.</p></details>`;
+    `<p class="hint" style="margin:8px 0 0">Cliquez sur une ligne pour ouvrir sa fiche. Vous pouvez publier quand même.</p></details>`;
 }
 function openExport(){
   reindex();
@@ -2521,7 +2703,7 @@ function openExport(){
   if(!X.lots.size){const sel=S.sel&&IDX[S.sel]?rootOf(S.sel):null;if(sel)X.lots.add(sel.id)}
   [...X.lots].forEach(id=>{if(!IDX[id])X.lots.delete(id)});
   if(S.tab==="cctp"&&X.doc==="dpgf")X.doc="docx";else if(S.tab==="dpgf")X.doc="dpgf";
-  openModal("Exporter",`
+  openModal("Publier",`
     <fieldset><legend>Document</legend><div class="optrow">
       <label class="opt"><input type="radio" name="x-doc" value="dpgf" ${X.doc==="dpgf"?"checked":""}><span><b>DPGF</b><small>Classeur Excel</small></span></label>
       <label class="opt"><input type="radio" name="x-doc" value="docx" ${X.doc==="docx"?"checked":""}><span><b>CCTP Word</b><small>Modifiable, avec sommaire</small></span></label>
@@ -2540,7 +2722,7 @@ function openExport(){
       <div class="lotlist" id="x-lots">${S.tree.map(l=>`<label><input type="checkbox" data-xl="${l.id}"><span class="n">${IDX[l.id].nr}</span><span>${esc(l.nom)}</span><span class="a">${nf.format(baseT(l))}</span></label>`).join("")}
         <label class="recap-opt" id="x-recapl"><input type="checkbox" id="x-recap" ${X.recap?"checked":""}><span class="n">Σ</span><span>Récapitulatif (total HT, TVA, TTC)</span><span></span></label></div>
       <label class="recap-opt" style="margin-top:8px"><input type="checkbox" id="x-split" ${X.split?"checked":""}><span></span><span><b>Un fichier par lot</b> <small class="hint">au lieu d'un seul document</small></span><span></span></label></fieldset>`,
-    `<span class="x-sum" id="x-sum"></span><button class="btn" data-m="cancel">Annuler</button><button class="btn primary" id="x-go">Exporter</button>`,{focus:false});
+    `<span class="x-sum" id="x-sum"></span><button class="btn" data-m="cancel">Annuler</button><button class="btn primary" id="x-go">Publier</button>`,{focus:false});
   const body=$("#m-body");
   const sync=()=>{
     const all=X.scope==="all",docx=X.doc!=="dpgf",split=$("#x-split").checked,ch=X.doc==="choix";
@@ -2563,7 +2745,7 @@ function openExport(){
     setTimeout(()=>{const r=document.querySelector(`#tree [data-id="${CSS.escape(id)}"]`);if(r)r.scrollIntoView({block:"center"})},50)});
   $("#x-go").onclick=()=>{
     const ids=[...body.querySelectorAll("[data-xl]:checked")].map(c=>c.dataset.xl),rc=$("#x-recap").checked,sp=$("#x-split").checked;closeModal();
-    runExport(X.doc,X.doc==="choix"?X.fmt:X.type,ids,rc,sp).catch(e=>toast("Export impossible : "+(e&&e.message||e),5000));
+    runExport(X.doc,X.doc==="choix"?X.fmt:X.type,ids,rc,sp).catch(e=>toast("Publication impossible : "+(e&&e.message||e),5000));
   };
 }
 $("#b-export").onclick=openExport;
@@ -2772,7 +2954,7 @@ async function checkUpdate(){
 }
 async function initApp(){
   document.documentElement.classList.add("app-bureau");
-  setTimeout(checkUpdate,4000);
+  setTimeout(checkUpdate,4000);setTimeout(firstLaunch,1500);
   $("#b-saveas").hidden=false;
   try{
     DIRS=await inv("app_dirs");ME=await inv("whoami");CFG_PATH=pjoin(DIRS.config,"reglages.json");
