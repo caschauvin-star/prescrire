@@ -9,22 +9,23 @@
 /* Layout : application plein écran en trois colonnes (arborescence | fiche | sortie CCTP/DPGF/offres), empilées sur écran étroit */
 :root{
   --bg:#e9ecef; --panel:#f3f5f7; --soft:#f7f8fa; --ink:#1b2430; --muted:#5b6674; --line:#d3d9e0; --line-soft:#e6eaee;
-  --accent:#1d4f91; --accent-ink:#ffffff; --accent-soft:#e2eaf5; --danger:#a3361c; --danger-soft:#f7e6e1; --paper:#ffffff;
+  --accent:#0050c8; --accent-ink:#ffffff; --accent-soft:#e8eefb; --danger:#a3361c; --danger-soft:#f7e6e1; --paper:#ffffff;
   --ok:#2c6e3f; --ok-soft:#e0efe4; --warn:#8a5a00; --warn-soft:#fbefd5; --orange:#b85a0c; --orange-soft:#fbe9d8; --s-ok:#22b455; --s-orange:#ff8c1a; --s-red:#ef4444; --s-grey:#a3abb5; --bg-ok:#bdffd0; --bg-orange:#ffe7d2; --bg-red:#fbbcbc; --note:#fff8d6; --note-line:#eadb8c; --note-ink:#6b5300; --ph:#8a94a0;
-  --f-body:"IBM Plex Sans", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --f-label:"IBM Plex Sans Condensed", "Arial Narrow", "Helvetica Neue", sans-serif;
-  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --f-body:"Archivo", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --f-label:"Archivo Narrow", "Archivo", "Arial Narrow", "Helvetica Neue", sans-serif;
+  --f-mono:"Archivo", -apple-system, "Segoe UI", Arial, sans-serif; /* chiffres tabulaires plutôt qu'une police mono */
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#11151a; --panel:#181d23; --soft:#1b2128; --ink:#e4e8ed; --muted:#94a0ad; --line:#2b333c; --line-soft:#222930;
-  --accent:#7fa9e3; --accent-ink:#0d1622; --accent-soft:#1d2a3b; --danger:#e58a72; --danger-soft:#3a221c; --paper:#1d232a;
+  --accent:#6ea0ff; --accent-ink:#0b1a33; --accent-soft:#17243c; --danger:#e58a72; --danger-soft:#3a221c; --paper:#1d232a;
   --ok:#7cc493; --ok-soft:#1a2e21; --warn:#e2b55a; --warn-soft:#352a12; --orange:#f0a35a; --orange-soft:#3a2614; --s-ok:#3ddc84; --s-orange:#ffa54a; --s-red:#ff6b6b; --s-grey:#6b7682; --bg-ok:#173d26; --bg-orange:#45301a; --bg-red:#4d2020; --note:#2c2815; --note-line:#4a4222; --note-ink:#e2c96a; --ph:#7c8794; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#11151a; --panel:#181d23; --soft:#1b2128; --ink:#e4e8ed; --muted:#94a0ad; --line:#2b333c; --line-soft:#222930;
-  --accent:#7fa9e3; --accent-ink:#0d1622; --accent-soft:#1d2a3b; --danger:#e58a72; --danger-soft:#3a221c; --paper:#1d232a;
+  --accent:#6ea0ff; --accent-ink:#0b1a33; --accent-soft:#17243c; --danger:#e58a72; --danger-soft:#3a221c; --paper:#1d232a;
   --ok:#7cc493; --ok-soft:#1a2e21; --warn:#e2b55a; --warn-soft:#352a12; --orange:#f0a35a; --orange-soft:#3a2614; --s-ok:#3ddc84; --s-orange:#ffa54a; --s-red:#ff6b6b; --s-grey:#6b7682; --bg-ok:#173d26; --bg-orange:#45301a; --bg-red:#4d2020; --note:#2c2815; --note-line:#4a4222; --note-ink:#e2c96a; --ph:#7c8794; color-scheme:dark}
 
 [hidden]{display:none!important}
+body{font-variant-numeric:tabular-nums}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45}
 *{box-sizing:border-box}
@@ -320,8 +321,10 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .fx-notes .nh{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--note-line);padding-bottom:6px;color:var(--note-ink)}
 .fx-notes .nh label{font-family:var(--f-label);font-weight:600;font-size:13.5px;letter-spacing:.12em;text-transform:uppercase}
 .fx-notes .nh span{font-size:12px}
-.fx-notes .fx-title .where{color:var(--note-ink)}
-.fx-notes textarea{flex:1;min-height:340px;border:0;outline:none;resize:none;padding:0 2px;font-size:15px;line-height:28px;color:var(--ink);background-color:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,var(--note-line) 27px,var(--note-line) 28px);background-attachment:local}
+.fx-notes,.fx-notes .fx-title h3,.fx-notes .fx-title .num,.fx-notes .fx-title .where,.fx-notes textarea{color:var(--note-ink)!important}
+.fx-notes textarea::placeholder{color:var(--note-ink);opacity:.55}
+.fx-tab[data-ft="notes"][aria-selected="true"]{color:var(--note-ink)}
+.fx-notes textarea{flex:1;min-height:340px;border:0;outline:none;resize:none;padding:0 2px;font-size:15px;line-height:28px;letter-spacing:.025em;word-spacing:.06em;color:var(--ink);background-color:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,var(--note-line) 27px,var(--note-line) 28px);background-attachment:local}
 .msel-list{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:6px;max-height:260px;overflow:auto;background:var(--soft)}
 .msel-list li{display:flex;gap:8px;align-items:baseline;padding:5px 10px;border-bottom:1px solid var(--line-soft);cursor:pointer;font-size:13px}
 .msel-list li:last-child{border-bottom:0}
@@ -641,7 +644,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
    ====================================================================== */
 const CATS_DEF=["Fourniture et pose","Fourniture seule","Pose seule","Dépose / démolition","Préparation de support","Prestation forfaitaire","Essais et contrôles"];
 let CATS=null,CATS_MAJ=0;
-const APP_VERSION="0.13.0",GITHUB_REPO="caschauvin-star/prescrire";
+const APP_VERSION="0.13.1",GITHUB_REPO="caschauvin-star/prescrire";
 const TAUX=[20,10,5.5];
 /* Intitulé complet d'une prestation : nom + précision propre au projet (ex. « 120 x 220 ») */
 const ttl=n=>{const a=(n.nom||"").trim(),b=(n.prec||"").trim();return b?(a?a+" "+b:b):a};
