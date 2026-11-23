@@ -388,6 +388,63 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .dbl-foot{border-top:1px solid var(--line);background:var(--paper);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .dbl-foot .hint{flex:1;min-width:240px}
 @media (max-width: 760px){.dbl-grid{grid-template-columns:1fr}.dbl-side{border-right:0;border-bottom:1px solid var(--line);max-height:220px}}
+.top-actions{align-items:center;gap:2px}
+.top-actions .sep{height:22px;align-self:center;margin:0 6px}
+.btn.ib,.hist .btn{width:34px;height:34px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-color:transparent;background:transparent;color:var(--ink);border-radius:6px;position:relative}
+.btn.ib:hover,.hist .btn:hover:not(:disabled){border-color:var(--line);background:var(--panel);color:var(--accent)}
+.hist .btn:disabled{opacity:.4}
+.hist .btn svg{width:18px;height:18px}
+#b-save.dirty::after{content:"";position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:var(--warn,#d97a00);box-shadow:0 0 0 2px var(--bg)}
+.btn.pubb{height:34px;display:inline-flex;align-items:center;gap:7px;padding:0 12px 0 10px;border-radius:6px;font-size:13px;font-weight:600}
+.idea{margin-left:8px}
+.otb{display:flex;align-items:center;gap:2px;margin-left:auto}
+.otb-g{display:inline-flex;gap:2px}
+.otb-sep{width:1px;height:18px;background:var(--line);margin:0 4px}
+.oi{width:30px;height:30px;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;padding:0;cursor:pointer}
+.oi:hover{color:var(--accent);border-color:var(--line)}
+.oi[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.lotnav{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--paper);border-bottom:1px solid var(--line-soft)}
+#out:has(.lotnav){--navh:47px}
+.dpgf th{top:var(--navh,0)}
+.ln-a{width:28px;height:28px;flex:none;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;padding:0;cursor:pointer}
+.ln-a:disabled{opacity:.35;cursor:default}
+.ln-a:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.ln-m{flex:1;min-width:0;height:30px;border:1px solid var(--line);border-radius:5px;background:var(--paper);display:flex;align-items:center;gap:8px;padding:0 8px 0 10px;cursor:pointer;color:var(--ink);text-align:left;font:inherit}
+.ln-m:hover{border-color:var(--accent)}
+.ln-k{font-family:var(--f-label);font-weight:600;font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.ln-v{flex:1;min-width:0;font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ln-p{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.ln-l{position:absolute;left:46px;right:46px;top:42px;list-style:none;margin:0;padding:4px;background:var(--paper);border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 24px rgba(20,30,45,.18);max-height:60vh;overflow:auto;z-index:5}
+.ln-l li{display:flex;justify-content:space-between;gap:12px;padding:6px 8px;border-radius:4px;cursor:pointer;font-size:13px}
+.ln-l li:hover{background:var(--soft)}
+.ln-l li.all{font-weight:600;border-bottom:1px solid var(--line-soft);border-radius:0;margin-bottom:2px}
+.ln-l li[aria-selected="true"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.ln-l li .hint{font-variant-numeric:tabular-nums;white-space:nowrap}
+.addm{position:relative;display:inline-flex}
+#b-add{display:inline-flex;align-items:center;gap:4px}
+.addm-l{position:absolute;top:calc(100% + 4px);left:0;z-index:6;display:flex;flex-direction:column;min-width:150px;padding:4px;background:var(--paper);border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 24px rgba(20,30,45,.18)}
+.addm-l[hidden]{display:none}
+.mi{border:0;background:none;text-align:left;padding:7px 10px;border-radius:4px;cursor:pointer;font:inherit;font-size:13px;color:var(--ink)}
+.mi:hover{background:var(--soft);color:var(--accent)}
+.tree-empty{list-style:none;margin:18px 14px;padding:14px;border:1px dashed var(--line);border-radius:6px;display:flex;flex-direction:column;gap:8px;color:var(--muted);font-size:13px}
+.tree-empty b{color:var(--ink);font-size:14px}
+.tree-empty-b{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+details.ql>summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+details.ql>summary::-webkit-details-marker{display:none}
+details.ql>summary::before{content:"";width:7px;height:7px;border-right:1.6px solid var(--muted);border-bottom:1.6px solid var(--muted);transform:rotate(-45deg);margin-right:2px;align-self:center;transition:transform .15s}
+details.ql[open]>summary::before{transform:rotate(45deg)}
+details.ql[open] .ql-sumh{display:none}
+details.ql:not([open]) .ql-tip{display:none}
+.dlg-h{align-items:center}
+.dlg-h h3{font-weight:600;font-size:16.5px}
+.dlg-x{width:30px;height:30px;border:0;border-radius:6px;background:none;color:var(--muted);display:inline-flex;align-items:center;justify-content:center;cursor:pointer;margin:-4px -8px -4px 0;flex:none}
+.dlg-x:hover{background:var(--soft);color:var(--ink)}
+.dlg-f .btn{min-height:30px;padding:5px 14px}
+.dlg-f .btn.primary{order:99}
+.keys{border-collapse:collapse;width:100%;font-size:13px}
+.keys td{padding:6px 4px;border-bottom:1px solid var(--line-soft)}
+.keys td:first-child{white-space:nowrap;width:1%;padding-right:18px}
+kbd{font-family:var(--f-body);font-size:11.5px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--paper)}
 .msel-list{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:6px;max-height:260px;overflow:auto;background:var(--soft)}
 .msel-list li{display:flex;gap:8px;align-items:baseline;padding:5px 10px;border-bottom:1px solid var(--line-soft);cursor:pointer;font-size:13px}
 .msel-list li:last-child{border-bottom:0}
@@ -632,19 +689,21 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
     <div class="top-actions">
       <span class="hist"><button class="btn" id="b-undo" title="Annuler (Cmd+Z)" aria-label="Annuler" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg></button><button class="btn" id="b-redo" title="Rétablir (Cmd+Maj+Z)" aria-label="Rétablir" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 000 12h3"/></svg></button></span>
       <span class="sep"></span>
-      <button class="btn" id="b-new">Nouveau…</button>
-      <button class="btn" id="b-open">Ouvrir…</button>
-      <button class="btn" id="b-save">Enregistrer</button>
+      <button class="btn ib" id="b-new" title="Nouveau projet (Cmd+N)" aria-label="Nouveau projet"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6M9 14h6"/></svg></button>
+      <button class="btn ib" id="b-open" title="Ouvrir un projet (Cmd+O)" aria-label="Ouvrir un projet"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v1"/><path d="M3 7v10a2 2 0 0 0 2 2h12.5a2 2 0 0 0 1.9-1.4L22 11H7.5a2 2 0 0 0-1.9 1.4L3 19"/></svg></button>
+      <button class="btn ib" id="b-save" title="Enregistrer (Cmd+S)" aria-label="Enregistrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3h11l4 4v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 1-2z"/><path d="M8 3v5h7V3"/><path d="M8 21v-7h8v7"/></svg></button>
       <button class="btn" id="b-saveas" hidden>Enregistrer sous…</button>
       <span class="sep"></span>
-      <button class="btn" id="b-agence">Agence</button>
-      <button class="btn" id="b-proj">Projet</button>
+      <button class="btn ib" id="b-agence" title="Agence" aria-label="Agence"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v16"/><path d="M15 9h4a1 1 0 0 1 1 1v11"/><path d="M3 21h18"/><path d="M8 8h3M8 12h3M8 16h3"/></svg></button>
+      <button class="btn ib" id="b-proj" title="Projet" aria-label="Projet"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1z"/><path d="M8 5H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><path d="M8 12h8M8 16h5"/></svg></button>
       <span class="sep"></span>
-      <button class="btn" id="b-lieux">Lieux</button>
-      <button class="btn" id="b-cats">Catégories</button>
-      <button class="btn" id="b-lib">Bibliothèque</button>
+      <button class="btn ib" id="b-lieux" title="Lieux" aria-label="Lieux"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg></button>
+      <button class="btn ib" id="b-cats" title="Catégories" aria-label="Catégories"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="8" cy="8" r="1.5"/></svg></button>
+      <button class="btn ib" id="b-lib" title="Bibliothèque" aria-label="Bibliothèque"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="M14.5 4.5l3.5-1 3 15.5-3.5 1z"/></svg></button>
+      <span class="sep"></span>
+      <button class="btn primary pubb" id="b-export" title="Publier le CCTP, la DPGF ou le tableau des choix (Cmd+E)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg><span>Publier…</span></button>
+      <button class="btn ib" id="b-keys" title="Raccourcis clavier (?)" aria-label="Raccourcis clavier"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg></button>
     </div>
-    <span class="sep" style="width:1px;align-self:stretch;background:var(--line);margin:4px 2px 4px auto"></span>
     <a class="idea" id="b-idea" href="https://github.com/caschauvin-star/prescrire/issues/new" target="_blank" rel="noopener" title="Proposer une amélioration ou signaler un problème" aria-label="Proposer une amélioration ou signaler un problème">💡</a>
   </header>
 
@@ -654,9 +713,9 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
       <button class="vbar" data-unfold="1" title="Afficher la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>Lots et prestations</span></button>
       <div class="col-h"><h2>Lots et prestations</h2><button class="colhide" data-fold="1" aria-label="Masquer la colonne Lots et prestations" title="Masquer la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button></div>
       <div class="tree-tools">
-        <button class="btn" id="b-lot">+ Lot</button>
-        <button class="btn" id="b-slot">+ Sous-lot</button>
         <button class="btn primary" id="b-presta">+ Prestation</button>
+        <span class="addm"><button class="btn" id="b-add" aria-haspopup="menu" aria-expanded="false" title="Ajouter un lot ou un sous-lot">+ Lot, sous-lot <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+          <span class="addm-l" role="menu" hidden><button class="mi" role="menuitem" id="b-lot">Lot</button><button class="mi" role="menuitem" id="b-slot">Sous-lot</button></span></span>
         <button class="btn" id="b-implots" title="Importer des lots, sous-lots ou prestations d'un autre projet" aria-label="Importer des lots d'un autre projet" style="display:inline-flex;align-items:center;padding:4px 7px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v11"/><path d="M7.5 9.5L12 14l4.5-4.5"/><path d="M4 15v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"/></svg></button>
       </div>
       <div class="tree-stat" id="tree-stat" aria-label="Avancement de la rédaction"></div>
@@ -684,18 +743,13 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
           <button class="tab" role="tab" id="t-dpgf">DPGF</button>
           <button class="tab" role="tab" id="t-off">Offres</button>
         </div>
-        <div class="seg" role="group" aria-label="Affichage" id="seg">
-          <span class="seg-lab">Afficher</span>
-          <button id="v-lots">Par lots</button>
-          <button id="v-lieux">Par lieux</button>
+        <div class="otb" role="toolbar" aria-label="Affichage">
+          <span class="otb-g" id="seg"><button class="oi" id="v-lots" title="Afficher par lots" aria-label="Afficher par lots"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg></button><button class="oi" id="v-lieux" title="Afficher par lieux" aria-label="Afficher par lieux"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg></button></span>
+          <span class="otb-sep" id="otb-sep"></span>
+          <button class="oi" id="o-fin" title="Seulement les prestations avec finition (liste d'arbitrage pour la maîtrise d'ouvrage)" aria-label="Seulement les prestations avec finition" aria-pressed="false" hidden><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c3 4 6 7.5 6 11a6 6 0 0 1-12 0c0-3.5 3-7 6-11z"/></svg></button>
+          <button class="oi" id="b-copy" title="Copier pour Word" aria-label="Copier pour Word"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg></button>
         </div>
         <button class="colhide" data-fold="3" aria-label="Masquer la colonne Documents" title="Masquer la colonne" style="margin-left:0"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
-      </div>
-      <div class="out-tools" id="out-tools">
-        <button class="btn" id="b-copy">Copier</button>
-        <label class="finchk" id="o-finl" hidden><input type="checkbox" id="o-fin"> Prestations avec finition</label>
-        <span style="flex:1"></span>
-        <button class="btn primary" id="b-export" title="Publier le CCTP, la DPGF ou le tableau des choix (Cmd+E)">Publier…</button>
       </div>
       <div class="col-b" id="out"></div>
     </section>
@@ -704,7 +758,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
 <div class="toast" id="toast" hidden></div>
 <div class="modal" id="modal" hidden>
   <div class="dlg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="m-title">
-    <div class="dlg-h"><h3 id="m-title"></h3><span class="hint" id="m-sub"></span></div>
+    <div class="dlg-h"><h3 id="m-title"></h3><span class="hint" id="m-sub"></span><button class="dlg-x" id="m-x" aria-label="Fermer la fenêtre" title="Fermer (Échap)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <div class="dlg-b" id="m-body"></div>
     <div class="dlg-f" id="m-foot"></div>
   </div>
@@ -721,7 +775,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
    ====================================================================== */
 const CATS_DEF=["Fourniture et pose","Fourniture seule","Pose seule","Dépose / démolition","Préparation de support","Prestation forfaitaire","Essais et contrôles"];
 let CATS=null,CATS_MAJ=0;
-const APP_VERSION="0.14.2",GITHUB_REPO="caschauvin-star/prescrire";
+const APP_VERSION="0.14.3",GITHUB_REPO="caschauvin-star/prescrire";
 const TAUX=[20,10,5.5];
 /* Intitulé complet d'une prestation : nom + précision propre au projet (ex. « 120 x 220 ») */
 const ttl=n=>{const a=(n.nom||"").trim(),b=(n.prec||"").trim();return b?(a?a+" "+b:b):a};
@@ -1066,7 +1120,7 @@ function renderTree(){
       `<span class="num">${x.nr}</span><span class="nm">${W.length?hl((g?n.nom:ttl(n))||"Sans titre",W):esc((g?n.nom:ttl(n))||"Sans titre")}</span>${!g&&n.note&&n.note.trim()?'<span class="note" aria-label="Note interne"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16v12H8l-4 4z"/></svg></span>':""}${!g&&n.pse?'<span class="pse">PSE</span>':""}${!g&&n.vid&&varOfP(n)?`<span class="pse vtag" title="${esc(vLabel(rootOf(n.id),varOfP(n)))}">V${vNum(rootOf(n.id),varOfP(n))}</span>`:""}<span class="amt">${amt?nf.format(amt):""}</span></div>`+
       (g&&!closed&&n.children.length?`<ul>${rec(n.children,pm)}</ul>`:"")+`</li>`;
   }).join("");
-  $("#tree").innerHTML=rec(S.tree,false)||(active?`<li class="tree-hint">Aucune prestation ne correspond.</li>`:"");
+  $("#tree").innerHTML=rec(S.tree,false)||(active?`<li class="tree-hint">Aucune prestation ne correspond.</li>`:S.tree.length?"":`<li class="tree-empty"><b>Projet vide</b><span>Ajoutez un premier lot avec « + Lot, sous-lot », ou reprenez des lots d'un autre projet avec le bouton d'import.</span><span class="tree-empty-b"><button class="btn primary" data-empty="lot">Ajouter un lot</button><button class="btn" data-empty="imp">Importer des lots…</button></span></li>`);
   const all=flatP(S.tree),cnt=k=>all.filter(n=>(n.etat||"redaction")===k).length;
   $("#tree-stat").innerHTML=all.length?ETATS.map(([k,l])=>`<button data-filtre="${k}" aria-pressed="${F===k}" ${cnt(k)||F===k?"":"disabled"} title="${cnt(k)} ${{redaction:"en rédaction",relecture:"à relire",validee:"validée"+(cnt(k)>1?"s":""),reviser:"à réviser"}[k]} · ${F===k?"cliquer pour tout afficher":"cliquer pour n'afficher que celles-ci"}" aria-label="${cnt(k)} ${{redaction:"en rédaction",relecture:"à relire",validee:"validée"+(cnt(k)>1?"s":""),reviser:"à réviser"}[k]}"><i class="c-${k}"></i>${cnt(k)}</button>`).join(""):"";
   {const np=all.filter(n=>n.pse&&!n.vid).length,nv=all.filter(n=>n.vid).length;
@@ -1167,6 +1221,11 @@ function openImportLots(text,fname){
 }
 function walkAll(n,fn){fn(n);if(n.kind==="g")n.children.forEach(c=>walkAll(c,fn))}
 function targetGroup(){if(!S.sel||!IDX[S.sel])return null;const x=IDX[S.sel];return x.n.kind==="g"?x.n:x.parent}
+{const add=$("#b-add"),ml=document.querySelector(".addm-l");
+  const close=()=>{ml.hidden=true;add.setAttribute("aria-expanded","false")};
+  add.onclick=e=>{e.stopPropagation();const o=ml.hidden;ml.hidden=!o;add.setAttribute("aria-expanded",o)};
+  ml.addEventListener("click",close);document.addEventListener("mousedown",e=>{if(!e.target.closest(".addm"))close()});
+  $("#tree").addEventListener("click",e=>{const b=e.target.closest("[data-empty]");if(!b)return;e.stopPropagation();if(b.dataset.empty==="lot")$("#b-lot").click();else $("#b-implots").click()})}
 $("#b-lot").onclick=()=>{const g=grp("Nouveau lot",[]);S.tree.push(g);select(g.id,true);setTimeout(()=>{const i=$("#g-nom");if(i){i.focus();i.select()}},0)};
 $("#b-slot").onclick=()=>{const t=targetGroup();if(!t)return toast("Sélectionnez d'abord un lot.");const g=grp("Nouveau sous-lot",[]);t.children.push(g);S.open[t.id]=true;select(g.id,true);setTimeout(()=>{const i=$("#g-nom");if(i){i.focus();i.select()}},0)};
 $("#b-presta").onclick=()=>{
@@ -1176,7 +1235,7 @@ $("#b-presta").onclick=()=>{
   else{const t=targetGroup();if(!t)return toast("Créez ou sélectionnez d'abord un lot.");t.children.push(p);S.open[t.id]=true}
   select(p.id,true);setTimeout(()=>{const i=$("#f-nom");i&&i.focus()},0);
 };
-function select(id,changed){if(S.sel!==id){LIVE=null;const f=$("#fiche");if(f)f.scrollTop=0}S.sel=id;if(changed)commit();else{persist();renderTree();renderOut()}renderFiche()}
+function select(id,changed){if(S.sel!==id){LIVE=null;const f=$("#fiche");if(f)f.scrollTop=0;const L=lotOfId(id);if(L&&S.lot!==L.id&&S.view!=="lieux")S.lot=L.id;if(L&&S.olot&&S.olot!=="synth"&&S.olot!==L.id)S.olot=L.id}S.sel=id;if(changed)commit();else{persist();renderTree();renderOut()}renderFiche()}
 function commit(){save();renderTree();renderOut()}
 
 /* ======================================================================
@@ -1295,12 +1354,15 @@ function lieuChips(n){
 }
 function qlHTML(n){
   if(n.lieux.length<2)return"";
-  return`<div class="ql"><div class="ql-h"><span class="lab">Quantités par lieu</span><span class="hint">La quantité totale en est la somme</span></div>`+
+  const open=QLOPEN!==null?QLOPEN:n.lieux.length<=3;
+  return`<details class="ql" ${open?"open":""}><summary class="ql-h"><span class="lab">Quantités par lieu</span><span class="hint ql-sumh">${n.lieux.length} lieux · ${qf.format(num(n.qte))} ${esc(n.u)}</span><span class="hint ql-tip">La quantité totale en est la somme</span></summary>`+
     n.lieux.map((l,i)=>{const ex=n.qlx[l],r=ex?evalQ(ex,l):null,li=LO(l);
       return`<div class="ql-row"><label class="ln" for="ql-${i}">${esc(l)}<small>${esc(dimTxt(li))}</small></label><input type="text" inputmode="decimal" id="ql-${i}" data-ql="${esc(l)}" value="${esc(ex||fmtIn(n.ql[l]))}" placeholder="0" class="${r&&r.err?"bad":""}" title="${esc(r&&r.err||"")}"><span class="u" data-qlr="${esc(l)}">${ex?(r.err?'<span class="err">erreur</span>':"= "+qf.format(r.v)+" "+esc(n.u)):esc(n.u)}</span><span class="qm">${qBtns(l,"ql-"+i)}</span></div>`}).join("")+
     `<div class="ql-row ql-sum"><span>Total</span><b id="ql-sum">${qf.format(num(n.qte))}</b><span class="u">${esc(n.u)}</span><span></span></div>
-    <p class="hint">Saisissez un nombre ou une formule : 3,2*2,5 · S = surface au sol, P = périmètre, H = hauteur du lieu.</p></div>`;
+    <p class="hint">Saisissez un nombre ou une formule : 3,2*2,5 · S = surface au sol, P = périmètre, H = hauteur du lieu.</p></details>`;
 }
+let QLOPEN=null;
+document.addEventListener("toggle",e=>{if(e.target.classList&&e.target.classList.contains("ql"))QLOPEN=e.target.open},true);
 function qresHTML(n){
   if(n.lieux.length>1)return"";
   let h="";
@@ -1390,7 +1452,7 @@ function renderFiche(){
     <div class="fx-grey">
       <h4>Quantitatif</h4>
       <div style="display:flex;flex-direction:column;gap:8px">
-        <div><span class="lb">Lieux :</span> <button class="link" id="f-glieux">gérer les lieux</button></div>
+        <div><span class="lb">Lieux :</span></div>
         <div class="chips" id="f-lieux">${lieuChips(n)}</div>
       </div>
       ${qlHTML(n)}
@@ -1472,7 +1534,7 @@ function renderFiche(){
   {const b=$("#f-coefoff");if(b)b.onclick=()=>{n.prix=n.prixOrig;delete n.prixOrig;delete n.coef;commit();renderFiche()}}
   $("#f-lieux").onclick=e=>{const c=e.target.closest(".chip");if(!c)return;toggleLieu(n,c.dataset.l);commit();renderFiche();
     const q=$("#fiche").querySelector(`[data-ql="${CSS.escape(c.dataset.l)}"]`);if(q){q.focus();q.select()}};
-  $("#f-glieux").onclick=openLieux;
+
   el.querySelectorAll('input[name="f-nat"]').forEach(r=>r.onchange=e=>{const v=e.target.value;
     if(v==="var"){const vs=varsOf(lot);if(!vs.length)vs.push({id:uid(),nom:"",rempl:[]});n.vid=vs[0].id;n.pse=false;
       vs[0].rempl=(vs[0].rempl||[]).filter(id=>id!==n.id);toast("Prestation rattachée à la "+vLabel(lot,vs[0]).toLowerCase()+". Indiquez dans la fiche du lot ce qu'elle remplace.",5000)}
@@ -1637,7 +1699,7 @@ function acPick(k){
    Colonne de droite : CCTP, DPGF, offres
    ====================================================================== */
 function setTab(t){S.tab=t;["cctp","dpgf","off"].forEach(k=>$("#t-"+k).setAttribute("aria-selected",k===t));
-  $("#seg").hidden=t==="off";$("#out-tools").hidden=t==="off";$("#b-copy").textContent=t==="dpgf"?"Copier pour Excel":"Copier pour Word";$("#b-copy").hidden=t==="off";$("#o-finl").hidden=t!=="dpgf";persist();renderOut()}
+  $("#seg").hidden=t==="off";$("#otb-sep").hidden=t==="off";const cp=$("#b-copy"),lb=t==="dpgf"?"Copier pour Excel":"Copier pour Word";cp.title=lb;cp.setAttribute("aria-label",lb);cp.hidden=t==="off";$("#o-fin").hidden=t!=="dpgf";persist();renderOut()}
 $("#t-cctp").onclick=()=>setTab("cctp");$("#t-dpgf").onclick=()=>setTab("dpgf");$("#t-off").onclick=()=>setTab("off");
 function setView(v){S.view=v;$("#v-lots").setAttribute("aria-pressed",v==="lots");$("#v-lieux").setAttribute("aria-pressed",v==="lieux");persist();renderOut()}
 $("#v-lots").onclick=()=>setView("lots");$("#v-lieux").onclick=()=>setView("lieux");
@@ -1771,17 +1833,49 @@ function dpgfLots(){
   }
   return bar+`<div class="tblwrap">${body}</div>`;
 }
+let CCTP_SEEN=null;
 function renderOut(){
   reindex();
   const o=$("#out");
   if(S.tab==="off"){o.innerHTML=offresHTML();bindOffres();return}
-  if(!S.tree.length){o.innerHTML=`<div class="empty">Aucun lot pour l'instant.</div>`;return}
-  if(S.tab==="cctp"){o.innerHTML=`<article class="cctp" id="cctp">${S.view==="lieux"?cctpLieuxHTML():cctpHTML()}</article>`;return}
-  $("#o-fin").checked=!!S.finOnly;
+  if(!S.tree.length){o.innerHTML=`<div class="empty">Le CCTP et la DPGF apparaîtront ici dès le premier lot.</div>`;return}
+  if(S.tab==="cctp"){const st=o.scrollTop;o.innerHTML=`<article class="cctp" id="cctp">${S.view==="lieux"?cctpLieuxHTML():cctpHTML()}</article>`;o.scrollTop=st;
+    if(S.sel&&S.sel!==CCTP_SEEN){CCTP_SEEN=S.sel;const a=o.querySelector(`.c-art[data-id="${S.sel}"]`);if(a){const r=a.getBoundingClientRect(),q=o.getBoundingClientRect();if(r.top<q.top||r.bottom>q.bottom)a.scrollIntoView({block:"nearest"})}}return}
+  $("#o-fin").setAttribute("aria-pressed",!!S.finOnly);
   o.innerHTML=S.finOnly?dpgfFin():S.view==="lieux"?dpgfLieux():dpgfLots();
+  navify(o);
   const tv=$("#tva");if(tv)tv.onchange=e=>{S.projet.tva=+e.target.value;save();renderOut()};
 }
-$("#o-fin").onchange=e=>{S.finOnly=e.target.checked;persist();renderOut()};
+/* Barre des lots : remplace la rangée de pastilles par ‹ menu › (les pastilles restent, cachées, et portent les actions) */
+function navify(o){
+  const bar=o.querySelector(".lotbar");if(!bar)return;
+  const ch=[...bar.querySelectorAll(".chip")];if(!ch.length)return;
+  const key=c=>c.dataset.lot||c.dataset.lieu||c.dataset.olot;
+  const isAll=c=>/^(recap|__recap|synth)$/.test(key(c));
+  const items=[...ch.filter(isAll),...ch.filter(c=>!isAll(c))];
+  let cur=items.findIndex(c=>c.getAttribute("aria-pressed")==="true");if(cur<0)cur=0;
+  const kind=ch[0].dataset.lieu!==undefined?"Lieu":ch[0].dataset.olot!==undefined?"Vue":"Lot";
+  const amt=c=>{const id=c.dataset.lot||c.dataset.olot;const l=id&&S.tree.find(x=>x.id===id);return l?eur(baseT(l)):""};
+  const lab=c=>esc(c.childNodes[0]?c.childNodes[0].textContent.trim():c.textContent.trim());
+  const reals=items.filter(c=>!isAll(c)).length,pos=isAll(items[cur])?"":`${items.slice(0,cur+1).filter(c=>!isAll(c)).length} / ${reals}`;
+  bar.hidden=true;
+  const nav=document.createElement("div");nav.className="lotnav";
+  nav.innerHTML=`<button class="ln-a" data-step="-1" aria-label="Précédent" title="Précédent" ${cur<=0?"disabled":""}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <button class="ln-m" aria-haspopup="listbox" aria-expanded="false"><span class="ln-k">${kind}</span><span class="ln-v">${lab(items[cur])}</span><span class="ln-p">${pos}</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+    <button class="ln-a" data-step="1" aria-label="Suivant" title="Suivant" ${cur>=items.length-1?"disabled":""}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+    <ul class="ln-l" role="listbox" hidden>${items.map((c,i)=>`<li role="option" data-i="${i}" aria-selected="${i===cur}" class="${isAll(c)?"all":""}"><span>${lab(c)}</span><span class="hint">${amt(c)}</span></li>`).join("")}</ul>`;
+  bar.before(nav);
+  const go=i=>{if(i>=0&&i<items.length)items[i].click()};
+  nav.querySelectorAll("[data-step]").forEach(b=>b.onclick=e=>{e.stopPropagation();go(cur+ +b.dataset.step)});
+  const m=nav.querySelector(".ln-m"),L=nav.querySelector(".ln-l");
+  const close=()=>{L.hidden=true;m.setAttribute("aria-expanded","false");document.removeEventListener("mousedown",out)};
+  const out=e=>{if(!nav.contains(e.target))close()};
+  m.onclick=e=>{e.stopPropagation();if(!L.hidden)return close();L.hidden=false;m.setAttribute("aria-expanded","true");document.addEventListener("mousedown",out)};
+  L.onclick=e=>{e.stopPropagation();const li=e.target.closest("[data-i]");if(li){close();go(+li.dataset.i)}};
+}
+/* Le document suit l'arbre : sélectionner une prestation affiche son lot dans la DPGF */
+function lotOfId(id){return S.tree.find(l=>l.id===id||(function f(a){return a.some(n=>n.id===id||(n.children&&f(n.children)))})(l.children||[]))}
+$("#o-fin").onclick=()=>{S.finOnly=!S.finOnly;persist();renderOut()};
 $("#out").addEventListener("click",e=>{
   if(S.tab==="off")return;
   const cl=e.target.closest("[data-lieu]");
@@ -2010,7 +2104,14 @@ document.addEventListener("keydown",e=>{
   else if(k==="a"&&$("#modal").hidden){const t=e.target,ed=t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));if(ed)return;
     const vis=[...treeEl.querySelectorAll(".row.p")].map(r=>r.dataset.id);if(vis.length<2)return;e.preventDefault();MSEL=new Set(vis);S.sel=vis[0];ANCH=vis[0];renderTree();renderFiche();toast(vis.length+" prestations sélectionnées.",1500)}
   else if(k==="e"&&$("#modal").hidden){e.preventDefault();openExport()}
+  else if(k==="n"&&$("#modal").hidden){e.preventDefault();$("#b-new").click()}
 });
+const KEYS=[["Cmd+S","Enregistrer"],["Cmd+Maj+S","Enregistrer sous…"],["Cmd+O","Ouvrir un projet"],["Cmd+N","Nouveau projet"],["Cmd+E","Publier…"],["Cmd+Z","Annuler"],["Cmd+Maj+Z","Rétablir"],["Cmd+A","Sélectionner toutes les prestations visibles de l'arbre"],["Cmd+clic","Ajouter ou retirer une prestation de la sélection"],["Maj+clic","Sélectionner une suite de prestations"],["Échap","Fermer une fenêtre, vider la sélection"],["?","Afficher cet aide-mémoire"]];
+function openKeys(){const mac=/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent);
+  openModal("Raccourcis clavier",`<table class="keys">${KEYS.map(([k,l])=>`<tr><td>${k.split("+").map(x=>`<kbd>${esc(mac?x:x.replace("Cmd","Ctrl"))}</kbd>`).join(" + ")}</td><td>${esc(l)}</td></tr>`).join("")}</table>`,`<button class="btn primary" data-m="close">Fermer</button>`)}
+$("#b-keys").onclick=openKeys;
+document.addEventListener("keydown",e=>{if(e.key!=="?"||e.metaKey||e.ctrlKey||!$("#modal").hidden)return;const t=e.target;if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))return;e.preventDefault();openKeys()});
+$("#m-x").onclick=()=>closeModal();
 $("#m-foot").addEventListener("click",e=>{const b=e.target.closest('[data-m="cancel"],[data-m="close"]');if(b)closeModal()});
 
 /* ======================================================================
@@ -2893,6 +2994,11 @@ function aboutHTML(){
       <button class="link" id="ab-more" aria-expanded="false" aria-controls="ab-clip">Lire plus</button></section></div>`;
 }
 const CHANGES=[
+ ["0.14.3","23 novembre 2026",["Barre du haut en icônes (le nom s'affiche au survol), « Publier… » remonté à côté, pastille orange sur Enregistrer quand il reste des modifications",
+   "Colonne de droite simplifiée : une seule barre d'outils, choix du lot par un menu avec flèches précédent / suivant, le document suit la prestation sélectionnée dans l'arbre, titres du tableau toujours visibles",
+   "Arbre : « + Prestation » et un menu « + Lot, sous-lot » ; message d'accueil dans un projet vide",
+   "Fiche : quantités par lieu repliables",
+   "Fenêtres harmonisées avec un bouton de fermeture, aide-mémoire des raccourcis clavier (touche ?), colonne de droite repliée d'office sur les petits écrans"]],
  ["0.14.2","23 novembre 2026",["Nouvelle version de la main « OK » dans la barre du haut, la fenêtre d'accueil et l'icône de l'application, en mode clair comme en mode sombre"]],
  ["0.14.1","21 novembre 2026",["Nouveau logo : la main « OK » dessinée par Casimir, dans la barre du haut, la fenêtre d'accueil et l'icône de l'application",
    "DPGF plus lisible : retraits par niveau, alternance de lignes gris très clair et sous-totaux par sous-lot, dans l'application comme dans l'export Excel",
@@ -3088,7 +3194,7 @@ function offresHTML(){
     </tbody></table></div>${libresHTML}`;
 }
 function bindOffres(){
-  const o=$("#out");
+  const o=$("#out");navify(o);
   const imp=$("#of-imp");if(imp)imp.onclick=()=>pickFile(".xlsx",f=>importOffre(f).catch(e=>toast("Import impossible : "+(e&&e.message||e),5000)));
   const ex=$("#of-exp");if(ex)ex.onclick=()=>exportAnalyse().catch(e=>toast("Export impossible : "+(e&&e.message||e),5000));
   o.onclick=e=>{
@@ -3178,7 +3284,7 @@ async function exportAnalyse(){
 /* ======================================================================
    En-tête et démarrage
    ====================================================================== */
-function renderMeta(){winTitle();const m=$("#p-meta");if(!m)return;m.innerHTML=`<span class="tagphase">${esc(S.projet.phase||"")} · ind. ${esc(S.projet.indice||"A")}</span>${S.dirty?'<span class="dirty" title="Enregistrez le projet dans un fichier pour le conserver">● non enregistré</span>':S.fichier?`<span title="${esc(S.fichier)}">enregistré</span>`:""}`}
+function renderMeta(){winTitle();const m=$("#p-meta");if(!m)return;m.innerHTML=`<span class="tagphase">${esc(S.projet.phase||"")} · ind. ${esc(S.projet.indice||"A")}</span>`;const b=$("#b-save");if(b){b.classList.toggle("dirty",!!S.dirty);const t=S.dirty?"Enregistrer (Cmd+S) · modifications non enregistrées":"Enregistrer (Cmd+S)"+(S.fichier?" · "+S.fichier:"");b.title=t}}
 let FITC=null;
 function fitPNom(){const i=$("#p-nom");if(!i)return;FITC=FITC||document.createElement("canvas").getContext("2d");const cs=getComputedStyle(i);FITC.font=`${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
   const w=FITC.measureText(i.value||i.placeholder).width;i.style.width=Math.ceil(w+parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight)+6)+"px"}
@@ -3193,8 +3299,9 @@ const KEY_UI="prescrire-colonnes",UI_DEF={w1:300,w3:560,fold:[]};
 let UI=(()=>{try{return Object.assign({},UI_DEF,JSON.parse(localStorage.getItem(KEY_UI)||"{}"))}catch(e){return{...UI_DEF}}})();
 const saveUI=()=>{try{localStorage.setItem(KEY_UI,JSON.stringify(UI))}catch(e){}};
 const narrow=()=>matchMedia("(max-width: 1100px)").matches;
+const autoFold3=()=>innerWidth<1280&&!UI.keep3&&!narrow();
 function layoutCols(){
-  const f=k=>UI.fold.includes(k),cols=$("#cols");
+  const f=k=>UI.fold.includes(k)||(k===3&&autoFold3()),cols=$("#cols");
   [1,2,3].forEach(k=>$("#col"+k).classList.toggle("folded",f(k)));
   if(narrow()){cols.style.gridTemplateColumns="";return}
   const flex=!f(2)?2:!f(3)?3:!f(1)?1:2;
@@ -3206,8 +3313,8 @@ function layoutCols(){
 function clampW(){const W=$("#cols").clientWidth||1400;UI.w1=Math.max(200,Math.min(UI.w1,W-UI.w3-360,720));UI.w3=Math.max(300,Math.min(UI.w3,W-UI.w1-360,1100))}
 document.addEventListener("click",e=>{
   const a=e.target.closest("[data-fold]"),b=e.target.closest("[data-unfold]");
-  if(a){const k=+a.dataset.fold;if(!UI.fold.includes(k))UI.fold.push(k);saveUI();layoutCols()}
-  if(b){const k=+b.dataset.unfold;UI.fold=UI.fold.filter(x=>x!==k);saveUI();layoutCols()}
+  if(a){const k=+a.dataset.fold;if(!UI.fold.includes(k))UI.fold.push(k);if(k===3)delete UI.keep3;saveUI();layoutCols()}
+  if(b){const k=+b.dataset.unfold;UI.fold=UI.fold.filter(x=>x!==k);if(k===3&&innerWidth<1280)UI.keep3=true;saveUI();layoutCols()}
 });
 document.querySelectorAll(".split").forEach(sp=>{
   const which=+sp.dataset.split;
