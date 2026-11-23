@@ -406,6 +406,152 @@ ul.tree ul{list-style:none;margin:0;padding:0}
 .lotnav{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--paper);border-bottom:1px solid var(--line-soft)}
 #out:has(.lotnav){--navh:47px}
 .dpgf th{top:var(--navh,0)}
+.th-of{border:0;background:none;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit;cursor:pointer;padding:0;text-align:right;border-bottom:1px dotted currentColor}
+.th-of:hover{color:var(--accent)}
+
+
+/* ---- Aide ---- */
+.dlg-q{margin-right:2px}
+.dlg-q[hidden]{display:none}
+.hq{width:26px;height:26px;flex:0 0 26px;border:1px solid var(--line);border-radius:50%;background:var(--paper);color:var(--muted);font:600 13px var(--f-body);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0;vertical-align:middle}
+.hq:hover{color:var(--accent);border-color:var(--accent)}
+
+.help{display:grid;grid-template-columns:230px minmax(0,1fr);gap:0;height:100%;min-height:0;margin:-16px -18px}
+.help-n{display:flex;flex-direction:column;gap:2px;padding:14px 10px;border-right:1px solid var(--line);overflow:auto;background:var(--soft)}
+.help-n input{margin-bottom:8px}
+.help-n button{border:0;background:none;text-align:left;font:inherit;font-size:13px;color:var(--ink);padding:6px 10px;border-radius:6px;cursor:pointer}
+.help-n button:hover{background:var(--line-soft)}
+.help-n button[aria-current=true]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.help-n button.sep{margin-top:10px;border-top:1px solid var(--line);border-radius:0 0 6px 6px;padding-top:12px}
+.help-b{padding:18px 28px 28px;overflow:auto;font-size:14px;line-height:1.6;max-width:72ch}
+.help-b h3{margin:0 0 10px;font-size:19px}
+.help-b h4{margin:18px 0 4px;font-family:var(--f-label);font-weight:600;text-transform:uppercase;font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.help-b p{margin:0 0 10px}.help-b ul,.help-b ol{margin:0 0 10px;padding-left:20px}.help-b li{margin-bottom:4px}
+.help-b code{background:var(--line-soft);padding:1px 5px;border-radius:4px;font-size:13px}
+.faq{border-bottom:1px solid var(--line-soft);padding:8px 0}
+.faq summary{cursor:pointer;font-weight:600}
+.faq p{margin:6px 0 2px;color:var(--ink)}
+.help-hit{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;border:1px solid var(--line-soft);background:var(--paper);border-radius:6px;padding:8px 12px;margin-bottom:6px;cursor:pointer;font:inherit;color:var(--ink)}
+.help-hit span{font-size:12.5px;color:var(--muted)}
+.help-hit:hover{border-color:var(--accent)}
+/* ---- Modèle Word ---- */
+.tpl-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tpl-n{flex:1 1 100%;font-size:13px}
+.tpl-r{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:10px 0}
+.tpl-r h4{margin:0 0 4px;font-family:var(--f-label);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.06em;color:var(--muted)}
+.tpl-r ul{margin:0;padding:0;list-style:none;font-size:13px}
+.tpl-r li{padding:2px 0 2px 18px;position:relative}
+.tpl-r li.ok::before{content:"✓";position:absolute;left:0;color:var(--ok)}
+.tpl-r li.ko::before{content:"·";position:absolute;left:4px;color:var(--muted)}
+
+/* ---- Espaces Offres, Planning, Chantier ---- */
+.ws-mode #col2,.ws-mode [data-split="2"]{visibility:hidden;overflow:hidden;min-width:0;padding:0;border:0}
+.ws-mode #col3 .tabs,.ws-mode #col3 .otb,.ws-mode #col3 [data-fold="3"]{display:none!important}
+.ws-h{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.ws-h h2{flex:1;margin:0}
+.wsb[aria-pressed=true]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+/* ---- Planning ---- */
+/* ---- Chantier ---- */
+.ch-nav{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line-soft)}
+.ch-nav select{max-width:360px}
+.ch-kpi{display:flex;gap:1px;background:var(--line-soft);margin:12px;border:1px solid var(--line-soft);border-radius:6px;overflow:hidden}
+.ch-kpi>div{flex:1 1 0;background:var(--paper);padding:8px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.ch-kpi span{font-family:var(--f-label);font-weight:600;text-transform:uppercase;font-size:10.5px;letter-spacing:.06em;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-kpi b{font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ch-kpi .al b{color:var(--danger)}
+.ch-al{color:var(--danger);font-weight:600}
+.ch-w{color:var(--warn);font-weight:600}
+.ch-mv{color:var(--ok)}
+.ch-bar{display:inline-block;width:46px;height:5px;border-radius:3px;background:var(--line-soft);margin-right:6px;vertical-align:middle;overflow:hidden}
+.ch-bar i{display:block;height:100%;background:var(--ok)}
+table.ch tr.art{cursor:pointer}
+table.ch select{font-size:12px;max-width:96px}
+table.ch td.nw,table.ch td:last-child{white-space:nowrap}
+table.ch{font-size:12.5px}
+.ch-del .ch-nm{text-decoration:line-through;text-decoration-color:var(--muted);color:var(--muted)}
+table.ch td .hint{display:block}
+.ch-tag{display:inline-block;font-family:var(--f-label);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:1px 6px;border-radius:3px;background:var(--line-soft);color:var(--muted);margin-left:6px;vertical-align:1px}
+.ch-tag.pn{background:var(--warn-soft);color:var(--warn)}
+.ch-h{display:flex;align-items:center;gap:10px;padding:16px 12px 6px;font-family:var(--f-label);font-weight:600;text-transform:uppercase;font-size:11.5px;letter-spacing:.06em;color:var(--muted)}
+.ch-h>span:first-child{flex:1}
+.ch-h .btn{text-transform:none;letter-spacing:0;font-family:var(--f-body)}
+.ch-ts{margin:6px 12px 10px;border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:6px;padding:8px 12px;background:var(--paper)}
+.ch-ts.st-acc{border-left-color:var(--ok)}.ch-ts.st-ref{border-left-color:var(--s-grey);opacity:.75}
+.ch-ts header{display:flex;gap:10px;align-items:baseline}
+.ch-ts header .nm{flex:1;min-width:0}
+.ch-st{font-size:11.5px;padding:1px 8px;border-radius:999px;background:var(--warn-soft);color:var(--warn)}
+.st-acc .ch-st{background:var(--ok-soft);color:var(--ok)}.st-ref .ch-st{background:var(--line-soft);color:var(--muted)}
+.ch-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 6px;font-size:12px;color:var(--muted);margin:2px 0 6px}
+.ch-meta>*{white-space:nowrap}
+.ch-meta>span[style*="flex:1"]{flex:1 1 0}
+.ch-ent{font-size:12px!important}
+.ch-meta b{color:var(--ink);font-size:13px;font-variant-numeric:tabular-nums}
+.ch-act{display:flex;gap:8px;margin-top:6px}
+.ch-av{width:58px;text-align:right}
+
+.pl-f.flash{box-shadow:0 0 0 3px var(--accent-soft);border-color:var(--accent)}
+.pl-f{transition:box-shadow .3s,border-color .3s;border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin:14px 0 0}
+details.pl-f>summary{cursor:pointer;font-family:var(--f-label);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.06em;color:var(--muted)}
+details.pl-f[open]>summary{margin-bottom:10px}
+.pl-f legend{font-family:var(--f-label);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.06em;color:var(--muted);padding:0 4px}
+.pl-grid{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center}
+.pl-grid>label{font-size:12.5px;color:var(--muted);white-space:nowrap}
+.pl-grid .numin{width:64px;text-align:right}
+.pl-grid input[type=date]{width:auto}
+.pl-pre{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pl-pre select{max-width:280px}
+.pl-tag{display:inline-flex;align-items:center;gap:4px;background:var(--accent-soft);color:var(--ink);border-radius:999px;padding:2px 4px 2px 10px;font-size:12px;max-width:260px}
+.pl-tag button{border:0;background:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0 4px;border-radius:50%}
+.pl-tag button:hover{color:var(--danger)}
+.pl-info{margin-top:10px;font-size:12.5px;display:flex;flex-direction:column;gap:4px}
+.pl-res b{font-variant-numeric:tabular-nums}
+.pl-warn{color:var(--warn)}
+.pl-alert{margin:8px 12px 0;padding:8px 12px;border-radius:6px;background:var(--warn-soft);color:var(--warn);font-size:13px}
+.pl-cg{display:flex;gap:8px;align-items:center;margin-bottom:6px;font-size:13px;color:var(--muted)}
+.gt-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;font-size:13px;border-bottom:1px solid var(--line-soft)}
+.gt-top>span:first-child{flex:1;min-width:200px}
+.gt-sc{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.gt-sc button{border:0;background:var(--paper);color:var(--muted);font:inherit;font-size:12px;padding:4px 10px;cursor:pointer}
+.gt-sc button[aria-pressed=true]{background:var(--accent-soft);color:var(--ink);font-weight:600}
+.gt{overflow:auto;position:relative;margin:8px 0 0;max-height:calc(100% - 110px)}
+.gt-h,.gt-r{display:flex;min-width:max-content}
+.gt-h{position:sticky;top:0;z-index:6;background:var(--panel);border-bottom:1px solid var(--line)}
+.gt-n{position:sticky;left:0;z-index:5;width:300px;flex:0 0 300px;display:flex;align-items:center;gap:6px;background:var(--paper);border-right:1px solid var(--line);padding:0 8px;font-size:12.5px;min-height:28px;box-sizing:border-box}
+.gt-h .gt-n{background:var(--panel);font-family:var(--f-label);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.06em;color:var(--muted)}
+.gt-n .nr{color:var(--muted);font-variant-numeric:tabular-nums;min-width:30px}
+.gt-n .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gt-n .dd{color:var(--muted);font-variant-numeric:tabular-nums;margin-left:auto;padding-left:6px}
+.gt-h .gt-n .dd{margin-left:auto}
+.gt-t{border:0;background:none;color:var(--muted);width:16px;padding:0;cursor:pointer;font-size:11px;flex:0 0 16px}
+.gt-l{position:relative;height:28px;flex:0 0 auto}
+.gt-h .gt-l{height:40px}
+.gt-ms,.gt-ws{position:absolute;left:0;right:0;height:20px}
+.gt-ws{top:20px}
+.gt-m,.gt-c{position:absolute;top:0;height:20px;line-height:20px;font-size:10.5px;color:var(--muted);border-left:1px solid var(--line);padding-left:4px;box-sizing:border-box;overflow:hidden;white-space:nowrap}
+.gt-c{text-align:center;padding:0;font-variant-numeric:tabular-nums;border-left-color:var(--line-soft)}
+.gt-m{font-family:var(--f-label);font-weight:600;text-transform:capitalize}
+.gt-bd{position:relative}
+.gt-bg{position:absolute;top:0;bottom:0;left:300px;pointer-events:none;z-index:1}
+.gt-off{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,var(--line-soft) 0 4px,transparent 4px 8px);opacity:.9}
+.gt-now{position:absolute;top:0;bottom:0;width:0;border-left:2px solid var(--danger);opacity:.7}
+.gt-fin{position:absolute;top:0;bottom:0;width:0;border-left:2px dashed var(--warn)}
+.gt-r{border-bottom:1px solid var(--line-soft);cursor:pointer}
+.gt-r:hover .gt-n,.gt-r.sel .gt-n{background:var(--accent-soft)}
+.gt-r.d0 .gt-n .nm{font-weight:600}
+.gt-b{position:absolute;top:8px;height:12px;border-radius:3px;background:var(--accent);z-index:2}
+.gt-b.d1{background:color-mix(in srgb,var(--accent) 62%,var(--paper));top:9px;height:10px}
+.gt-b.d2,.gt-b.p{background:color-mix(in srgb,var(--accent) 35%,var(--paper));top:10px;height:8px}
+.gt-b.sel{outline:2px solid var(--ink);outline-offset:1px}
+.gt-r.d0 .gt-l{background:color-mix(in srgb,var(--accent) 4%,transparent)}
+
+.gt-r{height:29px;box-sizing:border-box}
+.gt-dt{position:absolute;top:7px;font-size:10px;line-height:14px;color:var(--muted);white-space:nowrap;font-variant-numeric:tabular-nums;z-index:2;pointer-events:none}
+.gt-dt.l{transform:translateX(-100%)}
+.gt-ar{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
+.gt-ar path{fill:none;stroke:var(--ink);stroke-width:1.1;opacity:.55}
+.gt-ar marker path{fill:var(--ink);stroke:none;opacity:1}
+
+
 .ln-a{width:28px;height:28px;flex:none;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink);display:inline-flex;align-items:center;justify-content:center;padding:0;cursor:pointer}
 .ln-a:disabled{opacity:.35;cursor:default}
 .ln-a:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
@@ -687,6 +833,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
       <span class="p-meta" id="p-meta"></span>
     </div></div>
     <div class="top-actions">
+      <button class="btn ib" id="b-help" title="Aide : manuel, questions fréquentes, raccourcis (?)" aria-label="Aide"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.3-2.5 3.9"/><path d="M12 17h.01"/></svg></button>
       <span class="hist"><button class="btn" id="b-undo" title="Annuler (Cmd+Z)" aria-label="Annuler" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg></button><button class="btn" id="b-redo" title="Rétablir (Cmd+Maj+Z)" aria-label="Rétablir" disabled><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 000 12h3"/></svg></button></span>
       <span class="sep"></span>
       <button class="btn ib" id="b-new" title="Nouveau projet (Cmd+N)" aria-label="Nouveau projet"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="M12 11v6M9 14h6"/></svg></button>
@@ -701,8 +848,11 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
       <button class="btn ib" id="b-cats" title="Catégories" aria-label="Catégories"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9z"/><circle cx="8" cy="8" r="1.5"/></svg></button>
       <button class="btn ib" id="b-lib" title="Bibliothèque" aria-label="Bibliothèque"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h4v16H4zM10 4h4v16h-4z"/><path d="M14.5 4.5l3.5-1 3 15.5-3.5 1z"/></svg></button>
       <span class="sep"></span>
+      <button class="btn ib wsb" id="b-ws-off" title="Analyse des offres" aria-label="Analyse des offres" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.5 6.5A7 7 0 1 0 17.5 17.5"/><path d="M4 10.5h9"/><path d="M4 13.5h9"/></svg></button>
+      <button class="btn ib wsb" id="b-ws-plan" title="Planning" aria-label="Planning" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v4"/><path d="M16 3v4"/><path d="M7.5 13h2"/><path d="M11 13h2"/><path d="M14.5 13h2"/><path d="M7.5 16.5h2"/><path d="M11 16.5h2"/></svg></button>
+      <button class="btn ib wsb" id="b-ws-ch" title="Suivi de chantier" aria-label="Suivi de chantier" aria-pressed="false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21V4"/><path d="M6 4h14"/><path d="M6 8l4-4"/><path d="M3 21h7"/><path d="M17 4v5"/><path d="M15.5 9h3v2.5h-3z"/><path d="M3 4h3"/><path d="M6 12l3-3"/><path d="M6 16l3-3"/></svg></button>
+      <span class="sep"></span>
       <button class="btn primary pubb" id="b-export" title="Publier le CCTP, la DPGF ou le tableau des choix (Cmd+E)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3"/><path d="M7 8l5-5 5 5"/><path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg><span>Publier…</span></button>
-      <button class="btn ib" id="b-keys" title="Raccourcis clavier (?)" aria-label="Raccourcis clavier"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg></button>
     </div>
     <a class="idea" id="b-idea" href="https://github.com/caschauvin-star/prescrire/issues/new" target="_blank" rel="noopener" title="Proposer une amélioration ou signaler un problème" aria-label="Proposer une amélioration ou signaler un problème">💡</a>
   </header>
@@ -736,12 +886,15 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
 
     <div class="split" data-split="2" role="separator" aria-orientation="vertical" aria-label="Largeur de la colonne Documents" tabindex="0" title="Glisser pour redimensionner · double-clic : largeurs d'origine"></div>
     <section class="col" id="col3" aria-label="Documents">
-      <button class="vbar" data-unfold="3" title="Afficher la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><span>CCTP · DPGF · Offres</span></button>
+      <button class="vbar" data-unfold="3" title="Afficher la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><span>CCTP · DPGF</span></button>
       <div class="col-h">
+        <div class="ws-h" id="ws-h" hidden><h2 id="ws-t"></h2><button class="btn" id="ws-x" title="Revenir au CCTP et à la DPGF">Revenir à la rédaction</button></div>
         <div class="tabs" role="tablist">
           <button class="tab" role="tab" id="t-cctp">CCTP</button>
           <button class="tab" role="tab" id="t-dpgf">DPGF</button>
-          <button class="tab" role="tab" id="t-off">Offres</button>
+          <button class="tab" role="tab" id="t-off" hidden>Offres</button>
+          <button class="tab" role="tab" id="t-plan" hidden>Planning</button>
+          <button class="tab" role="tab" id="t-ch" hidden>Chantier</button>
         </div>
         <div class="otb" role="toolbar" aria-label="Affichage">
           <span class="otb-g" id="seg"><button class="oi" id="v-lots" title="Afficher par lots" aria-label="Afficher par lots"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg></button><button class="oi" id="v-lieux" title="Afficher par lieux" aria-label="Afficher par lieux"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"/><circle cx="12" cy="10" r="2"/></svg></button></span>
@@ -758,7 +911,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
 <div class="toast" id="toast" hidden></div>
 <div class="modal" id="modal" hidden>
   <div class="dlg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="m-title">
-    <div class="dlg-h"><h3 id="m-title"></h3><span class="hint" id="m-sub"></span><button class="dlg-x" id="m-x" aria-label="Fermer la fenêtre" title="Fermer (Échap)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="dlg-h"><h3 id="m-title"></h3><span class="hint" id="m-sub"></span><button class="dlg-x dlg-q" id="m-q" hidden aria-label="Aide sur cette fenêtre" title="Aide sur cette fenêtre"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.2a2.6 2.6 0 0 1 5 .9c0 1.7-2.5 2.3-2.5 3.9"/><path d="M12 17h.01"/></svg></button><button class="dlg-x" id="m-x" aria-label="Fermer la fenêtre" title="Fermer (Échap)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
     <div class="dlg-b" id="m-body"></div>
     <div class="dlg-f" id="m-foot"></div>
   </div>
@@ -775,7 +928,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
    ====================================================================== */
 const CATS_DEF=["Fourniture et pose","Fourniture seule","Pose seule","Dépose / démolition","Préparation de support","Prestation forfaitaire","Essais et contrôles"];
 let CATS=null,CATS_MAJ=0;
-const APP_VERSION="0.14.3",GITHUB_REPO="caschauvin-star/prescrire";
+const APP_VERSION="0.15.0",GITHUB_REPO="caschauvin-star/prescrire";
 const TAUX=[20,10,5.5];
 /* Intitulé complet d'une prestation : nom + précision propre au projet (ex. « 120 x 220 ») */
 const ttl=n=>{const a=(n.nom||"").trim(),b=(n.prec||"").trim();return b?(a?a+" "+b:b):a};
@@ -793,7 +946,7 @@ const clOf=x=>{const c={};const src=x&&x.cl&&typeof x.cl==="object"?x.cl:{};CL_K
 const clCount=x=>Object.keys(clOf(x)).length;
 const clSig=x=>JSON.stringify(CL_KEYS.map(k=>clOf(x)[k]||""));
 const catList=()=>CATS&&CATS.length?CATS:CATS_DEF;
-const PHASES=["ESQ","APS","APD","PRO","DCE","ACT","EXE"];
+const PHASES=["ESQ","APS","APD","PRO","DCE","ACT","EXE","DET","AOR"];
 /* Lieux d'exemple : [niveau, nom, surface sol m², périmètre ml, hauteur m] */
 const LIEUX_DEF=[["","Toutes pièces"],["RDC","Entrée",6.2,10.4,2.5],["RDC","Séjour",32.5,24.6,2.5],["RDC","Cuisine",12.4,14.2,2.5],["RDC","WC",1.6,5.2,2.5],["RDC","Cellier",4.5,8.6,2.5],["RDC","Garage",18,17,2.4],
   ["R+1","Circulation",7.8,14.4,2.5],["R+1","Chambre 1",13.2,14.8,2.5],["R+1","Chambre 2",11.6,13.8,2.5],["R+1","Salle de bains",6.4,10.2,2.5],["Combles","Combles",48,28,""],["Extérieur","Façades"],["Extérieur","Extérieurs"]];
@@ -880,6 +1033,24 @@ function presta(nom,q,o={}){
   return n;
 }
 function emptyProject(){return{v:6,projet:{nom:"Nouvelle opération",moa:"",adresse:"",moe:"",phase:"DCE",indice:"A",dispo:"",tva:20,surf:"",surfType:"SHAB"},lieux:lieuxDef(false),tree:[grp("Lot 1",[])],sel:null,tab:"cctp",view:"lots",lot:"recap",lieu:null,olot:"synth",open:{},offres:[],indices:[],fichier:null,dirty:false}}
+/* offres d'exemple : quatre entreprises, prix écartés de façon reproductible, lots non chiffrés, un prix manquant, une variante libre */
+function demoOffers(){const L=S.tree;if(L.length<6)return false;const r2=v=>Math.round(v*100)/100;
+   const mk=(nom,f,lots,opt={})=>{const pu={};lots.forEach(i=>L[i]&&flatP([L[i]]).forEach((n,k)=>{if(opt.miss===n)return;const w=f[i]*(1+((k*7+nom.length)%9-4)/100);pu[n.id]=r2(num(n.prix)*w)}));
+     return{id:uid(),nom,fichier:nom+" - DPGF.xlsx",date:today(),pu,vl:(opt.vl||[]).map(v=>Object.assign({id:uid()},v))}};
+   const pL=flatP([L[3]]).filter(n=>!n.pse).sort((a,b)=>lineT(a)-lineT(b));
+   S.offres=[
+     mk("Bâti Vienne",{0:.94,1:1.06,3:.97},[0,1,3]),
+     mk("Entreprise Durand",{0:1.08,1:.92,2:1.04,3:1.18,4:.96,5:1.02},[0,1,2,3,4,5],{miss:pL[0],vl:[{lot:L[2].id,nom:"Menuiseries mixtes bois-aluminium",pmv:"1200",rem:"Délai de fabrication +2 semaines"}]}),
+     mk("Menuiseries du Rhône",{2:.88},[2],{vl:[{lot:L[2].id,nom:"Volets roulants solaires sans câblage",pmv:"-450",rem:""}]}),
+     mk("Elec 38",{4:.79},[4]),
+     mk("Couleurs & Co",{5:1.27},[5])];return true}
+/* version de test : ajoute les offres et le planning d'exemple au projet exemple déjà ouvert */
+const TEST_SEED=false;
+function testSeed(){if(!TEST_SEED||!S||S.projet.nom!=="Réhabilitation d'une maison de ville")return;let ch=false;
+  if(!S.offres.length&&demoOffers())ch=true;
+  if(!S.plan.debut&&S.tree.length>=6&&S.tree[1].children.length>=2){const L=S.tree,c=L[1].children;Object.assign(S.plan,{debut:"2027-01-11",fin:"2027-05-28"});
+   L[0].pl={d:10};c[0].pl={d:12,apres:[L[0].id]};c[1].pl={d:8,apres:[c[0].id],dec:2};L[2].pl={d:8,apres:[c[0].id]};L[3].pl={d:22,apres:[L[2].id]};L[4].pl={d:18,apres:[L[1].id]};L[5].pl={d:15,apres:[L[3].id],dec:5};ch=true}
+  if(ch)persist()}
 function demoProject(){
   S=emptyProject();
   Object.assign(S.projet,{nom:"Réhabilitation d'une maison de ville",moa:"Exemple : M. et Mme Martin",adresse:"12 rue des Tanneurs, Vienne",moe:"Votre agence",phase:"DCE",indice:"A",
@@ -896,6 +1067,10 @@ function demoProject(){
   recalcAll();
   const ex=["validee","validee","validee","validee","validee","validee","relecture","relecture","relecture","redaction","relecture","redaction","reviser"];
   flatP(S.tree).forEach((n,i)=>{n.etat=ex[i]||"redaction"});
+  {const L=S.tree,c=L[1].children;S.plan={debut:"2027-01-11",fin:"2027-05-28",conges:[],echelle:"sem"};
+   L[0].pl={d:10};c[0].pl={d:12,apres:[L[0].id]};c[1].pl={d:8,apres:[c[0].id],dec:2};
+   L[2].pl={d:8,apres:[c[0].id]};L[3].pl={d:22,apres:[L[2].id]};L[4].pl={d:18,apres:[L[1].id]};L[5].pl={d:15,apres:[L[3].id],dec:5}}
+  demoOffers();
   S.sel=S.tree[2].children[1].id;S.dirty=false;
   return S;
 }
@@ -905,7 +1080,12 @@ function migrate(s){
   s.projet=Object.assign({nom:"",moa:"",adresse:"",moe:"",phase:"DCE",indice:"A",dispo:"",tva:s.tva||20,surf:"",surfType:"SHAB"},s.projet||{});delete s.tva;
   s.lieux=(Array.isArray(s.lieux)?s.lieux:[]).map(l=>typeof l==="string"?{nom:l,niv:"",s:"",p:"",h:""}:Object.assign({nom:"",niv:"",s:"",p:"",h:""},l)).filter(l=>l.nom);
   s.tree=Array.isArray(s.tree)?s.tree:[];
-  Object.assign(s,{offres:s.offres||[],indices:s.indices||[],open:s.open||{},tab:s.tab||"cctp",view:s.view||"lots",lot:s.lot||"recap",olot:s.olot||"synth"});
+  Object.assign(s,{offres:s.offres||[],indices:s.indices||[],open:s.open||{},tab:s.tab||"cctp",view:s.view||"lots",lot:s.lot||"recap",olot:s.olot||"synth",docTab:s.docTab||(s.tab==="dpgf"?"dpgf":"cctp")});
+  s.plan=Object.assign({debut:"",fin:"",conges:[],echelle:"sem"},s.plan||{});if(!Array.isArray(s.plan.conges))s.plan.conges=[];
+  (function gw(a){a.forEach(n=>{if(n.kind!=="g")return;if(n.dtu==null)n.dtu="";const c=clOf(n),ks=Object.keys(c);
+    if(ks.length){const lines=[];CLAUSES.forEach(([,fs])=>fs.forEach(([k,l])=>{if(c[k])lines.push(l+" : "+String(c[k]).trim())}));n.intro=[(n.intro||"").trim(),...lines].filter(Boolean).join("\n");delete n.cl}
+    gw(n.children)})})(s.tree);
+  if(s.chantier){s.chantier=Object.assign({date:"",seuil:5,marche:{},ts:[],att:{},av:{}},s.chantier)}else s.chantier=null;
   delete s.db;
   (function wg(a){a.forEach(g=>{if(g.kind==="g"){g.cl=clOf(g);wg(g.children)}})})(s.tree);
   walkP(s.tree,n=>{
@@ -1380,16 +1560,18 @@ function renderFiche(){
   if(n.kind==="g"){
     const isLot=!x.parent;
     $("#fiche-h").textContent=isLot?"Fiche lot":"Fiche sous-lot";
-    el.innerHTML=tabBand(isLot?"Fiche lot":"Fiche sous-lot")+`<div class="fiche">
-      <div class="fiche-title"><span class="num">${x.nr}</span><h3>${esc(n.nom||"Sans titre")}</h3></div>
+    el.innerHTML=tabBand(isLot?"Fiche lot":"Fiche sous-lot")+`<div class="fiche" style="position:relative">
+      <button class="fx-share" id="g-share" title="Partager la rédaction ${isLot?"du lot":"du sous-lot"}" aria-label="Partager la rédaction ${isLot?"du lot":"du sous-lot"}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7.5 7.5L12 3l4.5 4.5"/><path d="M8 11H6a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8a1 1 0 0 0-1-1h-2"/></svg></button>
+      <div class="fiche-title" style="padding-right:34px"><span class="num">${x.nr}</span><h3>${esc(n.nom||"Sans titre")}</h3></div>
       <dl class="ro">${isLot?"":`<dt>Lot</dt><dd>${esc(IDX[anc[0].id].nr+" "+anc[0].nom)}</dd>`}
         <dt>Contenu</dt><dd>${countP(n)} prestation${countP(n)>1?"s":""}</dd>
         <dt>Montant HT</dt><dd>${eur(baseT(n))}${pseT(n)?` <span class="hint">+ ${eur(pseT(n))} en PSE</span>`:""}</dd></dl>
       <div class="f"><label for="g-nom">Intitulé</label><input type="text" id="g-nom" value="${esc(n.nom)}"></div>
-      <div class="f"><label for="g-intro">Généralités (texte d'introduction du CCTP)</label><textarea id="g-intro" rows="5" placeholder="Prescriptions communes à l'ensemble du ${isLot?"lot":"sous-lot"} : documents de référence, DTU applicables, interfaces avec les autres lots…">${esc(n.intro)}</textarea></div>
-      <p class="hint" style="margin:6px 0 0">Clauses communes à toutes les prestations du ${isLot?"lot":"sous-lot"} : elles s'impriment une seule fois, dans l'encadré de généralités, au lieu d'être répétées dans chaque article.</p>
-      ${clFields(n)}
+      <div class="f"><label for="g-dtu">DTU et normes de référence</label><textarea id="g-dtu" rows="3" placeholder="Ex. NF DTU 25.41 Ouvrages en plaques de plâtre ; NF DTU 45.10 Isolation des combles…">${esc(n.dtu||"")}</textarea></div>
+      <div class="f"><label for="g-intro">Clauses générales</label><textarea id="g-intro" rows="6" placeholder="Prescriptions communes à l'ensemble du ${isLot?"lot":"sous-lot"} : interfaces avec les autres lots, échantillons, protections, nettoyage, limites de prestation…">${esc(n.intro)}</textarea></div>
+      <p class="hint" style="margin:-6px 0 0">Ces deux champs s'impriment une seule fois, dans l'encadré de généralités ${isLot?"du lot":"du sous-lot"}, au lieu d'être répétés dans chaque article.</p>
       ${isLot?varsHTML(n):""}
+      ${plFields(n,false)}
       <div class="actions" style="border-top:1px solid var(--line);padding-top:14px"><button class="btn" id="g-dup">Dupliquer ${isLot?"le lot":"le sous-lot"}</button><button class="btn" id="g-coef">Coefficient sur les prix…</button><span style="flex:1"></span><button class="btn danger" id="f-del">Supprimer ${isLot?"le lot":"le sous-lot"}</button></div></div>`;
     $("#g-coef").onclick=()=>openCoef(n);
     $("#g-dup").onclick=()=>{const map={},c=JSON.parse(JSON.stringify(n));
@@ -1397,9 +1579,11 @@ function renderFiche(){
       if(c.vars){c.vars=c.vars.map(v=>{const nv=Object.assign({},v,{id:uid(),rempl:(v.rempl||[]).map(id=>map[id]).filter(Boolean)});map[v.id]=nv.id;return nv});walkAll(c,z=>{if(z.vid)z.vid=map[z.vid]})}
       c.nom=(c.nom||"")+" (copie)";x.arr.splice(x.i+1,0,c);S.open[c.id]=true;select(c.id,true);toast((isLot?"Lot":"Sous-lot")+" dupliqué avec ses "+countP(c)+" prestations.",3500)};
     if(isLot)bindVars(n);
-    bindCl(el,n);
+    $("#g-dtu").oninput=e=>{n.dtu=e.target.value;save();renderOut()};
+    $("#g-share").onclick=()=>openShareGroup(n,isLot);
     $("#g-nom").oninput=e=>{n.nom=e.target.value;el.querySelector("h3").textContent=n.nom||"Sans titre";commit()};
     $("#g-intro").oninput=e=>{n.intro=e.target.value;save();renderOut()};
+    bindPl(el,n);
     bindDel(n,countP(n));return;
   }
   $("#fiche-h").textContent="Fiche";
@@ -1483,6 +1667,7 @@ function renderFiche(){
           <span class="lb ttc">Total TTC :</span><b class="ttc" id="f-ttc">${eur(lineT(n)+vat)}</b>
         </div>
       </div>
+      ${plFields(n,true)}
       <div class="actions">
         <button class="btn" id="f-dup">Dupliquer</button>
         <span style="flex:1"></span>
@@ -1501,6 +1686,7 @@ function renderFiche(){
       <div class="nfoot"><span>Date et initiales posées à la création de chaque ligne</span><span style="opacity:1">Vos initiales : <b>${esc(myInit()||"—")}</b> · <button type="button" id="f-ninit">modifier dans Agence</button></span></div>
     </div>
   </div>`;
+  bindPl(el,n);
   libHint(n);
   el.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{FTAB=b.dataset.ft;el.querySelectorAll("[data-ft]").forEach(z=>z.setAttribute("aria-selected",z===b));$("#fp-fiche").hidden=FTAB!=="fiche";$("#fp-det").hidden=FTAB!=="det";$("#fp-notes").hidden=FTAB!=="notes";$("#fiche").scrollTop=0;if(FTAB==="notes"){$("#f-note").focus();drawNoteGut(n)}});
   bindCl(el,n,()=>{const c=clCount(n),b=$("#f-clc");b.textContent=c;b.hidden=!c;syncLive(n);libHint(n)});
@@ -1636,6 +1822,33 @@ function ficheText(n,withPrix){
 }
 const fichesDoc=arts=>JSON.stringify({format:"prescrire-fiches",version:1,cree:new Date().toISOString(),articles:arts},null,1);
 async function openUrlExt(u){if(T&&T.opener&&T.opener.openUrl){try{await T.opener.openUrl(u)}catch(e){toast("Ouverture impossible : "+e,5000)}}else{const a=document.createElement("a");a.href=u;a.target="_blank";a.rel="noopener";document.body.appendChild(a);a.click();a.remove()}}
+
+/* Partager la rédaction d'un lot ou d'un sous-lot : texte, e-mail, ou fichier importable
+   dans un autre projet par « Importer des lots d'un autre projet » */
+function groupText(g,wp){reindex();const L=[(IDX[g.id]?IDX[g.id].nr+" ":"")+(g.nom||"")];
+  if((g.dtu||"").trim())L.push("","DTU et normes de référence : "+g.dtu.trim());if((g.intro||"").trim())L.push("",g.intro.trim());
+  (function w(a){a.forEach(n=>{if(n.kind==="g"){L.push("","— "+IDX[n.id].nr+" "+(n.nom||""));if((n.dtu||"").trim())L.push("DTU et normes de référence : "+n.dtu.trim());if((n.intro||"").trim())L.push(n.intro.trim());w(n.children)}else{L.push("",IDX[n.id].nr+" "+ficheText(n,wp))}})})(g.children);
+  return L.join("\n")}
+function groupFile(g,wp){const c=JSON.parse(JSON.stringify(g));delete c.pl;
+  (function w(n){delete n.note;delete n.nm;delete n.ts;if(n.kind==="g")n.children.forEach(w);else if(!wp)n.prix=0})(c);
+  const P=emptyProject();P.projet.nom="Lot partagé — "+(g.nom||"");P.tree=[c];P.lieux=JSON.parse(JSON.stringify(S.lieux));
+  return JSON.stringify({format:"prescrire-projet",version:APP_VERSION,projet:P},null,1)}
+function openShareGroup(g,isLot){
+  const I=(d)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`,k=isLot?"le lot":"le sous-lot",np=countP(g);
+  const opts=[["copy",I('<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/>'),"Copier le texte","Généralités et descriptifs, à coller dans un e-mail ou dans Word"],
+    ["mail",I('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'),"E-mail avec le texte","Ouvre votre messagerie, le texte dans le message"],
+    ["save",I('<path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/>'),"Enregistrer "+k+"…","Un fichier à reprendre dans un autre projet : bouton « Importer des lots d'un autre projet » de l'arbre"],
+    ["fiches",I('<path d="M4 4h12a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><path d="M8 4v16"/><path d="M12 9h3"/>'),"Enregistrer ses "+np+" prestations comme fiches…","Pour une bibliothèque : Bibliothèque › Importer des fiches"]];
+  openModal(isLot?"Partager le lot":"Partager le sous-lot",`<p style="margin:0"><b>${esc(g.nom||"Sans titre")}</b> · ${np} prestation${np>1?"s":""}, généralités comprises. Les notes internes, le planning et les quantités par lieu restent dans le projet${""}.</p>
+    <label class="chk"><input type="checkbox" id="sh-prix" ${SH.prix?"checked":""}> Inclure les prix unitaires</label>
+    <div class="shareopts">${opts.map(([k,ic,t,d])=>`<button class="shareopt" data-sh="${k}">${ic}<span><b>${t}</b><small>${d}</small></span></button>`).join("")}</div>`,
+    `<button class="btn" data-m="cancel">Fermer</button>`,{focus:false});
+  $("#sh-prix").onchange=e=>SH.prix=e.target.checked;
+  $("#m-body").onclick=async e=>{const b=e.target.closest("[data-sh]");if(!b)return;const kk=b.dataset.sh,wp=SH.prix,txt=groupText(g,wp),base=slug(g.nom||"lot").slice(0,60);
+    if(kk==="copy"){try{await navigator.clipboard.writeText(txt);closeModal();toast("Texte copié.")}catch(err){$("#m-body").insertAdjacentHTML("beforeend",`<textarea readonly style="width:100%;height:160px">${esc(txt)}</textarea>`)}}
+    else if(kk==="mail"){closeModal();openUrlExt(`mailto:?subject=${encodeURIComponent("Prescrire — "+(g.nom||""))}&body=${encodeURIComponent(txt.slice(0,1800))}`)}
+    else if(kk==="save"){closeModal();await saveFile(`Lot - ${base}.json`,new Blob([groupFile(g,wp)],{type:"application/json"}))}
+    else if(kk==="fiches"){closeModal();await saveFile(`Fiches - ${base}.json`,new Blob([fichesDoc(flatP([g]).map(n=>ficheArticle(n,wp)))],{type:"application/json"}))}}}
 function openShare(n){
   const I=(d)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const opts=[
@@ -1698,9 +1911,15 @@ function acPick(k){
 /* ======================================================================
    Colonne de droite : CCTP, DPGF, offres
    ====================================================================== */
-function setTab(t){S.tab=t;["cctp","dpgf","off"].forEach(k=>$("#t-"+k).setAttribute("aria-selected",k===t));
-  $("#seg").hidden=t==="off";$("#otb-sep").hidden=t==="off";const cp=$("#b-copy"),lb=t==="dpgf"?"Copier pour Excel":"Copier pour Word";cp.title=lb;cp.setAttribute("aria-label",lb);cp.hidden=t==="off";$("#o-fin").hidden=t!=="dpgf";persist();renderOut()}
+function setTab(t){if(t==="cctp"||t==="dpgf")S.docTab=t;S.tab=t;wsSync();["cctp","dpgf","off","plan","ch"].forEach(k=>$("#t-"+k).setAttribute("aria-selected",k===t));
+  const nd=t==="off"||t==="plan"||t==="ch";$("#seg").hidden=nd;$("#otb-sep").hidden=nd;const cp=$("#b-copy"),lb=t==="dpgf"?"Copier pour Excel":"Copier pour Word";cp.title=lb;cp.setAttribute("aria-label",lb);cp.hidden=nd;$("#o-fin").hidden=t!=="dpgf";persist();renderOut()}
 $("#t-cctp").onclick=()=>setTab("cctp");$("#t-dpgf").onclick=()=>setTab("dpgf");$("#t-off").onclick=()=>setTab("off");
+const WS={off:"Analyse des offres",plan:"Planning",ch:"Suivi de chantier"};
+const isWS=()=>!!WS[S.tab];
+function wsSync(){const w=isWS();document.body.classList.toggle("ws-mode",w);$("#ws-h").hidden=!w;if(w)$("#ws-t").textContent=WS[S.tab];
+  document.querySelectorAll(".wsb").forEach(b=>b.setAttribute("aria-pressed",b.id==="b-ws-"+S.tab));if(typeof layoutCols==="function")layoutCols()}
+["off","plan","ch"].forEach(k=>{$("#b-ws-"+k).onclick=()=>setTab(S.tab===k?(S.docTab||"cctp"):k)});
+$("#ws-x").onclick=()=>setTab(S.docTab||"cctp");$("#t-plan").onclick=()=>setTab("plan");$("#t-ch").onclick=()=>setTab("ch");
 function setView(v){S.view=v;$("#v-lots").setAttribute("aria-pressed",v==="lots");$("#v-lieux").setAttribute("aria-pressed",v==="lieux");persist();renderOut()}
 $("#v-lots").onclick=()=>setView("lots");$("#v-lieux").onclick=()=>setView("lieux");
 
@@ -1720,8 +1939,8 @@ function clHTML(n,flat){const c=clOf(n);let i=0;
     const items=f.map(([k,l])=>`<p class="cla"><span class="cll">${LET(i++)})</span>${fs.length>1||flat?`<b>${l} :</b> `:""}${esc(c[k])}</p>`).join("");
     return flat?items:`<p class="clg">${g}</p>`+items}).join("")}
 function genHTML(g,isLot){
-  const k=isLot?"lot":"sous-lot";if(!(g.intro||"").trim()&&!clCount(g))return"";
-  return`<div class="c-gen"><p class="gt">Généralités du ${k}</p>${(g.intro||"").trim()?`<p class="intro">${esc(g.intro)}</p>`:""}${clCount(g)?`<p class="gst">Clauses communes à toutes les prestations du ${k}</p>${clHTML(g,true)}`:""}</div>`}
+  const k=isLot?"lot":"sous-lot";if(!(g.intro||"").trim()&&!(g.dtu||"").trim()&&!clCount(g))return"";
+  return`<div class="c-gen"><p class="gt">Généralités du ${k}</p>${(g.dtu||"").trim()?`<p class="intro"><b>DTU et normes de référence :</b> ${esc(g.dtu.trim())}</p>`:""}${(g.intro||"").trim()?`<p class="intro">${esc(g.intro)}</p>`:""}${clCount(g)?`<p class="gst">Clauses communes à toutes les prestations du ${k}</p>${clHTML(g,true)}`:""}</div>`}
 function cctpLieuxHTML(){
   return cctpHead("Prestations classées par lieu")+byLieu().map(([l,arr])=>`<h2>${esc(l)}</h2>`+arr.map(n=>{
       const autres=n.lieux.filter(z=>z!==l);
@@ -1834,10 +2053,320 @@ function dpgfLots(){
   return bar+`<div class="tblwrap">${body}</div>`;
 }
 let CCTP_SEEN=null;
+/*PLAN*/
+/* ======================================================================
+   Phase chantier : marchés figés par lot, travaux supplémentaires (TS),
+   plus et moins-values calculées par rapport au marché, avancement
+   ====================================================================== */
+const pdfSafe=o=>typeof o==="string"?o.replace(/[\u202f\u2009]/g,"\u00a0"):Array.isArray(o)?o.map(pdfSafe):o&&typeof o==="object"&&!(o instanceof Function)?Object.fromEntries(Object.entries(o).map(([k,v])=>[k,typeof v==="function"?v:pdfSafe(v)])):o;
+const TS_MOTIFS=["Demande du maître d'ouvrage","Aléa technique","Erreur ou omission","Prescription réglementaire","Autre"];
+const TS_ST={prop:"En attente",acc:"Accepté",ref:"Refusé"};
+const CH=()=>S.chantier;
+const chLines=l=>flatP([l]).filter(n=>!n.pse&&!n.vid);
+const chTva=n=>n.tva!=null&&n.tva!==""?num(n.tva):projTva();
+function chFreeze(cfg){
+  reindex();const m={};
+  S.tree.forEach(l=>{const c=cfg[l.id]||{},o=c.src&&c.src!=="est"?S.offres.find(x=>x.id===c.src):null;
+    if(o)chLines(l).forEach(n=>{if(o.pu[n.id]!=null)n.prix=num(o.pu[n.id])});
+    const lines={};chLines(l).forEach(n=>lines[n.id]={nom:ttl(n),q:num(n.qte),u:n.u,pu:num(n.prix),t:lineT(n),tva:chTva(n),nr:IDX[n.id].nr});
+    m[l.id]={ent:c.ent||"",src:o?o.id:"est",tot:Object.values(lines).reduce((s,x)=>s+x.t,0),est:baseT(l),lines}});
+  recalcAll&&recalcAll();
+  S.chantier={date:cfg.__date||isoD(new Date()),seuil:num(cfg.__seuil)||5,marche:m,ts:[],att:{},av:{}};
+  S.projet.phase="DET";save();renderHead();renderTree();renderFiche();renderOut()}
+/* écarts d'un lot : une ligne par prestation ajoutée, modifiée ou supprimée */
+function chDiff(l){
+  const C=CH(),M=C.marche[l.id];if(!M)return[];const out=[],seen=new Set();
+  chLines(l).forEach(n=>{seen.add(n.id);const o=M.lines[n.id],t=lineT(n);
+    if(!o)out.push({id:n.id,n,kind:"add",nom:ttl(n),nr:IDX[n.id].nr,q:num(n.qte),u:n.u,pu:num(n.prix),t,d:t,tva:chTva(n)});
+    else if(Math.abs(t-o.t)>0.004||Math.abs(num(n.qte)-o.q)>1e-9||Math.abs(num(n.prix)-o.pu)>0.004)
+      out.push({id:n.id,n,kind:"mod",nom:ttl(n),nr:IDX[n.id].nr,q:num(n.qte),u:n.u,pu:num(n.prix),t,d:t-o.t,o,pn:Math.abs(num(n.prix)-o.pu)>0.004,tva:chTva(n)})});
+  Object.entries(M.lines).forEach(([id,o])=>{if(!seen.has(id))out.push({id,kind:"del",nom:o.nom,nr:o.nr,q:0,u:o.u,pu:o.pu,t:0,d:-o.t,o,tva:o.tva})});
+  return out}
+function chLot(l){const C=CH(),M=C.marche[l.id],df=chDiff(l),ts=C.ts.filter(t=>t.lot===l.id);
+  const of=id=>df.filter(x=>C.att[x.id]===id),sum=a=>a.reduce((s,x)=>s+x.d,0);
+  const T=ts.map(t=>({t,lines:of(t.id),m:sum(of(t.id))}));
+  const free=df.filter(x=>!ts.some(t=>t.id===C.att[x.id]));
+  const acc=T.filter(x=>x.t.st==="acc"),pend=T.filter(x=>x.t.st==="prop");
+  const A=sum(acc.map(x=>({d:x.m}))),Pd=sum(pend.map(x=>({d:x.m}))),act=M.tot+A;
+  const done=chLines(l).reduce((s,n)=>s+lineT(n)*Math.min(100,Math.max(0,num(C.av[n.id]||0)))/100,0);
+  return{M,T,free,A,P:Pd,act,ec:M.tot?A/M.tot*100:0,del:acc.reduce((s,x)=>s+(+x.t.delai||0),0),done,av:act?done/act*100:0}}
+const tsDelay=id=>{const C=CH();return C?C.ts.filter(t=>t.lot===id&&t.st==="acc").reduce((s,t)=>s+(+t.delai||0),0):0};
+const sgn=v=>(v>0.004?"+":v<-0.004?"−":"")+nf.format(Math.abs(v));
+const pct=v=>(v>0?"+":v<0?"−":"")+Math.abs(v).toLocaleString("fr-FR",{maximumFractionDigits:1})+" %";
+let CHL="synth",CH_SEEN=null;
+function chantierHTML(){
+  reindex();const C=CH();
+  if(!C)return`<div class="empty"><p><b>Phase chantier</b></p><p>Une fois les marchés signés, figez le montant de chaque lot avec son entreprise. Prescrire suit ensuite les travaux supplémentaires (TS) : plus et moins-values calculées par rapport au marché, prix nouveaux, délais, avancement et alertes de dépassement.</p><p>Le CCTP et la DPGF restent modifiables : chaque changement apparaît ici comme un écart à rattacher à un TS.</p><p><button class="btn primary" id="ch-go" ${S.tree.length?"":"disabled"}>Passer en phase chantier…</button> ${helpBtn("chantier")}</p></div>`;
+  if(S.sel&&S.sel!==CH_SEEN){CH_SEEN=S.sel;const L=lotOfId(S.sel);if(L&&C.marche[L.id])CHL=L.id}
+  if(CHL!=="synth"&&!(IDX[CHL]&&C.marche[CHL]))CHL="synth";
+  const lots=S.tree.filter(l=>C.marche[l.id]);
+  const nav=`<div class="ch-nav"><select id="ch-l" aria-label="Lot"><option value="synth" ${CHL==="synth"?"selected":""}>Synthèse des marchés</option>${lots.map(l=>`<option value="${l.id}" ${CHL===l.id?"selected":""}>${IDX[l.id].nr} ${esc(l.nom)}${C.marche[l.id].ent?" — "+esc(C.marche[l.id].ent):""}</option>`).join("")}</select>
+    <span style="flex:1"></span><button class="btn" id="ch-xl">Excel</button><button class="btn" id="ch-set" title="Réglages du chantier">Réglages…</button>${helpBtn("chantier")}</div>`;
+  if(CHL==="synth"){
+    let T={M:0,A:0,P:0,act:0,done:0},rows="";
+    lots.forEach(l=>{const r=chLot(l);T.M+=r.M.tot;T.A+=r.A;T.P+=r.P;T.act+=r.act;T.done+=r.done;const al=Math.abs(r.ec)>C.seuil;
+      rows+=`<tr class="art" data-chl="${l.id}"><td class="n">${IDX[l.id].nr}</td><td>${esc(l.nom)}<div class="hint">${esc(r.M.ent||"entreprise à préciser")}${r.free.length?` · <span class="ch-w">${r.free.length} écart${r.free.length>1?"s":""} à rattacher</span>`:""}</div></td>
+      <td class="r">${nf.format(r.M.tot)}</td><td class="r">${r.A?sgn(r.A):"—"}${r.P?`<div class="hint">${sgn(r.P)} en attente</div>`:""}${r.del?`<div class="hint">+${r.del} j</div>`:""}</td><td class="r"><b>${nf.format(r.act)}</b></td><td class="r ${al?"ch-al":""}">${r.A?pct(r.ec):"—"}</td><td class="r nw"><span class="ch-bar"><i style="width:${Math.min(100,r.av)}%"></i></span>${Math.round(r.av)} %</td></tr>`});
+    const ec=T.M?T.A/T.M*100:0;
+    return nav+`<div class="ch-kpi"><div><span>Marchés</span><b>${eur(T.M)}</b></div><div><span>TS acceptés</span><b>${sgn(T.A)} €</b></div><div><span>Montant actualisé</span><b>${eur(T.act)}</b></div><div class="${Math.abs(ec)>C.seuil?"al":""}"><span>Écart</span><b>${pct(ec)}</b></div><div><span>Réalisé</span><b>${eur(T.done)}</b></div></div>
+    <div class="tblwrap"><table class="dpgf ch"><thead><tr><th>Lot</th><th>Lot · entreprise</th><th class="r">Marché</th><th class="r">TS</th><th class="r">Actualisé</th><th class="r">Écart</th><th class="r">Avct</th></tr></thead><tbody>${rows}
+    <tr class="tot st"><td></td><td>Total HT</td><td class="r">${nf.format(T.M)}</td><td class="r">${sgn(T.A)}${T.P?`<div class="hint">${sgn(T.P)} en attente</div>`:""}</td><td class="r">${nf.format(T.act)}</td><td class="r">${pct(ec)}</td><td class="r">${T.act?Math.round(T.done/T.act*100):0} %</td></tr></tbody></table></div>
+    <p class="hint" style="padding:0 12px 16px">Marchés figés le ${frDL(parseD(C.date))}. Alerte au-delà de ${C.seuil} % d'écart sur un lot. Les TS en attente ne sont pas comptés dans le montant actualisé.</p>`}
+  const l=IDX[CHL].n,r=chLot(l),C2=C;
+  const line=x=>{const st=x.kind==="del";return`<tr class="${st?"ch-del":""}"><td class="n">${x.nr}</td><td><span class="ch-nm">${esc(x.nom)}</span> ${x.kind==="add"?'<span class="ch-tag">ajout</span>':""}${x.pn||x.kind==="add"?'<span class="ch-tag pn" title="Prix absent du marché : à faire valider">prix nouveau</span>':""}${st?'<span class="ch-tag">supprimée</span>':""}
+    <div class="hint">${x.o?`marché : ${qf.format(x.o.q)} ${esc(x.o.u||"")} × ${nf.format(x.o.pu)}`:""}${x.o&&!st?" → ":""}${st?"":`${qf.format(x.q)} ${esc(x.u||"")} × ${nf.format(x.pu)}`}</div></td><td class="r ${x.d<0?"ch-mv":""}">${sgn(x.d)}</td>
+    <td><select data-att="${x.id}" aria-label="Rattacher à un TS"><option value="">non rattaché</option>${C2.ts.filter(t=>t.lot===l.id).map(t=>`<option value="${t.id}" ${C2.att[x.id]===t.id?"selected":""}>TS ${t.num}</option>`).join("")}</select></td></tr>`};
+  const ts=r.T.map(({t,lines,m})=>`<section class="ch-ts st-${t.st}"><header><b>TS n° ${t.num}</b><span class="nm">${esc(t.objet||"Sans objet")}</span><span class="ch-st">${TS_ST[t.st]}</span></header>
+    <div class="ch-meta">${frD(parseD(t.date))} · <b class="ch-ent">${esc(t.ent!=null&&t.ent!==""?t.ent:r.M.ent||"entreprise à préciser")}</b>${t.ent&&r.M.ent&&t.ent!==r.M.ent?' <span class="ch-tag">hors titulaire</span>':""} · ${esc(t.motif)}${+t.delai?` · délai +${t.delai} j ouvrés`:""}${t.doc?` · ${esc(t.doc)}`:""}<span style="flex:1"></span><b class="${m<0?"ch-mv":""}">${sgn(m)} € HT</b></div>
+    ${lines.length?`<table class="dpgf ch"><tbody>${lines.map(line).join("")}</tbody></table>`:`<p class="hint" style="margin:6px 0">Aucune prestation rattachée. Modifiez le CCTP ou la DPGF puis rattachez l'écart à ce TS ci-dessous.</p>`}
+    <div class="ch-act"><button class="btn" data-tse="${t.id}">Modifier…</button><button class="btn" data-tsp="${t.id}">Fiche TS (PDF)</button></div></section>`).join("");
+  return nav+`<div class="ch-kpi"><div><span>Marché · ${esc(r.M.ent||"entreprise à préciser")}</span><b>${eur(r.M.tot)}</b></div><div><span>TS acceptés</span><b>${sgn(r.A)} €</b></div><div><span>En attente</span><b>${sgn(r.P)} €</b></div><div><span>Actualisé</span><b>${eur(r.act)}</b></div><div class="${Math.abs(r.ec)>C.seuil?"al":""}"><span>Écart</span><b>${pct(r.ec)}</b></div></div>
+   ${Math.abs(r.ec)>C.seuil?`<div class="pl-alert">Les TS acceptés dépassent le seuil de ${C.seuil} % du marché : un avenant peut être nécessaire.</div>`:""}
+   <div class="ch-h"><span>Travaux supplémentaires</span><button class="btn primary" id="ch-ts">+ Nouveau TS</button></div>${ts||`<p class="hint" style="padding:0 12px">Aucun TS sur ce lot.</p>`}
+   ${r.free.length?`<div class="ch-h"><span>Écarts non rattachés <span class="ch-w">${r.free.length}</span></span></div><div class="tblwrap"><table class="dpgf ch"><tbody>${r.free.map(line).join("")}</tbody></table></div><p class="hint" style="padding:0 12px">Chaque modification du lot depuis la signature du marché apparaît ici tant qu'elle n'est pas rattachée à un TS.</p>`:""}
+   <div class="ch-h"><span>Avancement · situation</span><span class="hint">réalisé ${eur(r.done)} sur ${eur(r.act)}</span></div>
+   <div class="tblwrap"><table class="dpgf ch"><thead><tr><th>N°</th><th>Prestation</th><th class="r">Montant HT</th><th class="r">%</th><th class="r">Réalisé HT</th></tr></thead><tbody>${chLines(l).map(n=>{const v=num(C.av[n.id]||0);return`<tr><td class="n">${IDX[n.id].nr}</td><td>${esc(ttl(n))}</td><td class="r">${nf.format(lineT(n))}</td><td class="r"><input class="numin ch-av" data-av="${n.id}" value="${v||""}" placeholder="0" inputmode="decimal" aria-label="Avancement en %"></td><td class="r" data-avr="${n.id}">${nf.format(lineT(n)*v/100)}</td></tr>`}).join("")}</tbody></table></div><div style="height:20px"></div>`}
+function bindChantier(o){
+  const go=o.querySelector("#ch-go");if(go)go.onclick=openFreeze;
+  const sl=o.querySelector("#ch-l");if(sl)sl.onchange=e=>{CHL=e.target.value;renderOut()};
+  o.querySelectorAll("[data-chl]").forEach(r=>r.onclick=()=>{CHL=r.dataset.chl;renderOut()});
+  const nt=o.querySelector("#ch-ts");if(nt)nt.onclick=()=>openTS(null);
+  o.querySelectorAll("[data-tse]").forEach(b=>b.onclick=()=>openTS(b.dataset.tse));
+  o.querySelectorAll("[data-tsp]").forEach(b=>b.onclick=()=>tsPdf(b.dataset.tsp).then(f=>f&&saveMany([f])));
+  o.querySelectorAll("[data-att]").forEach(s=>{s.onclick=e=>e.stopPropagation();s.onchange=e=>{const C=CH();if(e.target.value)C.att[s.dataset.att]=e.target.value;else delete C.att[s.dataset.att];save();renderOut()}});
+  o.querySelectorAll("[data-av]").forEach(i=>i.oninput=e=>{const C=CH(),v=Math.max(0,Math.min(100,num(e.target.value)));if(v)C.av[i.dataset.av]=v;else delete C.av[i.dataset.av];save();const n=IDX[i.dataset.av].n;o.querySelector(`[data-avr="${n.id}"]`).textContent=nf.format(lineT(n)*v/100)});
+  o.querySelectorAll(".ch-av").forEach(i=>i.onchange=()=>renderOut());
+  const xl=o.querySelector("#ch-xl");if(xl)xl.onclick=()=>chXlsx().then(f=>f&&saveMany([f])).catch(er=>toast("Export impossible : "+(er&&er.message||er),5000));
+  const st=o.querySelector("#ch-set");if(st)st.onclick=openChSet}
+function openFreeze(){
+  reindex();const cfg={};
+  const opt=l=>{const of=S.offres.filter(o=>covered(o,l));const best=of.length?of.reduce((a,b)=>oBase(a,l)<=oBase(b,l)?a:b):null;cfg[l.id]={src:best?best.id:"est",ent:best?best.nom:""};
+    return`<tr><td class="n">${IDX[l.id].nr}</td><td>${esc(l.nom)}</td><td><select data-fs="${l.id}"><option value="est">Estimation · ${nf.format(baseT(l))}</option>${of.map(o=>`<option value="${o.id}" ${best===o?"selected":""}>${esc(o.nom)} · ${nf.format(oBase(o,l))}</option>`).join("")}</select></td><td><input type="text" data-fe="${l.id}" value="${esc(cfg[l.id].ent)}" placeholder="Entreprise titulaire"></td></tr>`};
+  openModal("Passer en phase chantier",`<p class="hint" style="margin:0 0 10px">Pour chaque lot, choisissez le montant du marché signé et l'entreprise titulaire. ${S.offres.length?"Si vous retenez une offre, ses prix unitaires remplacent ceux de l'estimation dans la DPGF.":"Aucune offre importée : les marchés reprennent les montants de l'estimation."}</p>
+    <div class="tblwrap"><table class="dpgf ch"><thead><tr><th>Lot</th><th>Désignation</th><th>Marché</th><th>Entreprise</th></tr></thead><tbody>${S.tree.map(opt).join("")}</tbody></table></div>
+    <div class="grid2" style="margin-top:12px"><div class="f"><label for="fz-d">Date de signature des marchés</label><input type="date" id="fz-d" value="${isoD(new Date())}"></div><div class="f"><label for="fz-s">Alerte au-delà de (% d'écart par lot)</label><input type="text" class="numin" id="fz-s" value="5" inputmode="decimal"></div></div>
+    <p class="hint">La phase du dossier passe à DET. Figez d'abord l'indice DCE (fenêtre Projet) si vous voulez garder une trace du dossier de consultation.</p>`,
+    `<button class="btn" data-m="cancel">Annuler</button><button class="btn primary" id="fz-go">Figer les marchés</button>`,{focus:false});
+  const b=$("#m-body");
+  b.querySelectorAll("[data-fs]").forEach(s=>s.onchange=e=>{const c=cfg[s.dataset.fs];c.src=e.target.value;const o=S.offres.find(x=>x.id===c.src);const i=b.querySelector(`[data-fe="${s.dataset.fs}"]`);if(o&&(!i.value||S.offres.some(x=>x.nom===i.value))){i.value=o.nom;c.ent=o.nom}});
+  b.querySelectorAll("[data-fe]").forEach(i=>i.oninput=e=>{cfg[i.dataset.fe].ent=e.target.value});
+  $("#fz-go").onclick=()=>{cfg.__date=$("#fz-d").value;cfg.__seuil=$("#fz-s").value;closeModal();chFreeze(cfg);toast("Marchés figés : la phase chantier est ouverte.",3500)}}
+function openChSet(){const C=CH();
+  openModal("Réglages du chantier",`<div class="tblwrap"><table class="dpgf ch"><thead><tr><th>Lot</th><th>Entreprise</th><th class="r">Marché HT</th></tr></thead><tbody>${S.tree.filter(l=>C.marche[l.id]).map(l=>`<tr><td class="n">${IDX[l.id].nr}</td><td><input type="text" data-se="${l.id}" value="${esc(C.marche[l.id].ent)}" placeholder="${esc(l.nom)}"></td><td class="r">${nf.format(C.marche[l.id].tot)}</td></tr>`).join("")}</tbody></table></div>
+    <div class="grid2" style="margin-top:12px"><div class="f"><label for="cs-s">Alerte au-delà de (% d'écart par lot)</label><input type="text" class="numin" id="cs-s" value="${C.seuil}"></div><div class="f"><label for="cs-d">Date de signature des marchés</label><input type="date" id="cs-d" value="${esc(C.date)}"></div></div>
+    <p class="hint">Les lots ajoutés après la signature n'ont pas de marché : <button class="link" id="cs-add">figer les nouveaux lots</button>.</p>
+    <fieldset><legend>Revenir avant le chantier</legend><p class="hint" style="margin:0 0 8px">Supprime les marchés, les TS et l'avancement. Les prestations et les prix restent tels qu'ils sont.</p><button class="btn danger" id="cs-x">Quitter la phase chantier</button></fieldset>`,
+    `<button class="btn primary" data-m="close">Fermer</button>`,{onClose:()=>renderOut()});
+  $("#m-body").querySelectorAll("[data-se]").forEach(i=>i.oninput=e=>{C.marche[i.dataset.se].ent=e.target.value;save()});
+  $("#cs-s").oninput=e=>{C.seuil=num(e.target.value)||5;save()};$("#cs-d").onchange=e=>{C.date=e.target.value;save()};
+  $("#cs-add").onclick=()=>{let k=0;S.tree.forEach(l=>{if(!C.marche[l.id]){const lines={};chLines(l).forEach(n=>lines[n.id]={nom:ttl(n),q:num(n.qte),u:n.u,pu:num(n.prix),t:lineT(n),tva:chTva(n),nr:IDX[n.id].nr});C.marche[l.id]={ent:"",src:"est",tot:Object.values(lines).reduce((s,x)=>s+x.t,0),est:baseT(l),lines};k++}});save();closeModal();toast(k?k+" lot"+(k>1?"s":"")+" ajouté"+(k>1?"s":"")+" aux marchés.":"Tous les lots ont déjà un marché.",3000)};
+  const x=$("#cs-x");x.onclick=()=>{if(x.dataset.sure){S.chantier=null;save();closeModal();toast("Phase chantier quittée.",3000);return}x.dataset.sure=1;x.textContent="Confirmer : tout supprimer"}}
+function openTS(id){
+  const C=CH(),l=IDX[CHL].n,t=id?C.ts.find(x=>x.id===id):{id:uid(),lot:l.id,num:C.ts.filter(x=>x.lot===l.id).reduce((m,x)=>Math.max(m,x.num),0)+1,date:isoD(new Date()),ent:C.marche[l.id].ent||"",objet:"",motif:TS_MOTIFS[0],st:"prop",delai:0,doc:""};
+  const free=chDiff(l).filter(x=>!C.ts.some(z=>z.id===C.att[x.id]));
+  openModal(id?`TS n° ${t.num} · ${esc(l.nom)}`:`Nouveau TS · ${esc(l.nom)}`,`<div class="grid2"><div class="f"><label for="ts-n">Numéro</label><input type="text" class="numin" id="ts-n" value="${t.num}"></div><div class="f"><label for="ts-d">Date</label><input type="date" id="ts-d" value="${esc(t.date)}"></div></div>
+    <div class="f"><label for="ts-e">Entreprise qui réalise les travaux</label><input type="text" id="ts-e" list="ts-el" value="${esc(t.ent!=null?t.ent:C.marche[l.id].ent||"")}" placeholder="Titulaire du lot, sous-traitant ou autre entreprise"><datalist id="ts-el">${[...new Set([...Object.values(C.marche).map(m=>m.ent),...S.offres.map(o=>o.nom),...C.ts.map(z=>z.ent)].filter(Boolean))].map(e=>`<option value="${esc(e)}">`).join("")}</datalist>
+      <p class="hint" style="margin:4px 0 0">Par défaut, le titulaire du lot. Indiquez une autre entreprise si le TS lui est confié.</p></div>
+    <div class="f"><label for="ts-o">Objet</label><input type="text" id="ts-o" value="${esc(t.objet)}" placeholder="Ex. Remplacement du linteau découvert à la démolition"></div>
+    <div class="grid2"><div class="f"><label for="ts-m">Motif</label><select id="ts-m">${TS_MOTIFS.map(m=>`<option ${m===t.motif?"selected":""}>${m}</option>`).join("")}</select></div><div class="f"><label for="ts-s">Statut</label><select id="ts-s">${Object.entries(TS_ST).map(([k,v])=>`<option value="${k}" ${k===t.st?"selected":""}>${v}</option>`).join("")}</select></div></div>
+    <div class="grid2"><div class="f"><label for="ts-dl">Incidence sur le délai (j ouvrés)</label><input type="text" class="numin" id="ts-dl" value="${t.delai||""}" placeholder="0"></div><div class="f"><label for="ts-doc">Pièce liée</label><input type="text" id="ts-doc" value="${esc(t.doc||"")}" placeholder="Ex. Devis n° 2027-014, CR n° 6"></div></div>
+    ${!id&&free.length?`<fieldset><legend>Rattacher les écarts en cours</legend>${free.map(x=>`<label class="recap-opt"><input type="checkbox" data-tf="${x.id}" checked><span class="n">${x.nr}</span><span>${esc(x.nom)}</span><span class="a">${sgn(x.d)}</span></label>`).join("")}</fieldset>`:""}
+    ${id?`<div><button class="btn danger" id="ts-x">Supprimer ce TS</button></div>`:""}`,
+    `<button class="btn" data-m="cancel">Annuler</button><button class="btn primary" id="ts-ok">${id?"Enregistrer":"Créer le TS"}</button>`);
+  $("#ts-ok").onclick=()=>{Object.assign(t,{num:parseInt($("#ts-n").value,10)||t.num,date:$("#ts-d").value,ent:$("#ts-e").value.trim(),objet:$("#ts-o").value.trim(),motif:$("#ts-m").value,st:$("#ts-s").value,delai:parseInt($("#ts-dl").value,10)||0,doc:$("#ts-doc").value.trim()});
+    if(!id){C.ts.push(t);$("#m-body").querySelectorAll("[data-tf]").forEach(c=>{if(c.checked)C.att[c.dataset.tf]=t.id})}
+    save();closeModal();renderOut()};
+  const x=$("#ts-x");if(x)x.onclick=()=>{if(!x.dataset.sure){x.dataset.sure=1;x.textContent="Confirmer la suppression";return}C.ts=C.ts.filter(z=>z.id!==t.id);Object.keys(C.att).forEach(k=>{if(C.att[k]===t.id)delete C.att[k]});save();closeModal();renderOut()}}
+async function tsPdf(id){
+  if(!needLib("pdfMake"))return null;reindex();const C=CH(),t=C.ts.find(x=>x.id===id),l=IDX[t.lot].n,M=C.marche[l.id],P=S.projet;
+  const lines=chDiff(l).filter(x=>C.att[x.id]===id),ht=lines.reduce((s,x)=>s+x.d,0),tva=lines.reduce((s,x)=>s+x.d*x.tva/100,0),r=chLot(l);
+  const MUT="#5b6674",ACC="#0050c8";
+  const body=[[{text:"N°",style:"th"},{text:"Désignation",style:"th"},{text:"Marché",style:"th",alignment:"right"},{text:"Nouveau",style:"th",alignment:"right"},{text:"Plus ou moins-value HT",style:"th",alignment:"right"}]].concat(lines.map(x=>[
+    {text:x.nr,color:MUT},{stack:[{text:x.nom,decoration:x.kind==="del"?"lineThrough":undefined},{text:(x.kind==="add"?"Prestation ajoutée · prix nouveau":x.kind==="del"?"Prestation supprimée":x.pn?"Prix nouveau":"Quantité modifiée"),fontSize:7.5,color:MUT}]},
+    {text:x.o?`${qf.format(x.o.q)} ${x.o.u||""} × ${nf.format(x.o.pu)}`:"—",alignment:"right",fontSize:8},{text:x.kind==="del"?"—":`${qf.format(x.q)} ${x.u||""} × ${nf.format(x.pu)}`,alignment:"right",fontSize:8},{text:sgn(x.d),alignment:"right"}]));
+  const box=(h)=>({stack:[{text:h,style:"th"},{text:"Date, nom et signature",fontSize:7.5,color:MUT,margin:[0,2,0,0]}],margin:[0,0,0,0],border:[true,true,true,true]});
+  const dd={pageSize:"A4",pageMargins:[44,48,44,48],info:{title:`TS ${t.num} — ${l.nom}`},
+    content:[{columns:[{text:P.nom||"",bold:true,fontSize:13},{text:`${P.moe||""}`,alignment:"right",fontSize:9,color:MUT}]},{text:P.adresse||"",fontSize:9,color:MUT,margin:[0,2,0,14]},
+      {text:`Travaux supplémentaires n° ${t.num}`,fontSize:18,bold:true,color:ACC},{text:`Lot ${IDX[l.id].nr} ${l.nom}`,fontSize:11,margin:[0,2,0,12]},
+      {table:{widths:[110,"*"],body:[["Entreprise",(t.ent||M.ent||"—")+(t.ent&&M.ent&&t.ent!==M.ent?` (titulaire du lot : ${M.ent})`:"")],["Date",frDL(parseD(t.date))],["Objet",t.objet||"—"],["Motif",t.motif],["Statut",TS_ST[t.st]],["Incidence sur le délai",+t.delai?`+${t.delai} jours ouvrés`:"aucune"],["Pièce liée",t.doc||"—"]].map(([a,b])=>[{text:a,color:MUT,fontSize:9},{text:b,fontSize:9.5}])},layout:"noBorders",margin:[0,0,0,14]},
+      {table:{headerRows:1,widths:[34,"*",88,88,80],body},layout:{hLineWidth:()=>0.4,vLineWidth:()=>0,hLineColor:()=>"#d3d9e0",paddingTop:()=>4,paddingBottom:()=>4}},
+      {table:{widths:["*",90],body:[["Montant HT du TS",{text:sgn(ht)+" €",alignment:"right",bold:true}],["TVA",{text:sgn(tva)+" €",alignment:"right"}],["Montant TTC du TS",{text:sgn(ht+tva)+" €",alignment:"right",bold:true}]]},layout:"noBorders",margin:[240,10,0,14]},
+      {table:{widths:["*",90],body:[["Marché initial HT",{text:nf.format(M.tot)+" €",alignment:"right"}],["Cumul des TS acceptés HT (avant celui-ci)",{text:sgn(r.A-(t.st==="acc"?ht:0))+" €",alignment:"right"}],["Montant actualisé HT avec ce TS",{text:nf.format(M.tot+r.A-(t.st==="acc"?ht:0)+ht)+" €",alignment:"right",bold:true}],["Écart cumulé sur le marché",{text:pct(M.tot?(r.A-(t.st==="acc"?ht:0)+ht)/M.tot*100:0),alignment:"right"}]].map(([a,b])=>[{text:a,fontSize:9,color:MUT},Object.assign(b,{fontSize:9})])},layout:"noBorders",margin:[0,0,0,26]},
+      {table:{widths:["*","*","*"],heights:[70],body:[[box("L'entreprise"),box("Le maître d'œuvre"),box("Le maître d'ouvrage")]]},layout:{hLineColor:()=>"#d3d9e0",vLineColor:()=>"#d3d9e0"}}],
+    styles:{th:{fontSize:8,bold:true,color:MUT}},defaultStyle:{fontSize:9.5,color:"#1b2430"}};
+  const blob=await new Promise((ok,ko)=>{try{pdfMake.createPdf(pdfSafe(dd)).getBlob(ok)}catch(e){ko(e)}});
+  return{name:`${slug(P.nom)} - Lot ${IDX[l.id].nr} - TS ${t.num}.pdf`,blob}}
+async function chXlsx(){
+  if(!needLib("ExcelJS"))return null;reindex();const C=CH(),P=S.projet,wb=new ExcelJS.Workbook();wb.creator="Prescrire";
+  const NF='#,##0.00;[Red]-#,##0.00',hd=r=>{r.font={bold:true,size:9,color:{argb:"FF5B6674"}};r.eachCell(c=>c.border={bottom:{style:"thin",color:{argb:"FFD3D9E0"}}})};
+  const ws=wb.addWorksheet("Synthèse",{pageSetup:{paperSize:9,orientation:"landscape",fitToPage:true,fitToWidth:1,fitToHeight:0}});
+  ws.columns=[{width:7},{width:38},{width:26},{width:14},{width:14},{width:14},{width:14},{width:10},{width:9},{width:12}];
+  ws.getCell("A1").value=P.nom;ws.getCell("A1").font={bold:true,size:14};ws.getCell("A2").value=`Suivi financier du chantier · marchés signés le ${frD(parseD(C.date))} · édité le ${frD(new Date())}`;ws.getCell("A2").font={color:{argb:"FF5B6674"}};
+  hd(ws.getRow(4));ws.getRow(4).values=["Lot","Désignation","Entreprise","Marché HT","TS acceptés","TS en attente","Actualisé HT","Écart","Délai (j)","Réalisé HT"];hd(ws.getRow(4));
+  const lots=S.tree.filter(l=>C.marche[l.id]);
+  lots.forEach((l,i)=>{const r=chLot(l),k=5+i,row=ws.getRow(k);row.values=[IDX[l.id].nr,l.nom,r.M.ent,r.M.tot,r.A,r.P,{formula:`D${k}+E${k}`,result:r.act},{formula:`IF(D${k}=0,0,E${k}/D${k})`,result:r.ec/100},r.del,r.done];
+    [4,5,6,7,10].forEach(c=>row.getCell(c).numFmt=NF);row.getCell(8).numFmt="0.0%";if(Math.abs(r.ec)>C.seuil)row.getCell(8).font={bold:true,color:{argb:"FFA3361C"}}});
+  const e=4+lots.length,tr=ws.getRow(e+1);tr.values=["","Total HT","",...["D","E","F","G"].map(c=>({formula:`SUM(${c}5:${c}${e})`})),{formula:`IF(D${e+1}=0,0,E${e+1}/D${e+1})`},{formula:`SUM(I5:I${e})`},{formula:`SUM(J5:J${e})`}];tr.font={bold:true};[4,5,6,7,10].forEach(c=>tr.getCell(c).numFmt=NF);tr.getCell(8).numFmt="0.0%";
+  const wt=wb.addWorksheet("TS");wt.columns=[{width:7},{width:8},{width:11},{width:24},{width:40},{width:26},{width:12},{width:8},{width:10},{width:44},{width:14}];
+  wt.getRow(1).values=["Lot","TS","Date","Entreprise","Objet","Motif","Statut","Délai","N°","Prestation","Montant HT"];hd(wt.getRow(1));let k=2;
+  lots.forEach(l=>{chLot(l).T.forEach(({t,lines,m})=>{const a=wt.getRow(k++);a.values=[IDX[l.id].nr,t.num,frD(parseD(t.date)),t.ent||C.marche[l.id].ent||"",t.objet,t.motif,TS_ST[t.st],t.delai||"","","Total du TS",m];a.font={bold:true};a.getCell(11).numFmt=NF;
+    lines.forEach(x=>{const b=wt.getRow(k++);b.values=["","","","","","","","",x.nr,(x.kind==="del"?"[supprimée] ":x.kind==="add"?"[ajout] ":x.pn?"[prix nouveau] ":"")+x.nom,x.d];b.getCell(11).numFmt=NF;if(x.kind==="del")b.getCell(10).font={strike:true}})})});
+  const buf=await wb.xlsx.writeBuffer();return{name:`${slug(P.nom)} - Suivi de chantier.xlsx`,blob:new Blob([buf],{type:XLSX_MIME})}}
+
+/* ======================================================================
+   Planning (Gantt) : durées en jours ouvrés, enchaînements fin → début,
+   calendrier (week-ends, jours fériés, congés de chantier), recalcul en cascade
+   ====================================================================== */
+const PLAN_DEF={debut:"",fin:"",conges:[],echelle:"sem"};
+const isoD=d=>d.toISOString().slice(0,10);
+const parseD=s=>{if(!s)return null;const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s);return m?new Date(Date.UTC(+m[1],+m[2]-1,+m[3])):null};
+const addD=(d,k)=>new Date(d.getTime()+k*864e5);
+const frD=d=>d?d.toLocaleDateString("fr-FR",{day:"2-digit",month:"2-digit",year:"2-digit",timeZone:"UTC"}):"";
+const frDL=d=>d?d.toLocaleDateString("fr-FR",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"}):"";
+function paques(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;return new Date(Date.UTC(y,mo-1,da))}
+const FERIES={};
+function feries(y){if(FERIES[y])return FERIES[y];const p=paques(y),s=new Set(["01-01","05-01","05-08","07-14","08-15","11-01","11-11","12-25"].map(x=>y+"-"+x));
+  [1,39,50].forEach(k=>s.add(isoD(addD(p,k))));return FERIES[y]=s}
+function planCal(){const P=S.plan||PLAN_DEF,C=(P.conges||[]).map(c=>[parseD(c.du),parseD(c.au)]).filter(c=>c[0]&&c[1]);
+  return d=>{const w=d.getUTCDay();if(w===0||w===6)return false;const s=isoD(d);if(feries(d.getUTCFullYear()).has(s))return false;return!C.some(([a,b])=>d>=a&&d<=b)}}
+function nextWork(d,ok){let x=d;for(let i=0;i<4000&&!ok(x);i++)x=addD(x,1);return x}
+function addWork(d,n,ok){let x=nextWork(d,ok),k=1;while(k<n){x=nextWork(addD(x,1),ok);k++}return x} /* fin d'une tâche de n jours commencée le jour ouvré d */
+function skipWork(d,n,ok){let x=d;for(let k=0;k<n;k++)x=nextWork(addD(x,1),ok);return x}
+function workBetween(a,b,ok){let n=0,x=a;if(b<a)return-workBetween(b,a,ok);while(x<b){x=addD(x,1);if(ok(x))n++}return n}
+const plOf=n=>n.pl||{};
+function plTasks(){const L=[];(function w(a,par,dep){a.forEach(n=>{L.push({n,par,dep});if(n.kind==="g")w(n.children,n,dep+1)})})(S.tree,null,0);return L}
+/* calcule les dates : PLAN[id]={s,e,late,minLate,warn} */
+let PLAN={},PLAN_ERR="",PRE={};
+/* prédécesseurs effectifs : ceux choisis, sinon pour un sous-lot le sous-lot planifié qui le précède (enchaînement par défaut) */
+function plPre(t,by,res){const pl=plOf(t.n);if((pl.apres||[]).length)return pl.apres.filter(id=>by[id]);
+  if(t.n.kind!=="g"||!t.par||pl.par)return[];const sib=t.par.children,i=sib.indexOf(t.n);
+  for(let k=i-1;k>=0;k--){const z=sib[k];if(z.kind!=="g")continue;const r=res(by[z.id]);if(r&&r.e)return[z.id]}return[]}
+function planCompute(){
+  PLAN={};PLAN_ERR="";const P=S.plan||PLAN_DEF,ok=planCal(),d0=parseD(P.debut);if(!d0)return PLAN;
+  const T=plTasks(),by={};T.forEach(t=>by[t.n.id]=t);const busy=new Set(),memo={},m0={};PRE={};
+  const loop=()=>{PLAN_ERR="Un enchaînement tourne en boucle : il a été ignoré."};
+  function s0(t){const id=t.n.id;if(m0[id])return m0[id];if(busy.has("s"+id)){loop();return d0}busy.add("s"+id);
+    const pl=plOf(t.n);let s=t.par?s0(by[t.par.id]):d0;const pre=plPre(t,by,res);PRE[id]=pre;
+    pre.forEach(pid=>{const q=by[pid];if(!q)return;const r=res(q);if(r&&r.e){const st=skipWork(r.e,Math.max(0,+pl.dec||0)+1,ok);if(st>s)s=st}});
+    const m=parseD(pl.min);if(m&&m>s)s=m;
+    busy.delete("s"+id);return m0[id]=nextWork(s,ok)}
+  function res(t){const id=t.n.id;if(memo[id])return memo[id];if(busy.has(id)){loop();return{}}busy.add(id);
+    const pl=plOf(t.n);let d=+pl.d||0,s=s0(t),e=null,over=0,der=false;
+    if(t.n.kind==="g"){let cs=null,ce=null;t.n.children.forEach(c=>{const r=res(by[c.id]);if(r.e){if(!cs||r.s<cs)cs=r.s;if(!ce||r.e>ce)ce=r.e}});
+      if(ce){e=ce;s=cs;der=true;d=0}}
+    if(!e&&d>0)e=addWork(s,d,ok);
+    const tsd=t.dep===0&&e?tsDelay(id):0;if(tsd)e=skipWork(e,tsd,ok);
+    busy.delete(id);return memo[id]={s,e,d:e?workBetween(s,e,ok)+1:0,own:d>0,der,over,tsd}}
+  T.forEach(t=>res(t));
+  Object.keys(memo).forEach(id=>{if(memo[id].e)PLAN[id]=memo[id]});
+  const ends=Object.values(PLAN).map(r=>r.e);
+  PLAN.__fin=ends.length?new Date(Math.max(...ends)):null;PLAN.__deb=d0;
+  const f=parseD(P.fin);PLAN.__late=f&&PLAN.__fin&&PLAN.__fin>f?workBetween(f,PLAN.__fin,ok):0;
+  return PLAN}
+/* liste des tâches pouvant précéder n (sans créer de boucle) */
+function plCandidates(n){const T=plTasks();const down=new Set();(function mark(id){T.forEach(t=>{if(down.has(t.n.id))return;if((plOf(t.n).apres||[]).includes(id)||t.n.id===id){down.add(t.n.id);mark(t.n.id)}})})(n.id);
+  walkAll(n,z=>down.add(z.id));ancestors(n.id).forEach(a=>down.add(a.id));
+  return T.filter(t=>!down.has(t.n.id)&&(t.n.kind==="g"||(+plOf(t.n).d>0)))}
+function plFields(n,isP){
+  const pl=plOf(n),cand=plCandidates(n),r=planCompute()[n.id],P=S.plan||PLAN_DEF;
+  const nm=id=>{const x=IDX[id];return x?x.nr+" "+(x.n.kind==="g"?x.n.nom:ttl(x.n)):"?"};
+  const tags=(pl.apres||[]).filter(id=>IDX[id]).map(id=>`<span class="pl-tag">${esc(nm(id))}<button data-plx="${id}" aria-label="Retirer">×</button></span>`).join("");
+  const info=!P.debut?`<span class="hint">Indiquez la date de début du chantier dans la fenêtre Projet pour calculer les dates.</span>`
+    :r?`<span class="pl-res">Du <b>${frD(r.s)}</b> au <b>${frD(r.e)}</b> · ${r.d} j ouvrés${r.own?"":" (d'après son contenu)"}${r.tsd?`, dont ${r.tsd} j de TS acceptés`:""}</span>${r.over?`<span class="pl-warn">Son contenu dépasse la durée prévue de ${r.over} j.</span>`:""}${pl.min&&r.s>parseD(pl.min)?`<span class="pl-warn">L'enchaînement repousse le début au-delà du ${frD(parseD(pl.min))}.</span>`:""}`
+    :`<span class="hint">${isP?"Sans durée, la prestation suit son lot.":"Sans durée ni contenu planifié, pas de barre dans le planning."}</span>`;
+  return`<${isP?"details":"fieldset"} class="pl-f" ${isP&&(pl.d||(pl.apres||[]).length)?"open":""}>${isP?"<summary>Planning <span class=\"hint\">(facultatif)</span></summary>":"<legend>Planning</legend>"}
+    <div class="pl-grid">
+      <label for="pl-d">Durée</label><span>${r&&r.der?`<input type="text" class="numin" id="pl-d" value="${r.d}" disabled> j ouvrés <span class="hint">: la somme de ses sous-lots, enchaînés les uns après les autres. Elle suit leurs modifications.</span>`:`<input type="text" inputmode="numeric" class="numin" id="pl-d" value="${pl.d||""}" placeholder="${isP?"—":"0"}"> j ouvrés`}</span>
+      <label for="pl-add">Commence après</label><span class="pl-pre">${tags}${!isP&&IDX[n.id]&&IDX[n.id].parent&&!(pl.apres||[]).length?`<span class="hint">${pl.par?"en même temps que le sous-lot précédent":PRE[n.id]&&PRE[n.id].length?"le sous-lot précédent (par défaut)":"le début du lot"}</span>`:""}<select id="pl-add"><option value="">${cand.length?"ajouter…":"rien à enchaîner"}</option>${cand.map(t=>`<option value="${t.n.id}">${"  ".repeat(t.dep)}${esc(nm(t.n.id))}</option>`).join("")}</select></span>
+      ${!isP&&IDX[n.id]&&IDX[n.id].parent?`<span></span><label class="chk" style="margin:0"><input type="checkbox" id="pl-par" ${pl.par?"checked":""}> En même temps que le sous-lot précédent</label>`:""}
+      <label for="pl-dec">Décalage</label><span><input type="text" inputmode="numeric" class="numin" id="pl-dec" value="${pl.dec||""}" placeholder="0"> j ouvrés après la fin <span class="hint">(séchage, délai de livraison…)</span></span>
+      <label for="pl-min">Au plus tôt le</label><span><input type="date" id="pl-min" value="${esc(pl.min||"")}"></span>
+    </div><div class="pl-info" id="pl-info">${info}</div></${isP?"details":"fieldset"}>`}
+function bindPl(el,n,re){const RE=()=>(re||renderFiche)();
+  const P=()=>n.pl||(n.pl={});const upd=()=>{if(n.pl&&!n.pl.d&&!(n.pl.apres||[]).length&&!n.pl.dec&&!n.pl.min&&!n.pl.par)delete n.pl;save();renderOut();const i=el.querySelector("#pl-info");if(i){const box=document.createElement("div");box.innerHTML=plFields(n,n.kind==="p");i.innerHTML=box.querySelector("#pl-info").innerHTML}};
+  const d=el.querySelector("#pl-d");if(!d)return;
+  if(!d.disabled)d.oninput=e=>{const v=parseInt(e.target.value,10);P().d=v>0?v:0;if(!P().d)delete n.pl.d;upd()};
+  {const pp=el.querySelector("#pl-par");if(pp)pp.onchange=e=>{if(e.target.checked)P().par=true;else if(n.pl)delete n.pl.par;upd();RE()}}
+  el.querySelector("#pl-dec").oninput=e=>{const v=parseInt(e.target.value,10);P().dec=v>0?v:0;if(!P().dec)delete n.pl.dec;upd()};
+  el.querySelector("#pl-min").onchange=e=>{P().min=e.target.value;if(!P().min)delete n.pl.min;upd()};
+  el.querySelector("#pl-add").onchange=e=>{const v=e.target.value;if(!v)return;const a=P().apres||(P().apres=[]);if(!a.includes(v))a.push(v);save();RE();renderOut()};
+  el.querySelectorAll("[data-plx]").forEach(b=>b.onclick=()=>{P().apres=(P().apres||[]).filter(x=>x!==b.dataset.plx);if(!P().apres.length)delete n.pl.apres;upd();RE()});
+}
+/* vue Planning */
+function planHTML(){
+  reindex();const P=S.plan||PLAN_DEF;planCompute();
+  if(!P.debut)return`<div class="empty"><p><b>Planning</b></p><p>Indiquez la date de début du chantier dans la fenêtre Projet, puis une durée en jours ouvrés sur les lots ou sous-lots (fiche du lot, rubrique Planning). Les dates se calculent ensuite toutes seules à partir des enchaînements.</p><p><button class="btn primary" data-plgo="proj">Ouvrir la fenêtre Projet</button></p></div>`;
+  const rows=[];(function w(a,dep){a.forEach(n=>{const r=PLAN[n.id];if(n.kind==="g"){if(r||dep===0)rows.push({n,dep,r});if(S.plopen&&S.plopen[n.id]!==false||dep===0&&(!S.plopen||S.plopen[n.id]!==false))w(n.children,dep+1)}else if(r&&r.own)rows.push({n,dep,r})})})(S.tree,0);
+  const d0=PLAN.__deb,f=parseD(P.fin),end=new Date(Math.max(PLAN.__fin||d0,f||d0,addD(d0,28)));
+  const mon=d=>addD(d,-((d.getUTCDay()+6)%7));const W0=addD(mon(d0),-14),nW=Math.ceil((end-W0)/864e5/7)+3;
+  const sem=P.echelle!=="mois",cw=sem?26:8,px=d=>Math.round((d-W0)/864e5*(cw/7));const W=nW*cw;
+  let head="";if(sem){for(let i=0;i<nW;i++){const d=addD(W0,i*7);head+=`<span class="gt-c" style="left:${i*cw}px;width:${cw}px" title="Semaine du ${frD(d)}">${d.getUTCDate()}</span>`}}
+  const months=[];{let d=new Date(Date.UTC(W0.getUTCFullYear(),W0.getUTCMonth(),1));while(d<=addD(W0,nW*7)){months.push(d);d=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,1))}}
+  const mh=months.map(m=>{const a=Math.max(0,px(m)),b=Math.min(W,px(new Date(Date.UTC(m.getUTCFullYear(),m.getUTCMonth()+1,1))));return b-a>=30?`<span class="gt-m" style="left:${a}px;width:${b-a}px">${m.toLocaleDateString("fr-FR",{month:sem?"short":"long",year:"2-digit",timeZone:"UTC"})}</span>`:""}).join("");
+  const conges=(P.conges||[]).map(c=>[parseD(c.du),parseD(c.au)]).filter(c=>c[0]&&c[1]).map(([a,b])=>`<span class="gt-off" style="left:${px(a)}px;width:${Math.max(2,px(addD(b,1))-px(a))}px" title="Congés de chantier"></span>`).join("");
+  const now=new Date(),today=new Date(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate()));
+  const tl=today>=W0&&today<=addD(W0,nW*7)?`<span class="gt-now" style="left:${px(today)}px" title="Aujourd'hui"></span>`:"";
+  const fl=f?`<span class="gt-fin" style="left:${px(addD(f,1))}px" title="Réception prévue le ${frD(f)}"></span>`:"";
+  const body=rows.map(({n,dep,r})=>{const x=IDX[n.id],isG=n.kind==="g",op=!S.plopen||S.plopen[n.id]!==false,hasSub=isG&&n.children.some(c=>c.kind==="g"&&PLAN[c.id]||c.kind==="p"&&PLAN[c.id]&&PLAN[c.id].own);
+    const bar=r?`<span class="gt-b d${Math.min(dep,2)} ${isG?"":"p"} ${S.sel===n.id?"sel":""}" style="left:${px(r.s)}px;width:${Math.max(4,px(addD(r.e,1))-px(r.s))}px" title="${esc(x.nr+" "+(isG?n.nom:ttl(n)))} : du ${frD(r.s)} au ${frD(r.e)} (${r.d} j ouvrés)"></span>`:"";
+    const links=r?`<span class="gt-dt l" style="left:${px(r.s)-4}px">${frD(r.s)}</span><span class="gt-dt r" style="left:${Math.max(px(r.s)+4,px(addD(r.e,1)))+4}px">${frD(r.e)}</span>`:"";
+    return`<div class="gt-r d${Math.min(dep,2)} ${S.sel===n.id?"sel":""}" data-id="${n.id}"><div class="gt-n" style="padding-left:${8+dep*14}px">${hasSub?`<button class="gt-t" data-plt="${n.id}" aria-label="${op?"Replier":"Déplier"}">${op?"▾":"▸"}</button>`:`<span class="gt-t"></span>`}<span class="nr">${x.nr}</span><span class="nm">${esc(isG?n.nom:ttl(n))}</span><span class="dd">${r?r.d+" j":"—"}</span></div><div class="gt-l" style="width:${W}px">${links}${bar}</div></div>`}).join("");
+  const RH=29,rowY={};rows.forEach((x,i)=>rowY[x.n.id]=i*RH);
+  const arrows=rows.map(({n,r})=>r?(PRE[n.id]||[]).filter(id=>PLAN[id]&&rowY[id]!=null).map(id=>{const q=PLAN[id],x1=Math.max(px(q.s)+4,px(addD(q.e,1)))-2,yp=rowY[id],x2=px(r.s)+5,yt=rowY[n.id];
+    const down=yt>yp,ya=down?yp+24:yp+4,yb=down?yt+6:yt+22;return`<path d="M${x1} ${down?yp+20:yp+8}V${ya}H${Math.max(x2,x1+4)}V${yb}" marker-end="url(#gt-ah)"/>`}).join(""):"").join("");
+  const svg=`<svg class="gt-ar" width="${W}" height="${rows.length*RH}" aria-hidden="true"><defs><marker id="gt-ah" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L8 4L0 8z"/></marker></defs>${arrows}</svg>`;
+  const sum=PLAN.__fin?`Début le <b>${frDL(d0)}</b> · fin des travaux le <b>${frDL(PLAN.__fin)}</b> · ${workBetween(d0,PLAN.__fin,planCal())+1} j ouvrés`:"Aucune durée renseignée pour l'instant.";
+  const late=PLAN.__late?`<div class="pl-alert">La fin des travaux dépasse de <b>${PLAN.__late} j ouvrés</b> la réception prévue le ${frD(f)}.</div>`:"";
+  return`<div class="gt-top"><span>${sum}</span><span class="gt-sc" role="group" aria-label="Échelle"><button data-plsc="sem" aria-pressed="${sem}">Semaines</button><button data-plsc="mois" aria-pressed="${!sem}">Mois</button></span><button class="btn" data-plx2="xlsx">Excel</button><button class="btn" data-plx2="pdf">PDF A3</button>${helpBtn("planning")}</div>${late}${PLAN_ERR?`<div class="pl-alert">${esc(PLAN_ERR)}</div>`:""}
+  <div class="gt"><div class="gt-h"><div class="gt-n">Lot / tâche<span class="dd">Durée</span></div><div class="gt-l" style="width:${W}px"><div class="gt-ms">${mh}</div><div class="gt-ws">${head}</div></div></div>
+  <div class="gt-bd"><div class="gt-bg" style="width:${W}px">${conges}${tl}${fl}${svg}</div>${body}</div></div>
+  <p class="hint" style="padding:6px 12px">Les dates se calculent à partir de la date de début du chantier, des durées et des enchaînements : cliquez sur une ligne pour les régler. Week-ends, jours fériés et congés de chantier sont sautés.</p>`}
+function bindPlan(o){
+  o.onclick=e=>{const t=e.target.closest("[data-plt]");if(t){S.plopen=S.plopen||{};S.plopen[t.dataset.plt]=S.plopen[t.dataset.plt]===false;persist();renderOut();return}
+    const sc=e.target.closest("[data-plsc]");if(sc){S.plan.echelle=sc.dataset.plsc;save();renderOut();return}
+    const g=e.target.closest("[data-plgo]");if(g){openProjet();return}
+    const x=e.target.closest("[data-plx2]");if(x){(x.dataset.plx2==="xlsx"?planXlsx():planPdf()).then(f=>f&&saveMany([f])).catch(er=>toast("Export impossible : "+(er&&er.message||er),5000));return}
+    const r=e.target.closest(".gt-r[data-id]");if(r){select(r.dataset.id);openPlModal(r.dataset.id)}}}
+function openPlModal(id){reindex();const x=IDX[id];if(!x)return;const n=x.n,isP=n.kind==="p";
+  const draw=()=>{$("#m-body").innerHTML=plFields(n,isP).replace(/^<details/,"<div").replace(/<\/details>$/,"</div>").replace(/<summary>.*?<\/summary>/,"");bindPl($("#m-body"),n,draw)};
+  openModal(`Planning · ${x.nr} ${isP?ttl(n):n.nom}`,"",`<button class="btn primary" data-m="close">Fermer</button>`,{help:"planning",onClose:()=>renderOut()});draw()}
+function planRows(){planCompute();const out=[];(function w(a,dep){a.forEach(n=>{const r=PLAN[n.id];if(n.kind==="g"){if(r)out.push({n,dep,r});w(n.children,dep+1)}else if(r&&r.own)out.push({n,dep,r})})})(S.tree,0);return out}
+async function planXlsx(){
+  if(!needLib("ExcelJS"))return null;reindex();const rows=planRows();if(!rows.length){toast("Aucune durée renseignée.",4000);return null}
+  const P=S.projet,d0=PLAN.__deb,mon=d=>addD(d,-((d.getUTCDay()+6)%7)),W0=mon(d0),nW=Math.ceil((PLAN.__fin-W0)/864e5/7)+1;
+  const wb=new ExcelJS.Workbook();wb.creator="Prescrire";const ws=wb.addWorksheet("Planning",{views:[{state:"frozen",xSplit:4,ySplit:5}],pageSetup:{paperSize:8,orientation:"landscape",fitToPage:true,fitToWidth:1,fitToHeight:0}});
+  ws.getCell("A1").value=P.nom||"Planning";ws.getCell("A1").font={bold:true,size:14};
+  ws.getCell("A2").value=`Planning prévisionnel · ${P.phase||""} · ind. ${P.indice||"A"} · du ${frD(d0)} au ${frD(PLAN.__fin)}`;ws.getCell("A2").font={color:{argb:"FF5B6674"}};
+  ws.columns=[{width:9},{width:44},{width:10},{width:10},...Array.from({length:nW},()=>({width:3.2}))];
+  ws.getRow(4).values=["","","",""].concat(Array.from({length:nW},(_,i)=>{const d=addD(W0,i*7);return d.getUTCDate()===d.getUTCDate()&&i%4===0?d.toLocaleDateString("fr-FR",{month:"short",timeZone:"UTC"}):""}));
+  const h=ws.getRow(5);h.values=["N°","Lot / tâche","Début","Fin"].concat(Array.from({length:nW},(_,i)=>addD(W0,i*7).getUTCDate()));h.font={bold:true,size:9};
+  rows.forEach(({n,dep,r},k)=>{const x=IDX[n.id],row=ws.getRow(6+k);row.values=[x.nr,(n.kind==="g"?n.nom:ttl(n)),frD(r.s),frD(r.e)];
+    row.getCell(2).alignment={indent:dep};if(dep===0)row.font={bold:true};
+    const col=dep===0?"FF0050C8":dep===1?"FF6EA0FF":"FFB9CBF0";
+    for(let i=0;i<nW;i++){const ws0=addD(W0,i*7),we=addD(ws0,6);if(we>=r.s&&ws0<=r.e)row.getCell(5+i).fill={type:"pattern",pattern:"solid",fgColor:{argb:col}};row.getCell(5+i).border={left:{style:"hair",color:{argb:"FFD3D9E0"}}}}});
+  const buf=await wb.xlsx.writeBuffer();return{name:`${slug(P.nom)} - Planning - ind ${P.indice||"A"}.xlsx`,blob:new Blob([buf],{type:XLSX_MIME})}}
+async function planPdf(){
+  if(!needLib("pdfMake"))return null;reindex();const rows=planRows();if(!rows.length){toast("Aucune durée renseignée.",4000);return null}
+  const P=S.projet,d0=PLAN.__deb,mon=d=>addD(d,-((d.getUTCDay()+6)%7)),W0=mon(d0),nW=Math.ceil((PLAN.__fin-W0)/864e5/7)+1;
+  const pageW=1190-60,nameW=200,cw=Math.max(6,Math.min(44,(pageW-nameW-90)/nW));
+  const accent="#0050c8";
+  const hdr=[{text:"N°",style:"th"},{text:"Lot / tâche",style:"th"},{text:"Début",style:"th"},{text:"Fin",style:"th"}].concat(Array.from({length:nW},(_,i)=>({text:String(addD(W0,i*7).getUTCDate()),style:"th",alignment:"center"})));
+  const body=[hdr].concat(rows.map(({n,dep,r})=>{const x=IDX[n.id];const col=dep===0?accent:dep===1?"#6ea0ff":"#b9cbf0";
+    return[{text:x.nr,fontSize:7.5,color:"#5b6674"},{text:(n.kind==="g"?n.nom:ttl(n)),fontSize:8,bold:dep===0,margin:[dep*6,0,0,0]},{text:frD(r.s),fontSize:7.5},{text:frD(r.e),fontSize:7.5}].concat(Array.from({length:nW},(_,i)=>{const a=addD(W0,i*7),b=addD(a,6);return{text:"",fillColor:b>=r.s&&a<=r.e?col:null}}))}));
+  const dd={pageSize:"A3",pageOrientation:"landscape",pageMargins:[30,60,30,36],info:{title:"Planning — "+(P.nom||"")},
+    header:{margin:[30,22,30,0],columns:[{text:P.nom||"",bold:true,fontSize:13},{text:`Planning prévisionnel · ${P.phase||""} · ind. ${P.indice||"A"}`,alignment:"right",fontSize:9,color:"#5b6674"}]},
+    footer:(c,t)=>({margin:[30,8,30,0],columns:[{text:`Du ${frDL(d0)} au ${frDL(PLAN.__fin)} · jours ouvrés hors jours fériés et congés de chantier`,fontSize:7.5,color:"#5b6674"},{text:c+" / "+t,alignment:"right",fontSize:7.5,color:"#5b6674"}]}),
+    content:[{table:{headerRows:1,widths:[34,nameW,40,40].concat(Array.from({length:nW},()=>cw)),body},layout:{hLineWidth:()=>0.3,vLineWidth:(i)=>i>4?0.2:0.3,hLineColor:()=>"#d3d9e0",vLineColor:()=>"#e3e7ec",paddingLeft:()=>2,paddingRight:()=>2,paddingTop:()=>2,paddingBottom:()=>2}}],
+    styles:{th:{fontSize:7,bold:true,color:"#5b6674"}}};
+  const blob=await new Promise((ok,ko)=>{try{pdfMake.createPdf(pdfSafe(dd)).getBlob(ok)}catch(e){ko(e)}});
+  return{name:`${slug(P.nom)} - Planning - ind ${P.indice||"A"}.pdf`,blob}}
+
 function renderOut(){
   reindex();
   const o=$("#out");
   if(S.tab==="off"){o.innerHTML=offresHTML();bindOffres();return}
+  if(S.tab==="ch"){const st=o.scrollTop;o.innerHTML=chantierHTML();o.scrollTop=st;bindChantier(o);return}
+  if(S.tab==="plan"){const st=o.scrollTop,sl=(o.querySelector(".gt")||{}).scrollLeft;o.innerHTML=planHTML();o.scrollTop=st;const g=o.querySelector(".gt");if(g&&sl)g.scrollLeft=sl;bindPlan(o);return}
   if(!S.tree.length){o.innerHTML=`<div class="empty">Le CCTP et la DPGF apparaîtront ici dès le premier lot.</div>`;return}
   if(S.tab==="cctp"){const st=o.scrollTop;o.innerHTML=`<article class="cctp" id="cctp">${S.view==="lieux"?cctpLieuxHTML():cctpHTML()}</article>`;o.scrollTop=st;
     if(S.sel&&S.sel!==CCTP_SEEN){CCTP_SEEN=S.sel;const a=o.querySelector(`.c-art[data-id="${S.sel}"]`);if(a){const r=a.getBoundingClientRect(),q=o.getBoundingClientRect();if(r.top<q.top||r.bottom>q.bottom)a.scrollIntoView({block:"nearest"})}}return}
@@ -2088,6 +2617,7 @@ let onModalClose=null;
 function openModal(title,body,foot,o={}){
   {const ob=$("#m-body");ob.replaceWith(ob.cloneNode(false))} /* une fenêtre neuve, sans les écouteurs de la précédente */
   $("#m-title").textContent=title;$("#m-sub").textContent=o.sub||"";$("#m-body").innerHTML=body;$("#m-foot").innerHTML=foot||"";
+  {const sec=o.help!==undefined?o.help:helpFor(title);const q=$("#m-q");q.hidden=!sec;q.dataset.sec=sec||"";q.dataset.back=title}
   $("#m-foot").onclick=null;$("#dlg").className="dlg"+(o.wide?" wide":"");onModalClose=o.onClose||null;$("#modal").hidden=false;
   const f=$("#m-body").querySelector("input:not([type=radio]):not([type=checkbox]),textarea");if(f&&o.focus!==false)setTimeout(()=>f.focus(),0);
 }
@@ -2106,12 +2636,106 @@ document.addEventListener("keydown",e=>{
   else if(k==="e"&&$("#modal").hidden){e.preventDefault();openExport()}
   else if(k==="n"&&$("#modal").hidden){e.preventDefault();$("#b-new").click()}
 });
-const KEYS=[["Cmd+S","Enregistrer"],["Cmd+Maj+S","Enregistrer sous…"],["Cmd+O","Ouvrir un projet"],["Cmd+N","Nouveau projet"],["Cmd+E","Publier…"],["Cmd+Z","Annuler"],["Cmd+Maj+Z","Rétablir"],["Cmd+A","Sélectionner toutes les prestations visibles de l'arbre"],["Cmd+clic","Ajouter ou retirer une prestation de la sélection"],["Maj+clic","Sélectionner une suite de prestations"],["Échap","Fermer une fenêtre, vider la sélection"],["?","Afficher cet aide-mémoire"]];
+const KEYS=[["Cmd+S","Enregistrer"],["Cmd+Maj+S","Enregistrer sous…"],["Cmd+O","Ouvrir un projet"],["Cmd+N","Nouveau projet"],["Cmd+E","Publier…"],["Cmd+Z","Annuler"],["Cmd+Maj+Z","Rétablir"],["Cmd+A","Sélectionner toutes les prestations visibles de l'arbre"],["Cmd+clic","Ajouter ou retirer une prestation de la sélection"],["Maj+clic","Sélectionner une suite de prestations"],["Échap","Fermer une fenêtre, vider la sélection"],["?","Ouvrir l'aide"]];
+/* ======================================================================
+   Aide : manuel d'utilisation, questions fréquentes, raccourcis clavier
+   ====================================================================== */
+const HELP=[
+ ["debut","Prendre en main",`<p>Prescrire rédige le <b>CCTP</b> et chiffre la <b>DPGF</b> d'une même opération, à partir d'une seule liste de prestations. Ce que vous écrivez une fois sert aux deux documents.</p>
+  <h4>Les trois colonnes</h4><ul><li><b>À gauche, l'arbre</b> : les lots, sous-lots et prestations du projet, avec leur numéro et leur montant. La pastille de couleur indique l'état de rédaction.</li>
+  <li><b>Au centre, la fiche</b> de ce que vous avez sélectionné dans l'arbre : vous y écrivez.</li>
+  <li><b>À droite, les documents</b> : le CCTP et la DPGF, mis à jour en direct. Ils suivent la sélection de l'arbre.</li></ul>
+  <p>Trois icônes de la barre du haut, à droite de la bibliothèque, ouvrent les espaces de suivi : <b>Analyse des offres</b>, <b>Planning</b> et <b>Suivi de chantier</b>. Ils prennent toute la largeur à côté de l'arbre ; « Revenir à la rédaction », ou un nouveau clic sur l'icône, ramène la fiche et les documents.</p>
+  <p>Chaque colonne se replie avec la petite flèche de son en-tête ; la séparation entre deux colonnes se déplace à la souris (double-clic pour revenir aux largeurs d'origine).</p>
+  <h4>Pour un premier essai</h4><p>Créez un nouveau projet en choisissant <b>Projet exemple</b> : il contient six lots, des quantités, des offres et un planning. Vous pouvez tout modifier sans risque.</p>`],
+ ["projet","Projets, fichiers et indices",`<h4>Créer, ouvrir, enregistrer</h4><ul><li><b>Nouveau</b> propose un projet vide, le projet exemple, ou un départ à partir d'un projet existant (lots, prestations, prix et clauses repris ; quantités, indices, notes et offres remis à zéro).</li>
+  <li>Un projet s'enregistre dans un fichier <b>.caz</b>. Une pastille orange sur le bouton Enregistrer signale des modifications non enregistrées.</li>
+  <li>On peut aussi glisser un fichier .caz sur la fenêtre pour l'ouvrir.</li></ul>
+  <h4>La fenêtre Projet</h4><p>Nom de l'opération, maître d'ouvrage, adresse, maître d'œuvre, phase, TVA par défaut, surface de référence, dispositions générales (en tête du CCTP), dates du chantier pour le planning.</p>
+  <h4>Indices</h4><p>Avant de diffuser un dossier, <b>figez l'indice</b> (fenêtre Projet) : Prescrire garde une copie du dossier tel qu'il est parti et passe à l'indice suivant. Vous pourrez ensuite voir ce qui a changé d'un indice à l'autre.</p>`],
+ ["rediger","Rédiger les prestations",`<h4>L'arbre</h4><ul><li><b>+ Prestation</b> ajoute une prestation dans le lot sélectionné ; <b>+ Lot, sous-lot</b> crée un lot ou un sous-lot.</li>
+  <li>Glissez une ligne pour la déplacer. Cmd+clic et Maj+clic sélectionnent plusieurs prestations pour les déplacer ou les supprimer ensemble.</li>
+  <li>La recherche, sous les compteurs, filtre l'arbre.</li></ul>
+  <h4>La fiche prestation</h4><ul><li><b>Fiche prestation</b> : nom, précision, catégorie, unité, descriptif, finition, état de rédaction, quantités et prix.</li>
+  <li><b>Descriptif détaillé</b> : les clauses (support, entrepreneur, réalisation, interruption, finalisation, limites). Elles s'impriment en alinéas a), b), c)… ; seuls les champs remplis apparaissent.</li>
+  <li><b>Notes</b> : vos remarques internes, datées et signées de vos initiales à chaque ligne. Elles ne sont <b>jamais</b> imprimées ni exportées.</li></ul>
+  <h4>Les états de rédaction</h4><p>Gris : en cours · orange : à relire · vert : validée · rouge : à réviser. Les compteurs en haut de l'arbre montrent où en est le dossier.</p>
+  <h4>La fiche lot ou sous-lot</h4><p>Intitulé, <b>DTU et normes de référence</b>, <b>clauses générales</b> (imprimées une seule fois dans l'encadré de généralités), variantes exigées et planning. L'icône en haut à droite partage la rédaction du lot.</p>`],
+ ["quantites","Lieux et quantités",`<p>Les <b>lieux</b> (pièces, niveaux, façades…) se gèrent avec le bouton en forme d'épingle de la barre du haut : nom, niveau, surface au sol, périmètre, hauteur.</p>
+  <p>Dans une prestation, cochez les lieux concernés et saisissez une quantité par lieu : un nombre ou une formule, par exemple <code>3,2*2,5</code>. Trois lettres reprennent les dimensions du lieu : <b>S</b> la surface au sol, <b>P</b> le périmètre, <b>H</b> la hauteur. Ainsi <code>P*H-8</code> donne la surface des murs moins 8 m² d'ouvertures.</p>
+  <p>La quantité de la prestation est la somme des lieux. Le CCTP et la DPGF peuvent aussi s'afficher <b>par lieux</b> (bouton épingle de la colonne de droite).</p>`],
+ ["prix","Prix, TVA, PSE et variantes",`<ul><li>Le <b>prix unitaire</b> vient de la bibliothèque et peut être changé dans le projet. Un prix qui n'a pas été révisé depuis longtemps est signalé.</li>
+  <li>La <b>TVA</b> est celle du projet, sauf si une prestation a son propre taux (10 % ou 5,5 % en rénovation, par exemple).</li>
+  <li>Une <b>PSE</b> (prestation supplémentaire éventuelle) est chiffrée à part et n'entre pas dans le total de base.</li>
+  <li>Une <b>variante exigée</b> remplace une partie de la solution de base ; elle se crée dans la fiche du lot et se chiffre à part, avec sa plus ou moins-value.</li>
+  <li>Un <b>coefficient</b> peut s'appliquer à tous les prix d'un lot (fiche du lot) ou du projet (fenêtre Projet), pour actualiser une estimation.</li></ul>`],
+ ["biblio","La bibliothèque",`<p>La bibliothèque rassemble vos articles types : nom, catégorie, unité, prix, descriptif et clauses. Elle est commune à tous vos projets.</p>
+  <ul><li>Quand vous modifiez une prestation, Prescrire indique si elle est conforme à la bibliothèque, et propose d'y enregistrer vos changements.</li>
+  <li>Dans l'application, la bibliothèque peut être un fichier placé dans un dossier partagé de l'agence : chacun l'enrichit, les modifications sont fusionnées article par article.</li>
+  <li>L'outil <b>Doublons</b> repère les articles aux noms proches, les compare champ par champ et les fusionne.</li>
+  <li><b>Importer des fiches</b> reprend des fiches partagées par un confrère ou un recueil (.json).</li></ul>`],
+ ["publier","Publier les documents",`<p>Le bouton <b>Publier…</b> produit les documents à diffuser :</p>
+  <ul><li><b>DPGF</b> en Excel, pour le maître d'ouvrage (avec les prix) ou pour les entreprises (prix unitaires vides, totaux par formules) ;</li>
+  <li><b>CCTP</b> en Word (modifiable, avec sommaire) ou en PDF ;</li>
+  <li><b>Tableau des choix</b> : les finitions à arbitrer par le maître d'ouvrage, sans prix.</li></ul>
+  <p>On publie tous les lots ou seulement certains, en un seul fichier ou un fichier par lot. Une <b>check-list</b> peut s'afficher avant la publication (TVA vérifiée, page de garde à jour…) ; elle se règle dans la fenêtre Agence.</p>
+  <h4>Votre propre modèle Word</h4><p>Dans Publier, CCTP Word : <b>Utiliser un modèle Word…</b>. Partez du <b>modèle de départ</b> téléchargeable, habillez-le dans Word (page de garde, logo, en-têtes, styles), puis placez les repères <code>{sommaire}</code>, <code>{dispositions}</code> et <code>{contenu}</code>, chacun seul sur sa ligne. Les champs <code>{projet}</code> <code>{adresse}</code> <code>{moa}</code> <code>{moe}</code> <code>{phase}</code> <code>{indice}</code> <code>{date}</code> <code>{lots}</code> se remplissent partout, en-têtes et pieds de page compris. Les styles sont reconnus par leur nom : Titre 1, Titre 2, Titre 3, Corps, Clause, Généralités… Un rapport indique ce qui a été trouvé.</p>`],
+ ["offres","Analyser les offres",`<ol><li>Publiez la DPGF <b>Entreprises</b> en Excel et envoyez-la aux entreprises consultées.</li>
+  <li>Quand elles la renvoient remplie, <b>importez</b> chaque fichier dans l'espace <b>Analyse des offres</b> (icône € de la barre du haut). Les prix sont reconnus par le numéro d'article.</li>
+  <li>La synthèse compare chaque lot à l'estimation : vert pour le moins-disant, rouge au-delà de 20 % sous l'estimation, ocre au-delà de 20 % au-dessus, jaune pour un prix manquant. Le menu de vue détaille un lot prix par prix.</li></ol>
+  <p>Le bouton des entreprises permet de renommer une offre, d'y noter les variantes libres ou de la retirer. <b>Exporter l'analyse</b> produit un classeur avec la synthèse et une feuille par lot, aux mêmes couleurs.</p>`],
+ ["planning","Le planning",`<ol><li>Dans la fenêtre Projet, indiquez la <b>date de début des travaux</b>, et si besoin la réception prévue et les congés de chantier.</li>
+  <li>Dans la fiche d'un lot ou d'un sous-lot, rubrique Planning, saisissez une <b>durée en jours ouvrés</b> et ce après quoi la tâche commence, avec un éventuel décalage (séchage, délai de livraison).</li></ol>
+  <p>Les dates se calculent toutes seules ; week-ends, jours fériés et congés sont sautés. Les sous-lots s'enchaînent par défaut l'un après l'autre et la durée du lot est leur somme ; cochez « En même temps que le sous-lot précédent » pour les mener en parallèle. L'espace <b>Planning</b> (icône en haut) affiche le diagramme, avec les liens entre tâches ; un clic sur une ligne ouvre ses réglages de durée et d'enchaînement. Il s'exporte en Excel ou en PDF A3.</p>`],
+ ["chantier","La phase chantier",`<p>Une fois les marchés signés, <b>Passer en phase chantier</b> (espace <b>Suivi de chantier</b>, icône en haut) fige le montant de chaque lot avec son entreprise, à partir de l'estimation ou d'une offre importée.</p>
+  <ul><li>Ensuite, toute modification de la DPGF apparaît comme un <b>écart</b> : prestation ajoutée, prix nouveau, quantité changée ou prestation supprimée.</li>
+  <li>Créez un <b>TS</b> (travaux supplémentaires) avec son entreprise, son motif, son statut et son incidence sur le délai, et rattachez-y les écarts.</li>
+  <li>La synthèse montre le marché, les TS acceptés, le montant actualisé et l'écart, avec une alerte au-delà du seuil choisi.</li>
+  <li>L'avancement se saisit en pourcentage par prestation. Chaque TS s'imprime en fiche PDF à signer ; le suivi s'exporte en Excel.</li></ul>`],
+ ["agence","Réglages de l'agence",`<p>La fenêtre <b>Agence</b> (barre du haut) garde ce qui est commun à tous vos projets : nom, adresse, téléphone et e-mail, logo pour les pages de garde, initiales de ce poste pour les notes datées, check-list avant publication. Le modèle Word, choisi dans Publier, est lui aussi gardé pour toute l'agence.</p>`]];
+const FAQ=[
+ ["Où sont enregistrées mes données ?","Dans l'application, chaque projet est un fichier .caz là où vous l'enregistrez, et la bibliothèque est un fichier à part, sur votre poste ou dans un dossier partagé. Dans la version navigateur, le projet en cours est gardé par le navigateur : enregistrez-le régulièrement en fichier .caz."],
+ ["Peut-on travailler à plusieurs sur un même projet ?","Un projet s'ouvre sur un seul poste à la fois. Si un collègue l'a déjà ouvert, Prescrire vous prévient avant de l'ouvrir. La bibliothèque, elle, peut être partagée par toute l'agence."],
+ ["J'ai fait une erreur : comment revenir en arrière ?","Les flèches en haut de la fenêtre annulent ou rétablissent les dernières modifications (Cmd+Z, Cmd+Maj+Z). Pour revenir à un dossier diffusé, ouvrez la fenêtre Projet : les indices figés y sont conservés."],
+ ["Pourquoi mes notes n'apparaissent-elles pas dans le CCTP ?","C'est voulu : les notes sont internes à l'agence et ne sont jamais imprimées, exportées ni partagées."],
+ ["Le sommaire du CCTP Word est vide.","Il se met à jour à l'ouverture dans Word. Sinon : clic droit sur le sommaire, puis « Mettre à jour les champs »."],
+ ["L'import d'une offre ne reconnaît aucun prix.","Le fichier doit être une DPGF « Entreprises » publiée par Prescrire, remplie par l'entreprise sans modifier les colonnes ni les numéros d'articles."],
+ ["Comment réutiliser un lot bien rédigé dans un autre projet ?","Dans sa fiche, l'icône de partage propose « Enregistrer le lot… ». Dans l'autre projet, le bouton « Importer des lots d'un autre projet », dans l'arbre, le reprend."],
+ ["Comment proposer une amélioration ou signaler un problème ?","L'ampoule en haut à droite ouvre la page des suggestions du projet sur GitHub."]];
+let HELP_SEC="debut";
+const HELP_MAP={"Publier":"publier","Avant de publier":"publier","Modèle Word":"publier","Projet":"projet","Nouveau projet":"projet","Lieux du projet":"quantites","Bibliothèque d'articles":"biblio","Agence":"agence","Passer en phase chantier":"chantier","Réglages du chantier":"chantier","Offre":"offres","Offres importées":"offres","Coefficient sur les prix":"prix","Importer des lots d'un autre projet":"rediger","Partager la fiche":"biblio","Partager le lot":"rediger","Partager le sous-lot":"rediger"};
+const helpFor=t=>t==="Aide"?"":HELP_MAP[t]||(/^(TS n°|Nouveau TS)/.test(t)?"chantier":"");
+const HELP_BACK={"Publier":()=>openExport(),"Projet":()=>openProjet(),"Agence":()=>openAgence(),"Lieux du projet":()=>openLieux(),"Bibliothèque d'articles":()=>openLib(),"Passer en phase chantier":()=>openFreeze(),"Réglages du chantier":()=>openChSet()};
+const helpBtn=sec=>`<button class="hq" data-help="${sec}" title="Aide" aria-label="Aide">?</button>`;
+function openHelp(sec,back){
+  if(sec)HELP_SEC=sec;const mac=/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent);
+  const keys=`<table class="keys">${KEYS.map(([k,l])=>`<tr><td>${k.split("+").map(x=>`<kbd>${esc(mac?x:x.replace("Cmd","Ctrl"))}</kbd>`).join(" + ")}</td><td>${esc(l)}</td></tr>`).join("")}</table>`;
+  const faq=FAQ.map(([q,a])=>`<details class="faq"><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("");
+  const secs=[...HELP,["faq","Questions fréquentes",faq],["keys","Raccourcis clavier",keys]];
+  openModal("Aide",`<div class="help"><nav class="help-n"><input type="search" id="hl-q" placeholder="Rechercher dans l'aide…" aria-label="Rechercher dans l'aide">
+    ${secs.map(([id,t])=>`<button data-hs="${id}" class="${id==="faq"?"sep":""}">${esc(t)}</button>`).join("")}</nav>
+    <div class="help-b" id="hl-b"></div></div>`,`<span class="x-sum"><button class="link" id="hl-about">À propos de Prescrire ${APP_VERSION}</button></span>${back?'<button class="btn" id="hl-back">Revenir à la fenêtre</button>':""}<button class="btn primary" data-m="close">Fermer</button>`,{wide:true,focus:false});
+  if(back)$("#hl-back").onclick=()=>{closeModal();back()};
+  const b=$("#hl-b"),show=id=>{HELP_SEC=id;const s=secs.find(x=>x[0]===id)||secs[0];b.innerHTML=`<h3>${esc(s[1])}</h3>${s[2]}`;b.scrollTop=0;
+    document.querySelectorAll("[data-hs]").forEach(x=>x.setAttribute("aria-current",x.dataset.hs===id))};
+  document.querySelectorAll("[data-hs]").forEach(x=>x.onclick=()=>{$("#hl-q").value="";show(x.dataset.hs)});
+  $("#hl-q").oninput=e=>{const q=norm(e.target.value);if(q.length<2)return show(HELP_SEC);
+    const txt=h=>{const d=document.createElement("div");d.innerHTML=h;return d.textContent};
+    const hits=[];secs.forEach(([id,t,h])=>{if(id==="faq"){FAQ.forEach(([qq,a])=>{if(norm(qq+" "+a).includes(q))hits.push(`<details class="faq" open><summary>${esc(qq)}</summary><p>${esc(a)}</p></details>`)});return}
+      const p=txt(h),i=norm(p).indexOf(q);if(i>-1||norm(t).includes(q))hits.push(`<button class="help-hit" data-hh="${id}"><b>${esc(t)}</b><span>${esc((i>40?"…":"")+p.slice(Math.max(0,i-40),i+120))}…</span></button>`)});
+    b.innerHTML=`<h3>Résultats</h3>${hits.join("")||'<p class="hint">Rien trouvé. Essayez un autre mot, ou consultez les questions fréquentes.</p>'}`;
+    b.querySelectorAll("[data-hh]").forEach(x=>x.onclick=()=>{$("#hl-q").value="";show(x.dataset.hh)})};
+  $("#hl-about").onclick=()=>{closeModal();openAbout(false)};
+  show(HELP_SEC)}
+
 function openKeys(){const mac=/Mac|iPhone|iPad/.test(navigator.platform||navigator.userAgent);
   openModal("Raccourcis clavier",`<table class="keys">${KEYS.map(([k,l])=>`<tr><td>${k.split("+").map(x=>`<kbd>${esc(mac?x:x.replace("Cmd","Ctrl"))}</kbd>`).join(" + ")}</td><td>${esc(l)}</td></tr>`).join("")}</table>`,`<button class="btn primary" data-m="close">Fermer</button>`)}
-$("#b-keys").onclick=openKeys;
-document.addEventListener("keydown",e=>{if(e.key!=="?"||e.metaKey||e.ctrlKey||!$("#modal").hidden)return;const t=e.target;if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))return;e.preventDefault();openKeys()});
+
+document.addEventListener("keydown",e=>{if(e.key!=="?"||e.metaKey||e.ctrlKey||!$("#modal").hidden)return;const t=e.target;if(t&&(t.isContentEditable||/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)))return;e.preventDefault();openHelp()});
 $("#m-x").onclick=()=>closeModal();
+$("#b-help").onclick=()=>openHelp();
+$("#m-q").onclick=()=>{const q=$("#m-q"),sec=q.dataset.sec,back=HELP_BACK[q.dataset.back];onModalClose=null;closeModal();openHelp(sec,back)};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-help]");if(b){e.stopPropagation();openHelp(b.dataset.help)}});
 $("#m-foot").addEventListener("click",e=>{const b=e.target.closest('[data-m="cancel"],[data-m="close"]');if(b)closeModal()});
 
 /* ======================================================================
@@ -2133,6 +2757,11 @@ function openProjet(){
       <div class="f"><label for="pj-st">Type</label><select id="pj-st">${["SHAB","Surface de plancher","Surface utile","Surface"].map(t=>`<option ${t===(P.surfType||"SHAB")?"selected":""}>${t}</option>`).join("")}</select></div></div></div>
     <div><button class="btn" id="pj-coef">Appliquer un coefficient à tous les prix du projet…</button></div>
     <div class="f"><label for="pj-dispo">Dispositions générales (en tête du CCTP, communes à tous les lots)</label><textarea id="pj-dispo" rows="6" placeholder="Objet du CCTP, documents de référence, obligations communes des entreprises…">${esc(P.dispo)}</textarea></div>
+    <fieldset><legend>Planning du chantier</legend>
+      <div class="grid2"><div class="f"><label for="pj-deb">Début des travaux</label><input type="date" id="pj-deb" value="${esc(S.plan.debut||"")}"></div>
+        <div class="f"><label for="pj-finp">Réception prévue <span class="hint">(facultatif)</span></label><input type="date" id="pj-finp" value="${esc(S.plan.fin||"")}"></div></div>
+      <div class="f"><label>Congés de chantier</label><div id="pj-cg"></div><div><button class="btn" id="pj-cga">+ Période de congés</button></div></div>
+      <p class="hint" style="margin:0">Les week-ends et les jours fériés français (Pâques, Ascension et Pentecôte compris) sont sautés automatiquement.</p></fieldset>
     <fieldset><legend>Indices du dossier</legend>
       <p class="hint" style="margin:0 0 6px">Figer un indice enregistre une copie du dossier tel qu'il est diffusé. Vous pourrez ensuite voir ce qui a changé.</p>
       <div class="idx-list">${idx}</div>
@@ -2147,6 +2776,11 @@ function openProjet(){
   $("#pj-coef").onclick=()=>{closeModal();openCoef(null)};
   bind("#pj-nom","nom");bind("#pj-moa","moa");bind("#pj-adr","adresse");bind("#pj-moe","moe");bind("#pj-ind","indice");bind("#pj-dispo","dispo");
   $("#pj-ph").onchange=e=>{P.phase=e.target.value;save()};
+  const PL=S.plan,cgR=()=>{$("#pj-cg").innerHTML=PL.conges.map((c,i)=>`<div class="pl-cg"><span>du</span><input type="date" data-cgi="${i}" data-cgk="du" value="${esc(c.du||"")}"><span>au</span><input type="date" data-cgi="${i}" data-cgk="au" value="${esc(c.au||"")}"><button class="btn ib" data-cgx="${i}" aria-label="Retirer cette période" title="Retirer">×</button></div>`).join("")||`<p class="hint" style="margin:0 0 6px">Aucune période.</p>`;
+    $("#pj-cg").querySelectorAll("[data-cgi]").forEach(x=>x.onchange=e=>{PL.conges[+x.dataset.cgi][x.dataset.cgk]=e.target.value;save()});
+    $("#pj-cg").querySelectorAll("[data-cgx]").forEach(x=>x.onclick=()=>{PL.conges.splice(+x.dataset.cgx,1);save();cgR()})};cgR();
+  $("#pj-cga").onclick=()=>{const y=PL.debut?PL.debut.slice(0,4):String(new Date().getFullYear());PL.conges.push({du:y+"-08-01",au:y+"-08-23"});save();cgR()};
+  $("#pj-deb").onchange=e=>{PL.debut=e.target.value;save()};$("#pj-finp").onchange=e=>{PL.fin=e.target.value;save()};
   $("#pj-freeze").onclick=()=>{
     reindex();
     S.indices.push({id:uid(),indice:P.indice||"A",date:today(),ht:S.tree.reduce((s,l)=>s+baseT(l),0),tree:JSON.parse(JSON.stringify(S.tree))});
@@ -2662,7 +3296,7 @@ function wRun(t,o={}){const pr=(o.b?"<w:b/>":"")+(o.i?"<w:i/>":"")+(o.caps?"<w:c
 function wP(content,o={}){const pp=(o.style?`<w:pStyle w:val="${o.style}"/>`:"")+(o.keep?"<w:keepNext/>":"")+(o.br?"<w:pageBreakBefore/>":"")+(o.sp?`<w:spacing w:before="${o.sp[0]}" w:after="${o.sp[1]}"/>`:"")+(o.jc?`<w:jc w:val="${o.jc}"/>`:"");
   return`<w:p>${pp?`<w:pPr>${pp}</w:pPr>`:""}${content}</w:p>`}
 const wParas=(text,o)=>String(text||"").split(/\n+/).filter(t=>t.trim()).map(t=>wP(wRun(t),o)).join("");
-async function exportDocx(lotIds){
+async function exportDocx(lotIds,o={}){
   if(!needLib("JSZip"))return null;
   reindex();
   const P=S.projet,lots=S.tree.filter(l=>lotIds.includes(l.id));
@@ -2683,8 +3317,10 @@ async function exportDocx(lotIds){
   b+=wP(wRun([P.phase,"Indice "+(P.indice||"A"),today()].filter(Boolean).join(" · "),{sz:22}),{jc:"center"});
   if(P.moe)b+=wP(wRun("Maître d'œuvre : "+P.moe,{sz:22}),{jc:"center",sp:[120,0]});
   {const l=agLines(AG);if(l.length)b+=wP(wRun(l.join("\n"),{sz:18,color:"5B6674"}),{jc:"center",sp:[60,0]})}
+  const iCover=b.length;
   b+=wP(wRun("Sommaire",{b:true,sz:28}),{br:true,sp:[0,240]});
   b+=`<w:p><w:r><w:fldChar w:fldCharType="begin" w:dirty="true"/></w:r><w:r><w:instrText xml:space="preserve"> TOC \\o "1-2" \\h \\z \\u </w:instrText></w:r><w:r><w:fldChar w:fldCharType="separate"/></w:r><w:r><w:t xml:space="preserve">Le sommaire se met à jour à l'ouverture. Sinon : clic droit, puis « Mettre à jour les champs ».</w:t></w:r><w:r><w:fldChar w:fldCharType="end"/></w:r></w:p>`;
+  const iToc=b.length;
   let first=true;
   const TAB="<w:r><w:tab/></w:r>";
   const hd=(nr,txt,style,o={})=>wP(wRun(nr)+TAB+wRun(txt)+(o.pse?wRun("   (PSE)",{color:"8A5A00"}):""),Object.assign({style},o.br?{br:true}:{}));
@@ -2694,10 +3330,11 @@ async function exportDocx(lotIds){
       f.forEach(([k,l])=>String(c[k]).split(/\n+/).filter(t=>t.trim()).forEach((t,j)=>{
         h+=wP((j===0?wRun(LET(i++)+")")+TAB+(fs.length>1||flat?wRun(l+" : ",{b:true}):""):TAB)+wRun(t),{style:box?"GenClause":"Clause"})}))});
     return h};
-  const genW=(g,isLot)=>{const k=isLot?"lot":"sous-lot";if(!(g.intro||"").trim()&&!clCount(g))return"";
-    return wP(wRun("Généralités du "+k),{style:"GenTitre"})+((g.intro||"").trim()?wParas(g.intro,{style:"Gen"}):"")+
+  const genW=(g,isLot)=>{const k=isLot?"lot":"sous-lot";if(!(g.intro||"").trim()&&!(g.dtu||"").trim()&&!clCount(g))return"";
+    return wP(wRun("Généralités du "+k),{style:"GenTitre"})+((g.dtu||"").trim()?wP(wRun("DTU et normes de référence : ",{b:true})+wRun(g.dtu.trim().replace(/\n+/g," ; ")),{style:"Gen"}):"")+((g.intro||"").trim()?wParas(g.intro,{style:"Gen"}):"")+
       (clCount(g)?wP(wRun("Clauses communes à toutes les prestations du "+k),{style:"GenSousTitre"})+clW(g,true,true):"")};
   if(P.dispo){b+=hd("","Dispositions générales","Heading1",{br:true});b+=wParas(P.dispo,{style:"Corps"});first=false}
+  const iDispo=b.length;
   const rec=arr=>arr.map(n=>{const nr=IDX[n.id].nr;
     if(n.kind==="g")return hasNonVar(n)||!n.children.length?hd(nr,n.nom,"Heading2")+genW(n,false)+rec(n.children):"";
     if(n.vid)return"";
@@ -2716,10 +3353,19 @@ async function exportDocx(lotIds){
   const varsW=l=>varsOf(l).map((v,k)=>{const it=varItems(l,v),rm=varRempl(l,v);if(!it.length)return"";
     return hd(IDX[l.id].nr+".V"+(k+1),vLabel(l,v),"Heading2")+wP(wRun(rm.length?"Cette variante remplace les prestations : "+rm.map(n=>IDX[n.id].nr+" "+ttl(n)).join(" ; ")+".":"Variante chiffrée à part.",{i:true}),{style:"Corps"})+it.map(artW).join("")}).join("");
   lots.forEach(l=>{b+=hd(IDX[l.id].nr,l.nom,"Heading1",{br:true});first=false;b+=genW(l,true);b+=rec(l.children);b+=varsW(l)});
+  const fileName=`${slug(P.nom)} - CCTP${cctpScope(lots)} - ind ${P.indice||"A"}.docx`;
+  const TPL=o.starter?null:(o.tpl!==undefined?o.tpl:getAg().tpl);
+  const PARTS={toc:b.slice(iCover,iToc),tocField:b.slice(iCover,iToc).replace(/^<w:p>.*?<\/w:p>/,""),dispo:b.slice(iToc,iDispo),dispoTxt:P.dispo?wParas(P.dispo,{style:"Corps"}):"",body:b.slice(iDispo),lots};
+  if(o.starter){const F=t=>wRun(t);
+    b=wP(wRun("{projet}",{b:true,sz:44}),{jc:"center",sp:[2400,200]})+wP(F("{adresse}"),{jc:"center"})+wP(F("Maître d'ouvrage : {moa}"),{jc:"center",sp:[120,0]})+wP("",{sp:[1200,0]})+
+      wP(wRun("CAHIER DES CLAUSES TECHNIQUES PARTICULIÈRES",{b:true,sz:30,color:"0050C8"}),{jc:"center",sp:[0,120]})+wP(F("{lots}"),{jc:"center"})+wP("",{sp:[1600,0]})+
+      wP(F("{phase} · indice {indice} · {date}"),{jc:"center"})+wP(F("Maître d'œuvre : {moe}"),{jc:"center",sp:[120,0]})+
+      wP(wRun("Sommaire",{b:true,sz:28}),{br:true,sp:[0,240]})+wP(F("{sommaire}"))+
+      hd("","Dispositions générales","Heading1",{br:true})+wP(F("{dispositions}"),{style:"Corps"})+wP(F("{contenu}"))}
   const NS='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"';
   const doc=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document ${NS}><w:body>${b}<w:sectPr><w:headerReference w:type="default" r:id="rId10"/><w:headerReference w:type="first" r:id="rId12"/><w:footerReference w:type="first" r:id="rId13"/><w:footerReference w:type="default" r:id="rId11"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1418" w:right="1247" w:bottom="1418" w:left="1247" w:header="567" w:footer="567" w:gutter="0"/><w:titlePg/></w:sectPr></w:body></w:document>`;
-  const hdr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}>${wP(wRun((P.nom||"")+" — CCTP — "+indTxt()),{style:"Header"})}</w:hdr>`;
-  const ftr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr ${NS}><w:p><w:pPr><w:pStyle w:val="Footer"/><w:tabs><w:tab w:val="right" w:pos="9412"/></w:tabs></w:pPr>${wRun(P.moe||"")}<w:r><w:tab/></w:r>${wRun("Page ")}<w:fldSimple w:instr=" PAGE "><w:r><w:t>1</w:t></w:r></w:fldSimple>${wRun(" / ")}<w:fldSimple w:instr=" NUMPAGES "><w:r><w:t>1</w:t></w:r></w:fldSimple></w:p></w:ftr>`;
+  const hdr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}>${wP(wRun(o.starter?"{projet} — CCTP — {phase} · indice {indice}":(P.nom||"")+" — CCTP — "+indTxt()),{style:"Header"})}</w:hdr>`;
+  const ftr=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr ${NS}><w:p><w:pPr><w:pStyle w:val="Footer"/><w:tabs><w:tab w:val="right" w:pos="9412"/></w:tabs></w:pPr>${wRun(o.starter?"{moe}":P.moe||"")}<w:r><w:tab/></w:r>${wRun("Page ")}<w:fldSimple w:instr=" PAGE "><w:r><w:t>1</w:t></w:r></w:fldSimple>${wRun(" / ")}<w:fldSimple w:instr=" NUMPAGES "><w:r><w:t>1</w:t></w:r></w:fldSimple></w:p></w:ftr>`;
   const st=(id,name,ppr,rpr,o="")=>`<w:style w:type="paragraph" w:styleId="${id}"><w:name w:val="${name}"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/>${o}<w:qFormat/><w:pPr>${ppr}</w:pPr><w:rPr>${rpr}</w:rPr></w:style>`;
   const styles=`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles ${NS}>
 <w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial" w:eastAsia="Arial" w:cs="Arial"/><w:sz w:val="20"/><w:szCs w:val="20"/><w:lang w:val="fr-FR"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="80" w:line="264" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>
@@ -2740,6 +3386,7 @@ ${st("Footer","footer",'<w:jc w:val="left"/>','<w:color w:val="5B6674"/><w:sz w:
 ${st("TOC1","toc 1",'<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9402"/></w:tabs><w:spacing w:before="120" w:after="40"/><w:jc w:val="left"/>','<w:b/>')}
 ${st("TOC2","toc 2",'<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9402"/></w:tabs><w:spacing w:after="20"/><w:ind w:left="300"/><w:jc w:val="left"/>','')}
 </w:styles>`;
+  if(TPL&&TPL.data)return tplApply(TPL,PARTS,styles,fileName);
   const z=new JSZip();
   z.file("[Content_Types].xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/header2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer2.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/></Types>`);
   z.file("_rels/.rels",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>`);
@@ -2751,8 +3398,79 @@ ${st("TOC2","toc 2",'<w:tabs><w:tab w:val="right" w:leader="dot" w:pos="9402"/><
   z.file("word/header1.xml",hdr);z.file("word/footer1.xml",ftr);
   z.file("word/header2.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr ${NS}><w:p/></w:hdr>`);z.file("word/footer2.xml",`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr ${NS}><w:p/></w:ftr>`);
   const blob=await z.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
-  return{name:`${slug(P.nom)} - CCTP${cctpScope(lots)} - ind ${P.indice||"A"}.docx`,blob};
+  return{name:o.starter?"Modèle CCTP Prescrire.docx":fileName,blob};
 }
+
+/* ======================================================================
+   Modèle Word de l'agence : styles repris par leur nom, champs {projet}…,
+   repères {contenu} {sommaire} {dispositions}
+   ====================================================================== */
+const TPL_STY=[["Heading1","Titre 1",["heading 1","titre 1"]],["Heading2","Titre 2",["heading 2","titre 2"]],["Heading3","Titre 3",["heading 3","titre 3"]],
+  ["Corps","Corps",["corps","prescrire - texte","corps de texte","body text"]],["Clause","Clause",["clause","prescrire - alinéa"]],["ClauseTitre","Clause, titre",["clause titre","clause, titre","prescrire - groupe de clauses"]],
+  ["Meta","Mention",["mention","prescrire - mention"]],["Gen","Généralités",["généralités","generalites","prescrire - généralités"]],["GenTitre","Généralités, titre",["généralités titre","généralités, titre","prescrire - généralités, titre"]],
+  ["GenSousTitre","Clauses communes",["clauses communes","prescrire - clauses communes"]],["GenClause","Clause commune",["clause commune","prescrire - clause commune"]],["TOC1","Sommaire 1",["toc 1"]],["TOC2","Sommaire 2",["toc 2"]]];
+const TPL_FIELDS=["projet","adresse","moa","moe","phase","indice","date","lots"],TPL_MARK=["contenu","sommaire","dispositions"];
+const xmlEsc=t=>String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const xmlUnesc=t=>String(t).replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&amp;/g,"&");
+function tplStyles(xml){const m={},ids=new Set();(xml.match(/<w:style\b[\s\S]*?<\/w:style>/g)||[]).forEach(st=>{const id=(/w:styleId="([^"]+)"/.exec(st)||[])[1],nm=(/<w:name w:val="([^"]+)"/.exec(st)||[])[1];if(id){ids.add(id);if(nm)m[xmlUnesc(nm).toLowerCase()]=id}});return{m,ids}}
+/* texte de chaque paragraphe, recollé par-dessus les morceaux de Word */
+function tplParas(xml,fn){return xml.replace(/<w:p\b(?:[^>]*)>[\s\S]*?<\/w:p>|<w:p\/>/g,p=>{const toks=[];p.replace(/(<w:t(?:\s[^>]*)?>)([\s\S]*?)(<\/w:t>)/g,(a,o,t,c,i)=>{toks.push({o,t:xmlUnesc(t),c,i,len:a.length})});return fn(p,toks)})}
+function tplFillFields(xml,vals){return tplParas(xml,(p,toks)=>{const full=toks.map(t=>t.t).join("");if(!/\{[a-zé]+\}/i.test(full))return p;
+  const starts=[];let k=0;toks.forEach(t=>{starts.push(k);k+=t.t.length});
+  const re=/\{([a-zé]+)\}/gi,ms=[];let m;while((m=re.exec(full)))if(vals[m[1].toLowerCase()]!==undefined)ms.push([m.index,m.index+m[0].length,vals[m[1].toLowerCase()]]);
+  if(!ms.length)return p;
+  ms.reverse().forEach(([a,e,v])=>{const ti=starts.findIndex((s,i)=>a>=s&&a<s+toks[i].t.length),te=starts.findIndex((s,i)=>e>s&&e<=s+toks[i].t.length);
+    if(ti<0||te<0)return;if(ti===te){const t=toks[ti],o=a-starts[ti];t.t=t.t.slice(0,o)+v+t.t.slice(o+(e-a))}
+    else{toks[ti].t=toks[ti].t.slice(0,a-starts[ti])+v;for(let i=ti+1;i<te;i++)toks[i].t="";toks[te].t=toks[te].t.slice(e-starts[te])}
+    for(let i=0;i<toks.length;i++)starts[i]=i?starts[i-1]+toks[i-1].t.length:0});
+  let out="",last=0;toks.forEach(t=>{out+=p.slice(last,t.i)+t.o.replace(/^<w:t(?=[\s>])(?![^>]*xml:space)/,'<w:t xml:space="preserve"')+xmlEsc(t.t)+t.c;last=t.i+t.len});return out+p.slice(last)})}
+function tplReport(z,doc,sty){const {m}=tplStyles(sty);const found=[],miss=[];TPL_STY.forEach(([id,lab,al])=>{const hit=al.find(a=>m[a]);(hit?found:miss).push(lab)});
+  let txt="";tplParas(doc,(p,toks)=>{txt+=toks.map(t=>t.t).join("")+"\n";return p});
+  return{found,miss,fields:TPL_FIELDS.filter(f=>txt.includes("{"+f+"}")),marks:TPL_MARK.filter(f=>txt.includes("{"+f+"}"))}}
+async function tplLoad(file){
+  if(!needLib("JSZip"))return;const buf=await file.arrayBuffer();let z;try{z=await JSZip.loadAsync(buf)}catch(e){return toast("Ce fichier n'est pas un document Word (.docx ou .dotx).",5000)}
+  const d=z.file("word/document.xml"),st=z.file("word/styles.xml");if(!d)return toast("Ce fichier n'est pas un document Word (.docx ou .dotx).",5000);
+  const doc=await d.async("string"),sty=st?await st.async("string"):"<w:styles/>";
+  let hf="";for(const f of Object.keys(z.files).filter(n=>/^word\/(header|footer)\d*\.xml$/.test(n)))hf+=await z.file(f).async("string");
+  const r=tplReport(z,doc+hf,sty);
+  const b64=await blobB64(new Blob([buf]));
+  const A=getAg();A.tpl={name:file.name,data:b64,date:isoD(new Date())};await setAg(A);
+  openTplReport(r,file.name)}
+function openTplReport(r,name){
+  const li=(a,ok)=>a.map(x=>`<li class="${ok?"ok":"ko"}">${esc(x)}</li>`).join("");
+  openModal("Modèle Word",`<p>Le modèle <b>${esc(name)}</b> est enregistré pour l'agence : il servira à chaque CCTP Word.</p>
+    <div class="tpl-r"><div><h4>Styles repris du modèle</h4><ul>${li(r.found,1)||"<li class=\"hint\">aucun</li>"}</ul></div><div><h4>Styles fournis par Prescrire</h4><ul>${li(r.miss,0)||"<li class=\"hint\">aucun</li>"}</ul></div></div>
+    <div class="tpl-r"><div><h4>Champs trouvés</h4><ul>${li(r.fields.map(f=>"{"+f+"}"),1)||"<li class=\"hint\">aucun</li>"}</ul></div><div><h4>Repères</h4><ul>${TPL_MARK.map(f=>`<li class="${r.marks.includes(f)?"ok":"ko"}">{${f}}${r.marks.includes(f)?"":f==="contenu"?" — absent : les lots s'ajoutent à la fin":f==="sommaire"?" — absent : le sommaire précède les lots":" — absent : les dispositions précèdent les lots"}</li>`).join("")}</ul></div></div>
+    <p class="hint">Les styles sont reconnus par leur nom (Titre 1, Titre 2, Titre 3, Corps, Clause, Généralités…). Ceux qui manquent gardent la mise en forme de Prescrire. La page de garde, les en-têtes et les pieds de page viennent du modèle.</p>`,
+    `<button class="btn" data-m="close">Fermer</button><button class="btn primary" id="tpl-back">Revenir à la publication</button>`);$("#tpl-back").onclick=()=>{closeModal();openExport()}}
+async function tplApply(TPL,PARTS,ourStyles,fileName){
+  const z=await JSZip.loadAsync(TPL.data,{base64:true}),P=S.projet;
+  let doc=await z.file("word/document.xml").async("string"),sty=z.file("word/styles.xml")?await z.file("word/styles.xml").async("string"):null;
+  /* styles */
+  const {m,ids}=sty?tplStyles(sty):{m:{},ids:new Set()};let add="";const map={};
+  TPL_STY.forEach(([id,lab,al])=>{const hit=al.find(a=>m[a]);if(hit){map[id]=m[hit];return}
+    const def=(new RegExp(`<w:style w:type="paragraph" w:styleId="${id}">[\\s\\S]*?</w:style>`).exec(ourStyles)||[])[0];if(!def)return;
+    let nid=id;if(ids.has(nid))nid="Pz"+id;map[id]=nid;add+=def.replace(`w:styleId="${id}"`,`w:styleId="${nid}"`)});
+  if(sty&&add)sty=sty.replace("</w:styles>",add+"</w:styles>");
+  if(!sty)sty=ourStyles;
+  const restyle=x=>x.replace(/<w:pStyle w:val="([^"]+)"\/>/g,(a,id)=>map[id]?`<w:pStyle w:val="${map[id]}"/>`:a);
+  /* repères */
+  const has={};let txt="";tplParas(doc,(p,toks)=>{const t=toks.map(x=>x.t).join("").trim();TPL_MARK.forEach(k=>{if(t==="{"+k+"}")has[k]=1});return p});
+  const body=restyle((has.sommaire?"":PARTS.toc)+(has.dispositions?"":PARTS.dispo)+PARTS.body);
+  doc=tplParas(doc,(p,toks)=>{const t=toks.map(x=>x.t).join("").trim();
+    if(t==="{contenu}")return body;if(t==="{sommaire}")return PARTS.tocField;if(t==="{dispositions}")return restyle(PARTS.dispoTxt)||"<w:p/>";return p});
+  if(!has.contenu){const i=doc.lastIndexOf("<w:sectPr");doc=i>0?doc.slice(0,i)+body+doc.slice(i):doc.replace("</w:body>",body+"</w:body>")}
+  /* champs */
+  const all=PARTS.lots.length===S.tree.length;
+  const vals={projet:P.nom||"",adresse:P.adresse||"",moa:P.moa||"",moe:P.moe||"",phase:P.phase||"",indice:P.indice||"A",date:today(),lots:all?"Tous lots":PARTS.lots.map(l=>"Lot "+IDX[l.id].nr+" — "+l.nom).join(" ; ")};
+  doc=tplFillFields(doc,vals);z.file("word/document.xml",doc);z.file("word/styles.xml",sty);
+  for(const f of Object.keys(z.files).filter(n=>/^word\/(header|footer)\d*\.xml$/.test(n)))z.file(f,tplFillFields(await z.file(f).async("string"),vals));
+  /* modèle .dotx → document ; sommaire mis à jour à l'ouverture */
+  const ct=z.file("[Content_Types].xml");if(ct)z.file("[Content_Types].xml",(await ct.async("string")).replace("wordprocessingml.template.main+xml","wordprocessingml.document.main+xml"));
+  const se=z.file("word/settings.xml");if(se){let x=await se.async("string");if(!/w:updateFields/.test(x))x=x.replace(/(<w:settings\b[^>]*>)/,'$1<w:updateFields w:val="true"/>');z.file("word/settings.xml",x)}
+  if(!z.file("word/styles.xml"))z.file("word/styles.xml",sty);
+  const blob=await z.generateAsync({type:"blob",mimeType:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
+  return{name:fileName,blob}}
 const cctpScope=lots=>lots.length===S.tree.length?"":lots.length===1?" - lot "+IDX[lots[0].id].nr+" "+slug(lots[0].nom).slice(0,40):" - lots "+lots.map(l=>IDX[l.id].nr).join(", ");
 
 /* CCTP au format PDF (pdfmake) : même hiérarchie que le Word, numéros en marge */
@@ -2776,8 +3494,9 @@ async function exportPdf(lotIds){
       if(!flat)out.push({text:g,bold:true,italics:true,color:SOFT,fontSize:9,margin:[NW,5,0,1]});
       f.forEach(([k,l])=>String(c[k]).split(/\n+/).filter(t=>t.trim()).forEach((t,j)=>out.push({columns:[{width:NW,text:""},{width:18,text:j?"":LET(i++)+")"},{width:"*",text:[j===0&&(fs.length>1||flat)?{text:l+" : ",bold:true}:"",t],alignment:"justify"}],columnGap:0,margin:[0,0,0,2]})))});
     return out};
-  const gen=(g,isLot)=>{const k=isLot?"lot":"sous-lot";if(!(g.intro||"").trim()&&!clCount(g))return[];
+  const gen=(g,isLot)=>{const k=isLot?"lot":"sous-lot";if(!(g.intro||"").trim()&&!(g.dtu||"").trim()&&!clCount(g))return[];
     const inner=[{text:"GÉNÉRALITÉS DU "+k.toUpperCase(),bold:true,fontSize:8,color:MUT,characterSpacing:0.6,margin:[0,0,0,3]},
+      ...((g.dtu||"").trim()?[{text:[{text:"DTU et normes de référence : ",bold:true},g.dtu.trim().replace(/\n+/g," ; ")],margin:[0,0,0,3]}]:[]),
       ...String(g.intro||"").split(/\n+/).filter(x=>x.trim()).map(x=>({text:x,italics:true,margin:[0,0,0,3]})),
       ...(clCount(g)?[{text:"Clauses communes à toutes les prestations du "+k,bold:true,fontSize:9,margin:[0,2,0,2]},...clauses(g,true).map(x=>(x.columns[0].width=0,x))]:[])];
     return[{columns:[{width:NW,text:""},{width:"*",table:{widths:["*"],body:[[{stack:inner,fillColor:GEN,margin:[8,6,8,6]}]]},layout:"noBorders"}],columnGap:0,margin:[0,2,0,8]}]};
@@ -2994,6 +3713,14 @@ function aboutHTML(){
       <button class="link" id="ab-more" aria-expanded="false" aria-controls="ab-clip">Lire plus</button></section></div>`;
 }
 const CHANGES=[
+ ["0.15.0","23 novembre 2026",["Planning : durées en jours ouvrés, enchaînements avec décalage, flèches entre les tâches, dates de début et de fin sur chaque barre, sous-lots enchaînés par défaut et durée du lot égale à leur somme ; week-ends, jours fériés et congés de chantier sautés ; export Excel et PDF A3",
+   "Phase chantier : marchés figés par lot, TS attribués à une entreprise, plus et moins-values calculées d'après la DPGF, prix nouveaux signalés, prestations supprimées barrées, avancement, alerte de dépassement ; fiche TS en PDF et suivi en Excel",
+   "Modèle Word de l'agence : styles repris par leur nom, champs {projet}, {moa}, {phase}… et repères {sommaire}, {dispositions}, {contenu} ; modèle de départ à télécharger ; ouverture dans Word après l'enregistrement",
+   "Offres, Planning et Chantier s'ouvrent par trois icônes de la barre du haut, en pleine largeur ; la colonne de droite garde le CCTP et la DPGF",
+   "Offres : liste des entreprises dans un menu, analyse exportée aux couleurs de l'écran avec une feuille par lot",
+   "Lots et sous-lots : deux champs, DTU et clauses générales ; partage de la rédaction d'un lot, à reprendre dans un autre projet",
+   "Aide : bouton « ? » avec un manuel, des questions fréquentes et les raccourcis clavier, et petits « ? » dans les fenêtres importantes",
+   "Nouvelle icône pour les fichiers de projet .caz"]],
  ["0.14.3","23 novembre 2026",["Barre du haut en icônes (le nom s'affiche au survol), « Publier… » remonté à côté, pastille orange sur Enregistrer quand il reste des modifications",
    "Colonne de droite simplifiée : une seule barre d'outils, choix du lot par un menu avec flèches précédent / suivant, le document suit la prestation sélectionnée dans l'arbre, titres du tableau toujours visibles",
    "Arbre : « + Prestation » et un menu « + Lot, sous-lot » ; message d'accueil dans un projet vide",
@@ -3105,6 +3832,7 @@ function openExport(){
     <fieldset id="x-dest"><legend>Destinataire</legend><div class="optrow">
       <label class="opt"><input type="radio" name="x-type" value="moa" ${X.type==="moa"?"checked":""}><span><b>Maître d'ouvrage</b><small>Prix et montants de l'estimation</small></span></label>
       <label class="opt"><input type="radio" name="x-type" value="cons" ${X.type==="cons"?"checked":""}><span><b>Entreprises</b><small>Prix unitaires vides, totaux par formules</small></span></label></div></fieldset>
+    <fieldset id="x-tpl"><legend>Mise en page Word</legend><div id="x-tplb"></div></fieldset>
     <fieldset><legend>Contenu</legend><div class="optrow">
       <label class="opt"><input type="radio" name="x-scope" value="all" ${X.scope==="all"?"checked":""}><span><b>Tous les lots</b></span></label>
       <label class="opt"><input type="radio" name="x-scope" value="some" ${X.scope==="some"?"checked":""}><span><b>Lots choisis</b></span></label></div>
@@ -3115,7 +3843,7 @@ function openExport(){
   const body=$("#m-body");
   const sync=()=>{
     const all=X.scope==="all",docx=X.doc!=="dpgf",split=$("#x-split").checked,ch=X.doc==="choix";
-    $("#x-dest").hidden=docx;$("#x-recapl").hidden=docx;$("#x-fmt").hidden=!ch;
+    $("#x-dest").hidden=docx;$("#x-recapl").hidden=docx;$("#x-fmt").hidden=!ch;$("#x-tpl").hidden=X.doc!=="docx";
     body.querySelectorAll("[data-xl]").forEach(c=>{c.checked=all||X.lots.has(c.dataset.xl);c.disabled=all;c.closest("label").style.opacity=all?.55:1});
     const ids=[...body.querySelectorAll("[data-xl]:checked")].map(c=>c.dataset.xl),rc=!docx&&$("#x-recap").checked;
     const parts=[...ids.map(id=>"Lot "+IDX[id].nr),...(rc?["Récapitulatif"]:[])],n=parts.length;
@@ -3129,16 +3857,26 @@ function openExport(){
     if(t.dataset.xl)t.checked?X.lots.add(t.dataset.xl):X.lots.delete(t.dataset.xl);
     if(t.id==="x-recap")X.recap=t.checked;if(t.id==="x-split")X.split=t.checked;sync()};
   sync();
+  const tplR=()=>{const A=getAg(),t=A.tpl;$("#x-tplb").innerHTML=`<div class="tpl-row"><span class="tpl-n">${t?`Modèle de l'agence : <b>${esc(t.name)}</b>`:"Mise en page Prescrire"}</span>
+      <label class="btn">${t?"Changer…":"Utiliser un modèle Word…"}<input type="file" id="x-tplf" accept=".docx,.dotx" hidden></label>${t?`<button class="btn" id="x-tplr">Rapport</button><button class="btn" id="x-tplx">Ne plus l'utiliser</button>`:""}
+      <button class="link" id="x-tpls">Télécharger le modèle de départ</button></div>${T?`<label class="recap-opt" style="margin-top:8px"><input type="checkbox" id="x-open" ${X.open?"checked":""}><span></span><span>Ouvrir dans Word après l'enregistrement</span><span></span></label>`:""}`;
+    $("#x-tplf").onchange=async e=>{e.stopPropagation();const f=e.target.files[0];if(!f)return;onModalClose=null;closeModal();await tplLoad(f);};
+    const r=$("#x-tplr");if(r)r.onclick=async()=>{const A=getAg();const z=await JSZip.loadAsync(A.tpl.data,{base64:true});let d=await z.file("word/document.xml").async("string");for(const f of Object.keys(z.files).filter(n=>/^word\/(header|footer)\d*\.xml$/.test(n)))d+=await z.file(f).async("string");const st=z.file("word/styles.xml");closeModal();openTplReport(tplReport(z,d,st?await st.async("string"):""),A.tpl.name)};
+    const x=$("#x-tplx");if(x)x.onclick=async()=>{const A=getAg();delete A.tpl;await setAg(A);tplR()};
+    $("#x-tpls").onclick=async()=>{const f=await exportDocx(S.tree.map(l=>l.id),{starter:true});if(f)saveMany([f])};
+    const op=$("#x-open");if(op)op.onchange=e=>{X.open=e.target.checked;e.stopPropagation()}};
+  tplR();
   body.addEventListener("click",e=>{const g=e.target.closest("[data-goto]");if(!g)return;const id=g.dataset.goto;closeModal();
     reindex();ancestors(id).forEach(a=>S.open[a.id]=true);if(IDX[id]&&IDX[id].n.kind==="p")FTAB="fiche";select(id);
     setTimeout(()=>{const r=document.querySelector(`#tree [data-id="${CSS.escape(id)}"]`);if(r)r.scrollIntoView({block:"center"})},50)});
   $("#x-go").onclick=()=>{
     const ids=[...body.querySelectorAll("[data-xl]:checked")].map(c=>c.dataset.xl),rc=$("#x-recap").checked,sp=$("#x-split").checked;closeModal();
-    const go=()=>runExport(X.doc,X.doc==="choix"?X.fmt:X.type,ids,rc,sp).catch(e=>toast("Publication impossible : "+(e&&e.message||e),5000));
+    const go=()=>runExport(X.doc,X.doc==="choix"?X.fmt:X.type,ids,rc,sp).then(r=>{if(X.open&&X.doc==="docx"&&T&&typeof r==="string")openInWord(r)}).catch(e=>toast("Publication impossible : "+(e&&e.message||e),5000));
     const A=getAg();if(!A.chkOff&&chkItems(A).length)openChk(go,openExport);else go();
   };
 }
 $("#b-export").onclick=openExport;
+async function openInWord(path){try{await T.opener.openPath(path)}catch(e){try{await T.opener.revealItemInDir(path)}catch(_){toast("Ouverture impossible : "+e,5000)}}}
 
 /* ======================================================================
    Analyse des offres
@@ -3154,14 +3892,14 @@ function ecart(v,ref){if(!ref)return"";const p=(v-ref)/ref*100,c=p<-SEUIL?"lo":p
 function offresHTML(){
   const O=S.offres;
   let h=`<div class="out-tools" style="border-bottom:1px solid var(--line-soft)"><button class="btn primary" id="of-imp">Importer une offre…</button>
-    ${O.map(o=>`<span class="offchip">${esc(o.nom)}<button data-of="${o.id}" title="Renommer ou retirer">Modifier</button></span>`).join("")}
-    <span style="flex:1"></span>${O.length?'<button class="btn" id="of-exp">Exporter l\'analyse</button>':""}</div>`;
+    ${O.length?`<button class="btn" id="of-man" title="Renommer, compléter ou retirer une offre">${O.length} entreprise${O.length>1?"s":""} ▾</button>`:""}
+    <span style="flex:1"></span>${O.length?'<button class="btn" id="of-exp">Exporter l\'analyse</button>':""}${helpBtn("offres")}</div>`;
   if(!O.length)return h+`<div class="empty"><p><b>Analyse des offres</b></p><p>1. Exportez la DPGF « Entreprises » et envoyez-la aux entreprises consultées.<br>2. Quand elles vous la renvoient remplie, importez chaque fichier ici.<br>3. Prescrire compare chaque prix à votre estimation, ligne par ligne, et signale les écarts de plus de ${SEUIL} % et les prix manquants.</p></div>`;
   reindex();
   if(S.olot!=="synth"&&!IDX[S.olot])S.olot="synth";
   h+=`<div class="lotbar"><button class="chip" data-olot="synth" aria-pressed="${S.olot==="synth"}">Synthèse</button>${S.tree.map(l=>`<button class="chip" data-olot="${l.id}" aria-pressed="${S.olot===l.id}">${IDX[l.id].nr} ${esc(l.nom)}</button>`).join("")}</div>`;
   h+=`<div class="legend"><span><i style="background:var(--ok-soft);border:1px solid var(--ok)"></i>Moins-disant</span><span><i style="background:var(--danger)"></i>Plus de ${SEUIL} % sous l'estimation</span><span><i style="background:var(--warn)"></i>Plus de ${SEUIL} % au-dessus</span><span><i style="background:var(--danger-soft);border:1px solid var(--danger)"></i>Prix manquant</span></div>`;
-  const ths=O.map(o=>`<th class="r">${esc(o.nom)}</th>`).join("");
+  const ths=O.map(o=>`<th class="r"><button class="th-of" data-of="${o.id}" title="Modifier l'offre de ${esc(o.nom)}">${esc(o.nom)}</button></th>`).join("");
   if(S.olot==="synth"){
     let rows="";const tot=O.map(()=>0);let te=0;
     S.tree.forEach(l=>{const est=baseT(l);te+=est;const vals=O.map(o=>covered(o,l)?oBase(o,l):null);const ok=vals.filter(v=>v!=null);const best=ok.length?Math.min(...ok):null;
@@ -3196,6 +3934,7 @@ function offresHTML(){
 function bindOffres(){
   const o=$("#out");navify(o);
   const imp=$("#of-imp");if(imp)imp.onclick=()=>pickFile(".xlsx",f=>importOffre(f).catch(e=>toast("Import impossible : "+(e&&e.message||e),5000)));
+  const mg=$("#of-man");if(mg)mg.onclick=openOffresList;
   const ex=$("#of-exp");if(ex)ex.onclick=()=>exportAnalyse().catch(e=>toast("Export impossible : "+(e&&e.message||e),5000));
   o.onclick=e=>{
     if(S.tab!=="off")return;
@@ -3203,6 +3942,11 @@ function bindOffres(){
     const b=e.target.closest("[data-of]");if(b)editOffre(b.dataset.of);
   };
 }
+function openOffresList(){reindex();
+  openModal("Offres importées",`<div class="tblwrap"><table class="dpgf"><thead><tr><th>Entreprise</th><th>Lots chiffrés</th><th class="r">Total HT</th><th></th></tr></thead><tbody>${S.offres.map(o=>{const ls=S.tree.filter(l=>covered(o,l));
+    return`<tr><td><b>${esc(o.nom)}</b><div class="hint">${esc(o.fichier||"")} · ${esc(o.date||"")}${(o.vl||[]).length?` · ${o.vl.length} variante${o.vl.length>1?"s":""} libre${o.vl.length>1?"s":""}`:""}</div></td><td>${ls.map(l=>IDX[l.id].nr).join(", ")||"—"}</td><td class="r">${nf.format(ls.reduce((t,l)=>t+oBase(o,l),0))}</td><td class="r"><button class="btn" data-ofe="${o.id}">Modifier…</button></td></tr>`}).join("")}</tbody></table></div>`,
+    `<button class="btn primary" data-m="close">Fermer</button>`);
+  $("#m-body").querySelectorAll("[data-ofe]").forEach(b=>b.onclick=()=>{closeModal();editOffre(b.dataset.ofe)})}
 function editOffre(id){
   const of=S.offres.find(x=>x.id===id);if(!of)return;
   const n=Object.keys(of.pu).length;
@@ -3257,27 +4001,54 @@ async function importOffre(file){
 async function exportAnalyse(){
   if(!needLib("ExcelJS"))return;
   reindex();
-  const O=S.offres,wb=new ExcelJS.Workbook(),MONEY='#,##0.00 "€"',PCT='+0.0%;-0.0%;0.0%';
-  const font={name:"Arial",size:10},bold={name:"Arial",size:10,bold:true};
-  const ws=wb.addWorksheet("Synthèse",{views:[{state:"frozen",ySplit:4}]});
-  ws.getCell("A1").value=S.projet.nom;ws.getCell("A1").font={name:"Arial",size:14,bold:true};
-  ws.getCell("A2").value="Analyse des offres · "+indTxt()+" · "+today();ws.getCell("A2").font=font;
-  const hdr=["Lot","Désignation","Estimation HT",...O.flatMap(o=>[o.nom,"Écart"])];
-  ws.getRow(4).values=hdr;ws.getRow(4).font=bold;
+  const O=S.offres,wb=new ExcelJS.Workbook(),MONEY='#,##0.00 "€"',PCT='+0.0%;-0.0%;0.0%';wb.creator="Prescrire";
+  const font={name:"Arial",size:10},bold={name:"Arial",size:10,bold:true},small={name:"Arial",size:9,color:{argb:"FF5B6674"}};
+  const fill=c=>({type:"pattern",pattern:"solid",fgColor:{argb:c}});
+  const BEST=fill("FFE0EFE4"),MISS=fill("FFFBEFD5"),HEAD=fill("FFF3F5F7"),LOT=fill("FFE8EEFB");
+  const LO={name:"Arial",size:10,bold:true,color:{argb:"FFA3361C"}},HI={name:"Arial",size:10,bold:true,color:{argb:"FF8A5A00"}};
+  const line={bottom:{style:"thin",color:{argb:"FFD3D9E0"}}};
+  /* cellule montant + cellule écart, colorées comme à l'écran */
+  const put=(row,c,v,ref,best)=>{const a=row.getCell(c),b=row.getCell(c+1);
+    if(v==null){a.value="manquant";a.fill=MISS;a.font=small;a.alignment={horizontal:"right"};return}
+    a.value=v;a.numFmt=MONEY;a.font=font;if(best)a.fill=BEST;
+    if(ref){const p=(v-ref)/ref;b.value=p;b.numFmt=PCT;b.font=p*100<-SEUIL?LO:p*100>SEUIL?HI:small;if(best)b.fill=BEST}};
+  const legend=(ws,r)=>{ws.getCell("A"+r).value="Vert : moins-disant · rouge : plus de "+SEUIL+" % sous l'estimation · ocre : plus de "+SEUIL+" % au-dessus · jaune : prix manquant";ws.getCell("A"+r).font=small};
+  const title=(ws,t)=>{ws.getCell("A1").value=S.projet.nom;ws.getCell("A1").font={name:"Arial",size:14,bold:true};ws.getCell("A2").value=t+" · "+indTxt()+" · "+today();ws.getCell("A2").font=font;legend(ws,3)};
+  const head=(row,vals)=>{row.values=vals;row.font=bold;row.eachCell(c=>{c.fill=HEAD;c.border=line;c.alignment={vertical:"middle",wrapText:true}});row.height=28};
+  const setup={paperSize:9,orientation:"landscape",fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:.4,right:.4,top:.5,bottom:.5,header:.3,footer:.3}};
+  /* synthèse */
+  const ws=wb.addWorksheet("Synthèse",{views:[{state:"frozen",ySplit:5,xSplit:2}],pageSetup:setup});title(ws,"Analyse des offres");
+  head(ws.getRow(5),["Lot","Désignation","Estimation HT",...O.flatMap(o=>[o.nom,"Écart"])]);
   ws.columns=[{width:8},{width:40},{width:16},...O.flatMap(()=>[{width:16},{width:9}])];
-  let r=5;
-  S.tree.forEach(l=>{const est=baseT(l),row=ws.getRow(r);row.values=[IDX[l.id].nr,l.nom,est,...O.flatMap(o=>covered(o,l)?[oBase(o,l),est?(oBase(o,l)-est)/est:null]:["non chiffré",null])];
-    row.font=font;row.getCell(3).numFmt=MONEY;O.forEach((o,i)=>{row.getCell(4+i*2).numFmt=MONEY;row.getCell(5+i*2).numFmt=PCT});r++});
-  const tr=ws.getRow(r+1);tr.values=[null,"Total HT",{formula:`SUM(C5:C${r-1})`},...O.flatMap((o,i)=>{const col=String.fromCharCode(68+i*2);return[{formula:`SUM(${col}5:${col}${r-1})`},null]})];
-  tr.font=bold;tr.getCell(3).numFmt=MONEY;O.forEach((o,i)=>tr.getCell(4+i*2).numFmt=MONEY);
-  const wd=wb.addWorksheet("Détail",{views:[{state:"frozen",ySplit:1}]});
-  wd.getRow(1).values=["N°","Désignation","U","Qté","PU estim.",...O.flatMap(o=>["PU "+o.nom,"Écart"])];wd.getRow(1).font=bold;
-  wd.columns=[{width:10},{width:46},{width:6},{width:9},{width:12},...O.flatMap(()=>[{width:14},{width:9}])];
-  let k=2;
-  S.tree.forEach(l=>{const lr=wd.getRow(k);lr.values=[IDX[l.id].nr,("Lot "+IDX[l.id].nr+" — "+l.nom).toUpperCase()];lr.font=bold;k++;
-    flatP([l]).forEach(n=>{const ref=num(n.prix),row=wd.getRow(k);
-      row.values=[IDX[n.id].nr,ttl(n)+(n.pse?" (PSE)":""),n.u,num(n.qte),ref,...O.flatMap(o=>{const v=o.pu[n.id];return v==null?[covered(o,l)?"manquant":"",null]:[num(v),ref?(num(v)-ref)/ref:null]})];
-      row.font=font;row.getCell(5).numFmt=MONEY;O.forEach((o,i)=>{row.getCell(6+i*2).numFmt=MONEY;row.getCell(7+i*2).numFmt=PCT});k++});k++});
+  let r=6;const tot=O.map(()=>0);let te=0;
+  S.tree.forEach(l=>{const est=baseT(l),row=ws.getRow(r);te+=est;row.values=[IDX[l.id].nr,l.nom,est];row.font=font;row.getCell(3).numFmt=MONEY;
+    const vals=O.map(o=>covered(o,l)?oBase(o,l):null),ok=vals.filter(v=>v!=null),best=ok.length>1?Math.min(...ok):null;
+    O.forEach((o,i)=>{if(vals[i]==null){const c=row.getCell(4+i*2);c.value="non chiffré";c.font=small;c.alignment={horizontal:"right"}}else{tot[i]+=vals[i];put(row,4+i*2,vals[i],est,vals[i]===best)}});
+    row.eachCell({includeEmpty:true},c=>c.border=line);r++});
+  const tr=ws.getRow(r);tr.values=[null,"Total HT des lots chiffrés",te];tr.font=bold;tr.getCell(3).numFmt=MONEY;O.forEach((o,i)=>{const c=tr.getCell(4+i*2);c.value=tot[i];c.numFmt=MONEY;c.font=bold});
+  ws.getCell("B"+(r+2)).value="Les écarts du total ne portent que sur les lots chiffrés par chaque entreprise.";ws.getCell("B"+(r+2)).font=small;
+  /* une feuille par lot */
+  const used=new Set(["Synthèse"]);
+  S.tree.forEach(l=>{const cov=O.map(o=>covered(o,l)),Oi=O.map((o,i)=>i).filter(i=>cov[i]);
+    let nm=("Lot "+IDX[l.id].nr+" "+l.nom).replace(/[\[\]\*\?\/\\:]/g," ").slice(0,31).trim();while(used.has(nm))nm=nm.slice(0,28)+"~"+used.size;used.add(nm);
+    const wl=wb.addWorksheet(nm,{views:[{state:"frozen",ySplit:5,xSplit:2}],pageSetup:setup});title(wl,"Lot "+IDX[l.id].nr+" — "+l.nom);
+    wl.columns=[{width:10},{width:46},{width:6},{width:9},{width:12},...Oi.flatMap(()=>[{width:14},{width:9}])];
+    head(wl.getRow(5),["N°","Désignation","U","Qté","PU estim.",...Oi.flatMap(i=>["PU "+O[i].nom,"Écart"])]);
+    if(!Oi.length){wl.getCell("B6").value="Aucune entreprise n'a chiffré ce lot.";wl.getCell("B6").font=small;return}
+    let k=6;
+    const art=n=>{const ref=num(n.prix),row=wl.getRow(k++),pus=Oi.map(i=>O[i].pu[n.id]!=null?num(O[i].pu[n.id]):null),ok=pus.filter(v=>v!=null),best=ok.length>1?Math.min(...ok):null;
+      row.values=[IDX[n.id].nr,ttl(n)+(n.pse?" (PSE)":""),n.u,num(n.qte),ref];row.font=font;row.getCell(5).numFmt=MONEY;row.getCell(4).numFmt="#,##0.00";
+      Oi.forEach((i,j)=>put(row,6+j*2,pus[j],ref,pus[j]!=null&&pus[j]===best));row.eachCell({includeEmpty:true},c=>c.border=line)};
+    const sub=(t,fn,f2)=>{const row=wl.getRow(k++);row.values=[null,t,null,null,fn()];row.font=bold;row.getCell(5).numFmt=MONEY;
+      const vals=Oi.map(i=>f2(O[i])),best=vals.length>1?Math.min(...vals):null;Oi.forEach((i,j)=>put(row,6+j*2,vals[j],fn(),vals[j]===best));
+      row.eachCell({includeEmpty:true},c=>{c.fill=c.fill&&c.fill.fgColor&&c.fill.fgColor.argb==="FFE0EFE4"?c.fill:LOT;c.font=Object.assign({},c.font||font,{bold:true})})};
+    const all=flatP([l]),base=all.filter(n=>!n.pse&&!n.vid),pse=all.filter(n=>n.pse&&!n.vid);
+    base.forEach(art);sub("Total HT de la solution de base",()=>baseT(l),o=>oBase(o,l));
+    if(pse.length){k++;pse.forEach(art);sub("Total HT des PSE",()=>pseT(l),o=>oPse(o,l))}
+    varsOf(l).forEach(v=>{const it=varItems(l,v);if(!it.length)return;k++;const hr=wl.getRow(k++);hr.values=[null,vLabel(l,v)];hr.font=bold;it.forEach(art);sub("Total variante",()=>varT(l,v),o=>oVarT(o,l,v))});
+    const libres=Oi.flatMap(i=>(O[i].vl||[]).filter(x=>x.lot===l.id).map(x=>[O[i],x]));
+    if(libres.length){k++;const h=wl.getRow(k++);h.values=[null,"Variantes libres proposées par les entreprises"];h.font=bold;
+      libres.forEach(([o,x])=>{const row=wl.getRow(k++);row.values=[null,o.nom+" — "+(x.nom||"sans intitulé")+(x.rem?" ("+x.rem+")":""),null,null,x.pmv===""||x.pmv==null?"non chiffrée":num(x.pmv)];row.font=font;row.getCell(5).numFmt=MONEY})}});
   await saveFile(`${slug(S.projet.nom)} - analyse des offres.xlsx`,new Blob([await wb.xlsx.writeBuffer()],{type:XLSX_MIME}));
 }
 
@@ -3301,7 +4072,11 @@ const saveUI=()=>{try{localStorage.setItem(KEY_UI,JSON.stringify(UI))}catch(e){}
 const narrow=()=>matchMedia("(max-width: 1100px)").matches;
 const autoFold3=()=>innerWidth<1280&&!UI.keep3&&!narrow();
 function layoutCols(){
-  const f=k=>UI.fold.includes(k)||(k===3&&autoFold3()),cols=$("#cols");
+  const ws=document.body.classList.contains("ws-mode");
+  const f=k=>ws?(k===2?true:k===3?false:UI.fold.includes(k)):UI.fold.includes(k)||(k===3&&autoFold3()),cols=$("#cols");
+  if(ws&&!narrow()){[1,3].forEach(k=>$("#col"+k).classList.toggle("folded",f(k)));$("#col2").classList.remove("folded");
+    cols.style.gridTemplateColumns=`${f(1)?"36px":UI.w1+"px"} 10px 0px 0px minmax(0,1fr)`;
+    document.querySelector('[data-split="1"]').classList.toggle("off",f(1));document.querySelector('[data-split="2"]').classList.add("off");return}
   [1,2,3].forEach(k=>$("#col"+k).classList.toggle("folded",f(k)));
   if(narrow()){cols.style.gridTemplateColumns="";return}
   const flex=!f(2)?2:!f(3)?3:!f(1)?1:2;
@@ -3328,7 +4103,7 @@ document.querySelectorAll(".split").forEach(sp=>{
     if(which===1)UI.w1+=d;else UI.w3-=d;clampW();saveUI();layoutCols()});
 });
 window.addEventListener("resize",()=>{clampW();layoutCols()});
-function boot(){setTimeout(hReset,0);reindex();recalcAll();renderHead();renderTree();$("#v-lots").setAttribute("aria-pressed",S.view==="lots");$("#v-lieux").setAttribute("aria-pressed",S.view==="lieux");setTab(S.tab||"cctp");renderFiche();persist()}
+function boot(){testSeed();setTimeout(wsSync,0);setTimeout(hReset,0);reindex();recalcAll();renderHead();renderTree();$("#v-lots").setAttribute("aria-pressed",S.view==="lots");$("#v-lieux").setAttribute("aria-pressed",S.view==="lieux");setTab(S.tab||"cctp");renderFiche();persist()}
 async function drainPending(){const list=await inv("take_pending").catch(()=>[]);const p=list&&list[list.length-1];if(p)guardDirty("Ouvrir",()=>openPath(p))}
 const vnum=v=>String(v||"").replace(/^v/i,"").split(".").map(x=>parseInt(x,10)||0);
 const vNewer=(a,b)=>{const x=vnum(a),y=vnum(b);for(let i=0;i<3;i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
