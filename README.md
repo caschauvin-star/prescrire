@@ -4,21 +4,44 @@
 
 Prescrire réunit en un seul outil la bibliothèque de prescriptions, le CCTP et la DPGF : les deux documents viennent de la même source et restent toujours cohérents.
 
+![Interface principale de Prescrire : arbre des lots, fiche prestation et CCTP](docs/captures/interface.jpg)
+
 ## Fonctions
+
+**Rédaction**
 
 - **Lots, sous-lots et prestations** organisés par glisser-déposer, numérotation automatique.
 - **Fiche prestation** reliée à une bibliothèque d'articles, avec autocomplétion. Toute nouvelle prestation y est ajoutée.
-- **Descriptif détaillé** en trois groupes de clauses (préalables, exécution, limites de prestation), imprimés en alinéas a), b), c)… ; clauses communes au niveau du lot ou du sous-lot ; phrases types.
-- **Catégories** modifiables, communes à la bibliothèque.
-- **État de rédaction** de chaque prestation (en rédaction, à relire, validée, à réviser), visible en couleur dans l'arborescence et reporté sur les lots ; filtre par état ; auteur et date de chaque changement.
-- **Colonnes** redimensionnables et repliables.
+- **Descriptif détaillé** en clauses (préalables, exécution, limites de prestation), imprimées en alinéas a), b), c)… ; pour chaque lot ou sous-lot, les DTU de référence et des clauses générales imprimées une seule fois.
+- **Notes internes** datées et signées, jamais imprimées.
+- **État de rédaction** de chaque prestation (en rédaction, à relire, validée, à réviser), visible en couleur dans l'arborescence et reporté sur les lots.
 - **Lieux** par niveau, avec surface, périmètre et hauteur. Les quantités acceptent des formules (`P*H-4` pour les murs d'une pièce, ouvertures déduites) et se ventilent par pièce.
-- **CCTP et DPGF** affichés par lots ou par lieux, avec un récapitulatif HT / TVA / TTC.
-- **Prestations supplémentaires éventuelles (PSE)** chiffrées à part.
-- **Exports** : CCTP en Word (page de garde, sommaire, numérotation en marge) ; DPGF en Excel, version maître d'ouvrage avec prix ou version entreprises avec prix unitaires vides et totaux par formules.
-- **Analyse des offres** : import des DPGF remplies par les entreprises, comparaison ligne par ligne avec l'estimation, écarts signalés.
-- **Indices de DCE** : figer un indice et voir ce qui a changé depuis.
-- **Travail en agence** : bibliothèque partagée sur un dossier réseau, fusion des modifications de plusieurs postes, verrou signalant un projet déjà ouvert.
+- **Bibliothèque partagée** par l'agence, avec repérage et fusion des doublons ; partage d'une fiche ou de la rédaction d'un lot entier.
+
+**Documents**
+
+- **CCTP et DPGF** affichés en direct, par lots ou par lieux, avec un récapitulatif HT / TVA / TTC et des PSE chiffrées à part.
+- **Exports** : CCTP en Word ou en PDF ; DPGF en Excel, version maître d'ouvrage avec prix ou version entreprises avec prix unitaires vides et totaux par formules.
+- **Modèle Word de l'agence** : votre page de garde, vos en-têtes et vos styles, avec des champs `{projet}`, `{moa}`, `{phase}`… remplis automatiquement.
+- **Check-list** avant publication et **indices de DCE** : figer un indice et voir ce qui a changé depuis.
+
+**Suivi de l'opération**
+
+- **Analyse des offres** : import des DPGF remplies par les entreprises, comparaison avec l'estimation, moins-disant et écarts signalés ; export en Excel avec une feuille par lot.
+- **Planning** : durées en jours ouvrés, enchaînements entre lots, jours fériés et congés de chantier sautés ; export Excel et PDF A3.
+- **Suivi de chantier** : marchés figés par lot, travaux supplémentaires (TS) attribués à une entreprise, plus et moins-values calculées d'après la DPGF, avancement, alerte de dépassement ; fiche TS en PDF.
+- **Aide intégrée** : manuel, questions fréquentes et raccourcis clavier.
+
+## Aperçu
+
+| | |
+|---|---|
+| ![Planning avec enchaînements entre les lots](docs/captures/planning.jpg) | ![Analyse des offres de cinq entreprises](docs/captures/offres.jpg) |
+| **Planning** : durées, enchaînements et dates calculées | **Analyse des offres** : moins-disant en vert, écarts à l'estimation |
+| ![Suivi de chantier d'un lot avec un TS accepté](docs/captures/chantier-lot.jpg) | ![Interface en mode sombre avec la DPGF](docs/captures/interface-sombre.jpg) |
+| **Suivi de chantier** : TS, alerte de dépassement, avancement | **Mode sombre**, ici avec le récapitulatif de la DPGF |
+
+![Fenêtre d'aide : manuel d'utilisation, questions fréquentes et raccourcis](docs/captures/aide.jpg)
 
 Les projets s'enregistrent en fichiers `.caz`. L'application fonctionne sans connexion internet.
 
