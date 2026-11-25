@@ -24,15 +24,17 @@ Prescrire réunit en un seul outil la bibliothèque de prescriptions, le CCTP et
 - **Exports** : CCTP en Word ou en PDF ; DPGF en Excel, version maître d'ouvrage avec prix ou version entreprises avec prix unitaires vides et totaux par formules.
 - **Modèle Word de l'agence** : votre page de garde, vos en-têtes et vos styles, avec des champs `{projet}`, `{moa}`, `{phase}`… remplis automatiquement.
 - **Check-list** avant publication et **indices de DCE** : figer un indice et voir ce qui a changé depuis.
+- **Aide intégrée** : manuel, questions fréquentes et raccourcis clavier.
 
-**Suivi de l'opération**
+**Modules complémentaires** (réservés à une future version commerciale, hors de ce dépôt)
 
 - **Analyse des offres** : import des DPGF remplies par les entreprises, comparaison avec l'estimation, moins-disant et écarts signalés ; export en Excel avec une feuille par lot.
 - **Planning** : durées en jours ouvrés, enchaînements entre lots, jours fériés et congés de chantier sautés ; export Excel et PDF A3.
 - **Suivi de chantier** : marchés figés par lot, travaux supplémentaires (TS) attribués à une entreprise, plus et moins-values calculées d'après la DPGF, avancement, alerte de dépassement ; fiche TS en PDF.
-- **Aide intégrée** : manuel, questions fréquentes et raccourcis clavier.
 
 ## Aperçu
+
+Les captures du planning, de l'analyse des offres et du suivi de chantier montrent les modules complémentaires.
 
 | | |
 |---|---|
@@ -75,6 +77,8 @@ Pour publier une nouvelle version, augmentez le numéro dans `src-tauri/tauri.co
 
 ## Licence
 
-Prescrire est un logiciel libre, distribué sous licence [GNU GPL version 3](LICENSE) ou toute version ultérieure. Vous pouvez l'utiliser, l'étudier, le modifier et le redistribuer ; toute version modifiée diffusée doit rester sous la même licence, avec son code source.
+Les modules de base de Prescrire sont un logiciel libre, distribué sous licence [GNU GPL version 3](LICENSE) ou toute version ultérieure. Vous pouvez les utiliser, les étudier, les modifier et les redistribuer ; toute version modifiée diffusée doit rester sous la même licence, avec son code source.
+
+Les modules Analyse des offres, Planning et Suivi de chantier deviennent des modules complémentaires, proposés à l'avenir sous licence commerciale, en dehors de ce dépôt ; leurs versions déjà publiées ici restent sous GPL. Les modules de base n'ont pas vocation à être commercialisés pour le moment. Détails dans [LICENSING.md](LICENSING.md).
 
 Ce logiciel est fourni sans aucune garantie. Les prescriptions et les prix produits restent sous la responsabilité de leur auteur.

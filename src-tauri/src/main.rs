@@ -1,3 +1,5 @@
+// Copyright (C) 2026 Casimir Chauvin
+// SPDX-License-Identifier: GPL-3.0-or-later
 // Prescrire : coquille de bureau (macOS et Windows) autour de l'interface web.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
