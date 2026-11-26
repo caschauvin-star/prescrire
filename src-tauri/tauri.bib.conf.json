@@ -1,0 +1,41 @@
+{
+  "productName": "Prescrire BIB",
+  "identifier": "fr.prescrire.bib",
+  "build": {
+    "frontendDist": "../bib-app"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Prescrire BIB",
+        "width": 1440,
+        "height": 900,
+        "minWidth": 1024,
+        "minHeight": 640,
+        "center": true,
+        "dragDropEnabled": false
+      }
+    ]
+  },
+  "bundle": {
+    "shortDescription": "Gestionnaire de bibliothèques Prescrire",
+    "icon": [
+      "icons-bib/32x32.png",
+      "icons-bib/128x128.png",
+      "icons-bib/128x128@2x.png",
+      "icons-bib/icon.icns",
+      "icons-bib/icon.ico"
+    ],
+    "fileAssociations": null,
+    "resources": null,
+    "macOS": {
+      "files": null
+    },
+    "windows": {
+      "nsis": {
+        "installerHooks": null
+      }
+    }
+  }
+}

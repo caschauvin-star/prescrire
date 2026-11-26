@@ -1,6 +1,6 @@
 [package]
 name = "prescrire"
-version = "0.16.0"
+version = "0.18.0"
 description = "Rédaction de CCTP et DPGF"
 license = "GPL-3.0-or-later"
 edition = "2021"

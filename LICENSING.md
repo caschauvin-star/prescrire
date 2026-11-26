@@ -7,15 +7,18 @@ Les modules de base de Prescrire sont distribués sous licence **GNU GPL version
 - la rédaction des lots, sous-lots et prestations, les lieux et les quantités ;
 - la bibliothèque d'articles et son partage ;
 - le CCTP et la DPGF, leur affichage et leurs exports (Word, PDF, Excel), le modèle Word de l'agence ;
-- les indices, la check-list de publication et l'aide.
+- les phases et les indices du projet, la comparaison de deux indices, la recherche, la check-list de publication et l'aide ;
+- le tableau de bord et l'analyse des offres ;
+- les fiches lot et le descriptif détaillé personnalisable ;
+- **Prescrire BIB**, le gestionnaire de bibliothèques.
 
 Vous pouvez les utiliser, les étudier, les modifier et les redistribuer selon les termes de la GPL.
 
 ## Les modules complémentaires
 
-Les modules **Analyse des offres**, **Planning** et **Suivi de chantier** deviennent des modules complémentaires, proposés à l'avenir sous une **licence commerciale distincte** et développés en dehors de ce dépôt.
+Les modules **Planning**, **Suivi financier du chantier**, **Comptes rendus de chantier** et **Réception des travaux** sont des modules complémentaires, proposés à l'avenir sous une **licence commerciale distincte** et développés en dehors de ce dépôt.
 
-Les versions de ces modules déjà publiées ici sous GPL (jusqu'à la version 0.15.0 incluse) le restent : les droits accordés sur une version publiée ne peuvent pas être retirés. Seules leurs évolutions futures relèvent de la licence commerciale.
+Les versions des modules Planning et Suivi de chantier déjà publiées ici sous GPL (jusqu'à la version 0.15.0 incluse) le restent : les droits accordés sur une version publiée ne peuvent pas être retirés. Seules leurs évolutions futures relèvent de la licence commerciale.
 
 ## Contributions
 

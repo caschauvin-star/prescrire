@@ -1,4 +1,5 @@
-# Fabrique les applications Mac (.dmg) et Windows (-setup.exe) à chaque envoi
+# Fabrique les applications Mac (.dmg) et Windows (-setup.exe) de Prescrire
+# et de Prescrire BIB (gestionnaire de bibliothèques, même code) à chaque envoi
 # sur la branche main, ou à la demande (onglet Actions > Run workflow).
 # Les fichiers sont déposés dans la page Releases, sous le numéro de version
 # indiqué dans src-tauri/tauri.conf.json.
@@ -46,7 +47,19 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: "Prescrire v__VERSION__"
-          releaseBody: "Mac : téléchargez le fichier .dmg. Windows : téléchargez le fichier se terminant par -setup.exe."
+          releaseBody: "Prescrire et Prescrire BIB (gestionnaire de bibliothèques). Mac : téléchargez le fichier .dmg. Windows : téléchargez le fichier se terminant par -setup.exe. Les fichiers « Prescrire.BIB » sont ceux du gestionnaire."
           releaseDraft: false
           prerelease: false
           args: ${{ matrix.args }}
+      # Prescrire BIB : même code, lancé en mode gestionnaire de bibliothèques
+      - run: node outils/fabriquer-bib.mjs
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: v__VERSION__
+          releaseName: "Prescrire v__VERSION__"
+          releaseBody: "Prescrire et Prescrire BIB (gestionnaire de bibliothèques). Mac : téléchargez le fichier .dmg. Windows : téléchargez le fichier se terminant par -setup.exe. Les fichiers « Prescrire.BIB » sont ceux du gestionnaire."
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }} --config src-tauri/tauri.bib.conf.json
