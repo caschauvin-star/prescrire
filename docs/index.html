@@ -218,6 +218,19 @@
     .appel .btn-blanc { background: #fff; color: var(--bleu); }
     .appel .btn-blanc:hover { background: #eef4ff; }
 
+    /* Galerie de captures */
+    .galerie { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 22px; }
+    .shot { margin: 0; position: relative; background: #fff; border: 1px solid var(--bord); border-radius: 12px; overflow: hidden; cursor: zoom-in; box-shadow: 0 2px 8px rgba(20,30,50,.05); transition: box-shadow .15s, transform .15s; }
+    .shot:hover { box-shadow: 0 10px 26px rgba(20,30,50,.12); transform: translateY(-2px); }
+    .shot img { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--bord); background: var(--surface); }
+    .shot figcaption { padding: 14px 16px; font-size: .92rem; color: var(--gris); }
+    .shot-pro { position: absolute; top: 12px; left: 12px; z-index: 2; font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #fff; background: var(--bleu); padding: 3px 9px; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,80,200,.3); }
+    .shot-lightbox { position: fixed; inset: 0; z-index: 100; background: rgba(15,20,30,.85); display: flex; align-items: center; justify-content: center; padding: 28px; cursor: zoom-out; }
+    .shot-lightbox[hidden] { display: none; }
+    .shot-lightbox figure { margin: 0; max-width: 1200px; width: 100%; }
+    .shot-lightbox img { display: block; width: 100%; height: auto; max-height: 82vh; object-fit: contain; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    .shot-lightbox figcaption { color: #e9ecf1; text-align: center; margin-top: 14px; font-size: .95rem; }
+
     footer.bas { background: var(--surface); border-top: 1px solid var(--bord); padding: 36px 0; color: var(--gris); font-size: .92rem; }
     footer.bas .conteneur { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
     footer.bas a { color: var(--gris); }
@@ -244,6 +257,7 @@
       <nav class="menu">
         <a href="#piliers">Fonctionnalités</a>
         <a href="#cycle">Cycle ESQ → AOR</a>
+        <a href="#apercu">Aperçu</a>
         <a href="#bib">Prescrire BIB</a>
         <a href="#tarifs">Licence</a>
         <a href="#faq">FAQ</a>
@@ -9635,6 +9649,50 @@ if(T)initApp();
       </div>
     </section>
 
+    <section id="apercu" class="bloc surface">
+      <div class="conteneur">
+        <div class="entete centre">
+          <span class="etiquette">L'application en images</span>
+          <h2>Un aperçu de Prescrire, de la rédaction au chantier</h2>
+          <p class="lead">Rédaction du CCTP et de la DPGF, analyse des offres, planning et suivi financier du chantier dans une seule interface.</p>
+        </div>
+        <div class="galerie">
+          <figure class="shot" onclick="ouvrirShot('captures/interface.jpg','Rédaction du CCTP : l\'arbre des lots, la fiche de prestation et l\'aperçu du CCTP mis à jour en direct.')">
+            <img src="captures/interface.jpg" alt="Rédaction du CCTP dans Prescrire" loading="lazy">
+            <figcaption>Rédaction du CCTP : les trois colonnes, aperçu en direct.</figcaption>
+          </figure>
+          <figure class="shot" onclick="ouvrirShot('captures/interface-sombre.jpg','Mode sombre et récapitulatif de la DPGF : total HT, TVA par taux, TTC, base et PSE.')">
+            <img src="captures/interface-sombre.jpg" alt="Récapitulatif DPGF en mode sombre" loading="lazy">
+            <figcaption>Récapitulatif DPGF et mode sombre.</figcaption>
+          </figure>
+          <figure class="shot" onclick="ouvrirShot('captures/offres.jpg','Analyse des offres : comparatif des entreprises, écarts à l\'estimation, moins-disant et prix manquants, lot par lot.')">
+            <img src="captures/offres.jpg" alt="Analyse comparative des offres" loading="lazy">
+            <figcaption>Analyse des offres, écarts et moins-disant.</figcaption>
+          </figure>
+          <figure class="shot" onclick="ouvrirShot('captures/planning.jpg','Planning des travaux en diagramme de Gantt, calé sur les jours ouvrés, avec export Excel et PDF A3.')">
+            <span class="shot-pro">Pro</span>
+            <img src="captures/planning.jpg" alt="Planning des travaux (Gantt)" loading="lazy">
+            <figcaption>Planning : enchaînement des lots, export Excel et PDF A3.</figcaption>
+          </figure>
+          <figure class="shot" onclick="ouvrirShot('captures/chantier-lot.jpg','Suivi financier du chantier : marché, travaux supplémentaires, avenant et avancement par situation.')">
+            <span class="shot-pro">Pro</span>
+            <img src="captures/chantier-lot.jpg" alt="Suivi financier du chantier" loading="lazy">
+            <figcaption>Suivi de chantier : travaux supplémentaires et situations.</figcaption>
+          </figure>
+          <figure class="shot" onclick="ouvrirShot('captures/aide.jpg','Aide intégrée et visite guidée pour prendre l\'outil en main rapidement.')">
+            <img src="captures/aide.jpg" alt="Aide intégrée de Prescrire" loading="lazy">
+            <figcaption>Aide intégrée et visite guidée.</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div id="shot-lightbox" class="shot-lightbox" onclick="fermerShot()" hidden>
+        <figure>
+          <img id="shot-lightbox-img" src="" alt="">
+          <figcaption id="shot-lightbox-cap"></figcaption>
+        </figure>
+      </div>
+    </section>
+
     <section id="tarifs" class="bloc surface">
       <div class="conteneur">
         <div class="entete centre">
@@ -9739,10 +9797,9 @@ if(T)initApp();
           <h2>Vous êtes maître d'œuvre, économiste ou bureau d'études ?</h2>
           <p>Nous cherchons des testeurs, en priorité dans le Rhône (69) et l'Isère (38). Essayez la version libre ou demandez une démo de 20 minutes.</p>
           <div class="actions">
-            <a class="btn btn-blanc" href="mailto:contact@exemple.fr">Écrire à l'auteur</a>
+            <a class="btn btn-blanc" id="lien-contact" href="#">Écrire à l'auteur</a>
             <a class="btn btn-contour" href="#essai">Essayer dans le navigateur</a>
           </div>
-          <p style="font-size:.85rem;margin:22px auto 0;opacity:.8">Adresse e-mail provisoire : à remplacer avant mise en ligne.</p>
         </div>
       </div>
     </section>
@@ -9758,6 +9815,18 @@ if(T)initApp();
       </span>
     </div>
   </footer>
+
+  <script>
+    // Galerie : ouverture/fermeture de l'agrandissement
+    function ouvrirShot(src,cap){var b=document.getElementById("shot-lightbox");document.getElementById("shot-lightbox-img").src=src;document.getElementById("shot-lightbox-img").alt=cap;document.getElementById("shot-lightbox-cap").textContent=cap;b.hidden=false;}
+    function fermerShot(){document.getElementById("shot-lightbox").hidden=true;}
+    window.addEventListener("keydown",function(e){if(e.key==="Escape")fermerShot();});
+  </script>
+
+  <script>
+    // Adresse de contact assemblée à l'exécution pour échapper aux robots qui lisent le HTML
+    (function(){var u="cas.chauvin",d=["gmail","com"].join(".");var a=document.getElementById("lien-contact");if(a)a.href="mailto:"+u+String.fromCharCode(64)+d;})();
+  </script>
 
   <script>
     // Cycle MOP : chaque phase affiche son titre, son texte et ses livrables
