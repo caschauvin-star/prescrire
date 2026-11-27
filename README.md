@@ -76,8 +76,12 @@ La bibliothèque fournie au départ est un exemple : ses textes et ses prix sont
 - Toute la bibliothèque rangée par lots et sous-lots, avec la fiche lot en tête de chaque lot.
 - État de rédaction de chaque article, articles incomplets (sans descriptif, sans prix, prix à revoir) signalés.
 - Rangement et changement d'état de plusieurs articles à la fois.
-- Doublons, exports Excel et JSON, export d'un lot en fiches à partager.
+- Glisser-déposer pour réordonner les articles ou les changer de lot, tri du plus complet au moins complet.
+- Aperçu du CCTP à côté de la fiche ; colonnes réglables et masquables.
+- Doublons, exports Excel et `.cazb`, export d'un lot en fiches à partager.
 - Ouverture d'un autre fichier de bibliothèque sans toucher à celle du poste.
+
+Les fichiers de bibliothèque, recueils et fiches partagées s'enregistrent en `.cazb`, avec leur propre icône : un double-clic les ouvre dans Prescrire BIB. Les anciens fichiers `.json` s'ouvrent toujours.
 
 Les installeurs de Prescrire BIB sont publiés avec ceux de Prescrire, dans la page *Releases* (fichiers « Prescrire.BIB »). Elle est construite à partir du même code (`src/index.html`) par `outils/fabriquer-bib.mjs`.
 
@@ -90,7 +94,7 @@ Les projets `.caz` peuvent aussi être rangés sur le serveur : un fichier cach�
 ## Organisation du code
 
 - `src/` : l'interface (HTML et JavaScript), avec ses polices et ses modules Excel (ExcelJS) et Word (JSZip) intégrés.
-- `src-tauri/` : la coquille de bureau en Rust ([Tauri 2](https://tauri.app)) : fenêtre, fichiers, dialogues, association des fichiers `.caz`.
+- `src-tauri/` : la coquille de bureau en Rust ([Tauri 2](https://tauri.app)) : fenêtre, fichiers, dialogues, association des fichiers `.caz` (Prescrire) et `.cazb` (Prescrire BIB).
 - `.github/workflows/fabriquer.yml` : fabrique les installateurs Mac et Windows à chaque envoi sur `main` et les publie dans *Releases*, sous le numéro de version de `src-tauri/tauri.conf.json`.
 
 Pour publier une nouvelle version, augmentez le numéro dans `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml` et `package.json`, puis envoyez les modifications sur `main`.

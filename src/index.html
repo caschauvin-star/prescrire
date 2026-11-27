@@ -939,6 +939,47 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
 .bib-t tr.bib-sg td span{color:var(--muted);font-weight:400}
 .bib-t tr.bib-none td{font-size:12px;color:var(--muted);font-style:italic}
 .btn.mini2{padding:2px 10px;font-size:12px;line-height:18px}
+/* Prescrire BIB : liste | fiche | aperçu du CCTP */
+.bib-b{grid-template-columns:minmax(0,1fr) minmax(400px,440px) minmax(340px,32%)}
+.bib-b.nopv{grid-template-columns:minmax(0,1fr) minmax(460px,38%)}
+.bib-b.nopv .bib-p{display:none}
+.bib-p{order:3;overflow:auto;border-left:1px solid var(--line);background:var(--soft);min-width:0}
+.bib-ph{position:sticky;top:0;z-index:1;padding:10px 16px 8px;background:var(--soft);border-bottom:1px solid var(--line-soft);font-family:var(--f-label);font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.bib-ph span{text-transform:none;letter-spacing:0;font-weight:400}
+.bib-p .empty{margin:16px}
+.bib-cctp{max-width:none;padding:14px 18px 30px;margin:0}
+.bib-cctp .c-art{cursor:pointer;border-radius:3px}
+.bib-cctp .c-art:hover{background:var(--line-soft)}
+.bib-cctp .c-art.sel{background:var(--accent-soft)}
+@media (max-width:1250px){.bib-b{grid-template-columns:minmax(0,1fr) 400px 320px}}
+#bib-pv[aria-pressed=true]{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+#bib-r textarea{overflow:hidden;resize:none;min-height:56px}
+.bib-t tr[draggable=true]{cursor:grab}
+.bib-t tr.drag td{opacity:.45}
+.bib-t tr.drop-b td{box-shadow:inset 0 2px 0 var(--accent)}
+.bib-t tr.drop-a td{box-shadow:inset 0 -2px 0 var(--accent)}
+.bib-t tr.drop-in td{background:var(--accent-soft)!important;box-shadow:inset 0 0 0 1px var(--accent)}
+.bib-grip{color:var(--muted);opacity:.5;margin-right:4px;font-size:12px;cursor:grab}
+.bib-t tr:hover .bib-grip{opacity:1}
+.bib-t .ck{width:44px;white-space:nowrap}
+.bib-sc{display:inline-flex;align-items:center;gap:6px}
+.bib-sc .bib-bar{width:46px;height:5px;display:inline-block}
+.bib-sc small{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:30px}
+.bib-t th{white-space:nowrap}
+/* colonnes de BIB : comme dans Prescrire */
+.bib-b{grid-template-columns:minmax(0,1fr) 8px 440px 8px 480px}
+.bib-col{min-width:0;min-height:0;display:flex;flex-direction:column}
+.bib-col>.vbar{display:none}
+.bib-col.folded>.vbar{display:flex;flex:1;border:0;background:var(--panel);cursor:pointer;flex-direction:column;align-items:center;gap:10px;padding:12px 0;color:var(--muted);font-family:var(--f-label);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.bib-col.folded>.vbar:hover{color:var(--accent)}
+.bib-col.folded>.vbar span{writing-mode:vertical-rl;transform:rotate(180deg)}
+.bib-col.folded>:not(.vbar){display:none}
+.bib-col>.bib-c,.bib-col>.bib-r,.bib-col>.bib-p{flex:1;min-height:0;order:0}
+.bib-r,.bib-p{border-left:0;border-right:0}
+.bib-b>.split{background:var(--bg);border-left:1px solid var(--line)}
+.bib-rh,.bib-ph{display:flex;align-items:center;gap:6px}
+.bib-rh .colhide,.bib-ph .colhide{margin-left:auto}
+.bib-ch .bib-f1{order:9;margin-left:2px}
 </style>
 <style>body{margin:0}img{max-width:100%}</style>
 </head>
@@ -1051,7 +1092,7 @@ table.lieux{border-collapse:collapse;width:100%;font-size:13px;min-width:640px}
    ====================================================================== */
 const CATS_DEF=["Fourniture et pose","Fourniture seule","Pose seule","Dépose / démolition","Préparation de support","Prestation forfaitaire","Essais et contrôles"];
 let CATS=null,CATS_MAJ=0;
-const APP_VERSION="0.18.0",GITHUB_REPO="caschauvin-star/prescrire";
+const APP_VERSION="0.18.1",GITHUB_REPO="caschauvin-star/prescrire";
 const TAUX=[20,10,5.5];
 /* Intitulé complet d'une prestation : nom + précision propre au projet (ex. « 120 x 220 ») */
 const ttl=n=>{const a=(n.nom||"").trim(),b=(n.prec||"").trim();return b?(a?a+" "+b:b):a};
@@ -1219,7 +1260,25 @@ function bindLotbTab(){const q=$("#lb-lq");if(!q)return;q.value=LIB.lq||"";
    construite sur ce même code (window.PRESCRIRE_MODE="bib") : mêmes
    fichiers, même format, mêmes fonctions de bibliothèque que Prescrire.
    ====================================================================== */
-const BIB={on:false,lot:"*",sl:"",q:"",et:"",inc:false,sel:null,kind:"",tab:"fic",chk:new Set(),col:new Set(),file:null};
+const BIB={on:false,lot:"*",sl:"",q:"",et:"",inc:false,sel:null,kind:"",tab:"fic",chk:new Set(),col:new Set(),file:null,sort:"man",prev:true,pvSel:null};
+/* complétude d'un article, sur 100 : descriptif 30, prix 20 (10 s'il est ancien), clauses 20, état de rédaction 30 */
+function bibScore(a){let s=0;if((a.desc||"").trim())s+=30;if(num(a.prix))s+=prixAge(a)?10:20;s+=Math.min(clCount(a),4)*5;s+={validee:30,relecture:20,redaction:8,reviser:0}[bibEt(a)];return s}
+const bibCmpMan=(a,b)=>(a.o??1e9)-(b.o??1e9)||a.nom.localeCompare(b.nom,"fr");
+function bibCmp(a,b){const g=(a.lot||"~").localeCompare(b.lot||"~","fr")||(a.sl||"").localeCompare(b.sl||"","fr");if(g)return g;
+  if(BIB.sort==="az")return a.nom.localeCompare(b.nom,"fr");
+  if(BIB.sort==="plus")return bibScore(b)-bibScore(a)||a.nom.localeCompare(b.nom,"fr");
+  if(BIB.sort==="moins")return bibScore(a)-bibScore(b)||a.nom.localeCompare(b.nom,"fr");
+  return bibCmpMan(a,b)}
+/* glisser-déposer : range les articles dans un lot / sous-lot, à la place choisie */
+let BIB_DRAG=null;
+function bibMove(ids,lot,sl,pos){const moving=ids.map(id=>BASE.find(a=>a.id===id)).filter(Boolean);if(!moving.length)return;
+  const tid=pos?pos.replace("after:",""):null;if(tid&&ids.includes(tid))return bibRender(true);
+  moving.forEach(a=>{a.lot=lot;if(sl)a.sl=sl;else delete a.sl});
+  const grp=BASE.filter(a=>norm(a.lot||"")===norm(lot)&&norm(a.sl||"")===norm(sl)&&!moving.includes(a)).sort(bibCmpMan);
+  let at=grp.length;if(tid){const i=grp.findIndex(a=>a.id===tid);if(i>=0)at=pos.startsWith("after:")?i+1:i}
+  grp.splice(at,0,...moving);grp.forEach((a,i)=>{a.o=(i+1)*10});
+  BIB.col.delete(lot||"__none");saveBase();bibRender(true);
+  if(moving.length>1)toast(`${moving.length} articles déplacés dans « ${lot||"Sans lot"}${sl?" › "+sl:""} ».`)}
 const bibLotNames=()=>{const m=new Map();LOTB.forEach(L=>m.set(norm(L.nom),L.nom));BASE.forEach(a=>{if(a.lot&&!m.has(norm(a.lot)))m.set(norm(a.lot),a.lot)});return[...m.values()].sort((a,b)=>a.localeCompare(b,"fr"))};
 const bibArts=lot=>lot==="*"?BASE:lot==="__none"?BASE.filter(a=>!a.lot):BASE.filter(a=>norm(a.lot)===norm(lot));
 const bibEt=a=>ETATS.some(e=>e[0]===a.etat)?a.etat:"redaction";
@@ -1227,7 +1286,7 @@ const bibInc=a=>{const r=[];if(!(a.desc||"").trim())r.push("sans descriptif");if
 function bibStats(arts){const n=arts.length,v=arts.filter(a=>bibEt(a)==="validee").length;return{n,v,pv:n?v/n*100:0,rel:arts.filter(a=>bibEt(a)==="relecture").length,rev:arts.filter(a=>bibEt(a)==="reviser").length,inc:arts.filter(a=>bibInc(a).length).length,old:arts.filter(a=>prixAge(a)).length}}
 function bibList(){const words=norm(BIB.q).split(/\s+/).filter(Boolean);
   return bibArts(BIB.lot).filter(a=>(!BIB.sl||norm(a.sl||"")===norm(BIB.sl))&&(!BIB.et||bibEt(a)===BIB.et)&&(!BIB.inc||bibInc(a).length)&&words.every(w=>norm(a.nom+" "+(a.desc||"")+" "+(a.sl||"")).includes(w)))
-    .sort((a,b)=>(a.lot||"~").localeCompare(b.lot||"~","fr")||(a.sl||"").localeCompare(b.sl||"","fr")||a.nom.localeCompare(b.nom,"fr"))}
+    .sort(bibCmp)}
 const bibSrc=()=>BIB.file?`Fichier « ${esc(BIB.file.name)} »${BIB.file.dirty?' · <b class="bib-dirty">modifications non enregistrées</b>':" · enregistré"}`:T?(CFG.libDir?`Bibliothèque partagée · ${esc(CFG.libDir)}`:"Bibliothèque de ce poste, partagée avec Prescrire"):"Bibliothèque de ce navigateur, partagée avec Prescrire";
 
 function bibStart(){BIB.on=true;document.body.classList.add("bib-mode");document.title="Prescrire BIB";
@@ -1235,20 +1294,57 @@ function bibStart(){BIB.on=true;document.body.classList.add("bib-mode");document
   d.innerHTML=`<header class="bib-h"><img src="${window.BIB_LOGO||""}" alt="" class="bib-logo"><div class="bib-tt"><b>Prescrire <span>BIB</span></b><small id="bib-src"></small></div>
       <nav class="bib-tabs" role="tablist"><button role="tab" data-bt="fic">Fiches</button><button role="tab" data-bt="dbl">Doublons <span class="cnt" id="lb-ndbl"></span></button></nav><span style="flex:1"></span>
       <button class="btn" id="bib-open" title="Travailler sur un autre fichier de bibliothèque, sans toucher à celle du poste">Ouvrir un fichier…</button><button class="btn primary" id="bib-save" hidden>Enregistrer</button><button class="btn" id="bib-home" hidden>Revenir à la bibliothèque du poste</button>
-      <span class="bib-sep"></span><button class="btn" id="bib-imp" title="Fiches ou sauvegarde (.json), bordereau (.xlsx)">Importer…</button><button class="btn" id="bib-xlsx">Excel</button><button class="btn" id="bib-json">JSON</button></header>
-    <div class="bib-b" id="bib-fic"><main class="bib-c" id="bib-c"></main><section class="bib-r" id="bib-r"></section></div>
+      <span class="bib-sep"></span><button class="btn" id="bib-imp" title="Fiches ou bibliothèque (.cazb ou .json), bordereau (.xlsx)">Importer…</button><button class="btn" id="bib-xlsx">Excel</button><button class="btn" id="bib-json" title="Enregistrer une copie de la bibliothèque (.cazb)">Exporter</button></header>
+    <div class="bib-b" id="bib-fic"><div class="bib-col" id="bcol1"><button class="vbar" data-bunfold="1" title="Afficher la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>Bibliothèque</span></button><main class="bib-c" id="bib-c"></main></div><div class="split" data-bsplit="1" role="separator" aria-orientation="vertical" aria-label="Largeur de la fiche" tabindex="0"></div><div class="bib-col" id="bcol2"><button class="vbar" data-bunfold="2" title="Afficher la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg><span>Fiche</span></button><section class="bib-r" id="bib-r"></section></div><div class="split" data-bsplit="2" role="separator" aria-orientation="vertical" aria-label="Largeur de l'aperçu" tabindex="0"></div><div class="bib-col" id="bcol3"><button class="vbar" data-bunfold="3" title="Afficher la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg><span>Aperçu du CCTP</span></button><section class="bib-p" id="bib-p" aria-label="Aperçu du CCTP"></section></div></div>
     <div class="bib-d" id="bib-dbl" hidden><div class="dbl" id="lb-dbl"></div></div>`;
   d.querySelectorAll("[data-bt]").forEach(b=>b.onclick=()=>{BIB.tab=b.dataset.bt;bibRender()});
+  bibColsInit();
+  $("#bib-p").onclick=e=>{const x=e.target.closest("[data-pa]");if(x){BIB.kind="art";BIB.sel=x.dataset.pa;bibRender()}};
+  /* les textes de la fiche s'affichent en entier : les zones de texte s'agrandissent avec leur contenu */
+  const grow=t=>{t.style.height="auto";t.style.height=(t.scrollHeight+2)+"px"};
+  $("#bib-r").addEventListener("input",e=>{if(e.target.tagName==="TEXTAREA")grow(e.target)});
+  new MutationObserver(()=>requestAnimationFrame(()=>$("#bib-r").querySelectorAll("textarea").forEach(grow))).observe($("#bib-r"),{childList:true,subtree:true});
+  window.addEventListener("resize",()=>$("#bib-r").querySelectorAll("textarea").forEach(grow));
   $("#bib-open").onclick=bibOpenFile;$("#bib-save").onclick=()=>bibSaveFile();$("#bib-home").onclick=()=>bibHome();
-  $("#bib-imp").onclick=()=>pickFile(".json,.xlsx,application/json",f=>{if(/\.xlsx$/i.test(f.name))importLibXlsx(f).then(()=>bibRender()).catch(err=>toast("Import impossible : "+(err&&err.message||err)));else{const r=new FileReader();r.onload=()=>{importLibText(r.result);bibRender()};r.readAsText(f)}});
+  $("#bib-imp").onclick=()=>pickFile(".cazb,.json,.xlsx",f=>{if(/\.xlsx$/i.test(f.name))importLibXlsx(f).then(()=>bibRender()).catch(err=>toast("Import impossible : "+(err&&err.message||err)));else{const r=new FileReader();r.onload=()=>{importLibText(r.result);bibRender()};r.readAsText(f)}});
   $("#bib-xlsx").onclick=()=>bibXlsx().catch(err=>toast("Export impossible : "+(err&&err.message||err)));
-  $("#bib-json").onclick=()=>saveFile(`${BIB.file?BIB.file.name.replace(/\.json$/i,""):"Bibliothèque Prescrire "+today().replace(/\//g,"-")}.json`,new Blob([bibDoc()],{type:"application/json"}));
+  $("#bib-json").onclick=()=>saveFile(`${BIB.file?BIB.file.name.replace(/\.(json|cazb)$/i,""):"Bibliothèque Prescrire "+today().replace(/\//g,"-")}.cazb`,new Blob([bibDoc()],{type:"application/json"}));
   window.addEventListener("storage",e=>{if(e.key===KEY_B&&!BIB.file){const x=parseLib(e.newValue||"");if(x){applyMerge(mergeLib(x));bibRender(true)}}});
   window.addEventListener("beforeunload",e=>{if(BIB.file&&BIB.file.dirty){e.preventDefault();e.returnValue=""}});
   if(T&&T.window){const w=T.window.getCurrentWindow();w.onCloseRequested(ev=>{if(!(BIB.file&&BIB.file.dirty))return;ev.preventDefault();
     openModal("Modifications non enregistrées",`<p>Les modifications de « ${esc(BIB.file.name)} » ne sont pas enregistrées.</p>`,`<button class="btn" data-m="cancel">Annuler</button><button class="btn" id="bq-drop">Quitter sans enregistrer</button><button class="btn primary" id="bq-save">Enregistrer et quitter</button>`);
     $("#bq-drop").onclick=()=>{BIB.file.dirty=false;w.destroy()};$("#bq-save").onclick=async()=>{closeModal();await bibSaveFile();if(!BIB.file.dirty)w.destroy()}})}
   bibRender()}
+
+/* colonnes de BIB : largeurs réglables, colonnes repliables (préférences de ce poste) */
+const KEY_BUI="prescrire-bib-colonnes",BUI_DEF={wr:440,wp:480,fold:[]};
+let BUI=(()=>{try{return Object.assign({},BUI_DEF,JSON.parse(localStorage.getItem(KEY_BUI)||"{}"))}catch(e){return{...BUI_DEF}}})();
+const saveBUI=()=>{try{localStorage.setItem(KEY_BUI,JSON.stringify(BUI))}catch(e){}};
+function bibClamp(){const W=$("#bib-fic").clientWidth||1500;BUI.wr=Math.max(340,Math.min(BUI.wr,W-BUI.wp-320,900));BUI.wp=Math.max(300,Math.min(BUI.wp,W-BUI.wr-320,1000))}
+function bibLayout(){const f=k=>BUI.fold.includes(k),g=$("#bib-fic");if(!g)return;
+  [1,2,3].forEach(k=>$("#bcol"+k).classList.toggle("folded",f(k)));
+  const flex=!f(1)?1:!f(2)?2:3,w=k=>f(k)?"36px":k===flex?"minmax(0,1fr)":(k===2?BUI.wr:BUI.wp)+"px";
+  g.style.gridTemplateColumns=`${w(1)} 8px ${w(2)} 8px ${w(3)}`;
+  g.querySelector('[data-bsplit="1"]').classList.toggle("off",f(2)||flex===2||(f(1)&&flex!==1));
+  g.querySelector('[data-bsplit="2"]').classList.toggle("off",f(3)||flex===3)}
+/* séparateur entre fiche et aperçu : seules ces deux colonnes changent, la liste ne bouge pas */
+function bibSplitMove(which,dx,r0,p0){const f=k=>BUI.fold.includes(k);
+  if(which===2&&!f(1)&&!f(2)&&!f(3)){const d=Math.max(-(r0-340),Math.min(dx,p0-300));BUI.wr=r0+d;BUI.wp=p0-d;return}
+  if(which===1)BUI.wr=r0-dx;else BUI.wp=p0-dx;bibClamp()}
+function bibColsInit(){const g=$("#bib-fic");
+  g.addEventListener("click",e=>{const a=e.target.closest("[data-bfold-col]"),b=e.target.closest("[data-bunfold]");
+    if(a){const k=+a.dataset.bfoldCol;if([1,2,3].filter(x=>x!==k&&!BUI.fold.includes(x)).length===0)return toast("Au moins une colonne reste affichée.");if(!BUI.fold.includes(k))BUI.fold.push(k);saveBUI();bibRender(true)}
+    if(b){const k=+b.dataset.bunfold;BUI.fold=BUI.fold.filter(x=>x!==k);saveBUI();bibRender(true)}});
+  g.querySelectorAll("[data-bsplit]").forEach(sp=>{const which=+sp.dataset.bsplit;
+    sp.addEventListener("pointerdown",e=>{if(sp.classList.contains("off"))return;e.preventDefault();sp.setPointerCapture(e.pointerId);sp.classList.add("drag");document.body.classList.add("resizing");
+      const x0=e.clientX,r0=BUI.wr,p0=BUI.wp;
+      const mv=ev=>{bibSplitMove(which,ev.clientX-x0,r0,p0);bibLayout()};
+      const up=()=>{sp.classList.remove("drag");document.body.classList.remove("resizing");sp.removeEventListener("pointermove",mv);sp.removeEventListener("pointerup",up);saveBUI();window.dispatchEvent(new Event("resize"))};
+      sp.addEventListener("pointermove",mv);sp.addEventListener("pointerup",up)});
+    sp.addEventListener("dblclick",()=>{BUI.wr=BUI_DEF.wr;BUI.wp=BUI_DEF.wp;bibClamp();saveBUI();bibLayout()});
+    sp.addEventListener("keydown",e=>{if(e.key!=="ArrowLeft"&&e.key!=="ArrowRight")return;e.preventDefault();bibSplitMove(which,e.key==="ArrowRight"?16:-16,BUI.wr,BUI.wp);saveBUI();bibLayout()})});
+  window.addEventListener("resize",()=>{if(BIB.on){bibClamp();bibLayout()}});
+  bibClamp();bibLayout()}
 const bibDoc=()=>JSON.stringify({format:"prescrire-bibliotheque",version:10,categories:catList(),articles:BASE,lots:LOTB},null,1);
 let bibT=null;function bibChanged(){if(!BIB.on)return;if(BIB.file){BIB.file.dirty=true}clearTimeout(bibT);bibT=setTimeout(()=>bibRender(true),250)}
 function bibRender(keepEdit){if(!BIB.on)return;
@@ -1260,32 +1356,51 @@ function bibRender(keepEdit){if(!BIB.on)return;
   if(BIB.lot!=="*"&&BIB.lot!=="__none"&&!bibLotNames().some(n=>norm(n)===norm(BIB.lot)))BIB.lot="*";
   const c=$("#bib-c"),sc=c.scrollTop;c.innerHTML=bibCenterHTML();c.scrollTop=sc;bindBibCenter(c);
   const ae=document.activeElement,typing=ae&&$("#bib-r").contains(ae)&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName);
-  if(!keepEdit||!typing)bibEdit()}
+  if(!keepEdit||!typing)bibEdit();
+  BIB.prev=!BUI.fold.includes(3);bibLayout();
+  if(BIB.prev){const pv=$("#bib-p"),st=pv.scrollTop,key=BIB.kind+":"+(BIB.kind==="lot"?LIB.lsel:BIB.sel);pv.innerHTML=bibPrevHTML();
+    if(key!==BIB.pvSel){BIB.pvSel=key;const x=pv.querySelector(".c-art.sel");if(x)x.scrollIntoView({block:"center"});else pv.scrollTop=0}else pv.scrollTop=st}}
+/* aperçu : le lot tel qu'il sortira dans le CCTP de Prescrire (généralités, sous-lots, articles dans l'ordre de la bibliothèque) */
+function bibPrevHTML(){
+  const a=BIB.kind==="art"&&BASE.find(x=>x.id===BIB.sel),L=BIB.kind==="lot"&&LOTB.find(x=>x.id===LIB.lsel);
+  const lot=a?(a.lot||""):L?L.nom:(BIB.lot!=="*"&&BIB.lot!=="__none"?BIB.lot:null);
+  if(lot===null)return`<div class="bib-ph">Aperçu du CCTP<button class="colhide" data-bfold-col="3" aria-label="Masquer la colonne Aperçu du CCTP" title="Masquer la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div><div class="empty">Choisissez un article ou un lot : son lot s'affiche ici tel qu'il sortira dans le CCTP de Prescrire, généralités comprises.</div>`;
+  const names=bibLotNames(),li=names.findIndex(n=>norm(n)===norm(lot)),nr=li>=0?String(li+1).padStart(2,"0"):"—";
+  const FL=lot?lotbByName(lot):null,arts=bibArts(lot||"__none").slice().sort(bibCmpMan);let k=0;
+  const art=(x,n)=>`<div class="c-art ${a&&x.id===a.id?"sel":""}" data-pa="${x.id}"><div class="c-h"><span class="c-n">${n}</span><h4>${esc(x.nom||"Prestation sans nom")}</h4></div><div class="c-body">${x.desc?`<p>${esc(x.desc)}</p>`:""}${clHTML(x)}<p class="c-meta"><b>Unité de compte :</b> ${esc(x.u)}</p></div></div>`;
+  let h=`<div class="c-h c-lot"><span class="c-n">${nr}</span><h2>${esc(lot||"Sans lot")}</h2></div>${FL?genHTML(FL,true):""}`;
+  h+=arts.filter(x=>!x.sl).map(x=>art(x,`${nr}.${++k}`)).join("");
+  [...new Set(arts.map(x=>x.sl).filter(Boolean))].sort((p,q)=>p.localeCompare(q,"fr")).forEach(sl=>{const sn=`${nr}.${++k}`;let j=0;
+    h+=`<div class="c-h c-sl"><span class="c-n">${sn}</span><h3>${esc(sl)}</h3></div>`+arts.filter(x=>x.sl===sl).map(x=>art(x,`${sn}.${++j}`)).join("")});
+  if(!arts.length)h+=`<p class="hint">Aucun article dans ce lot.</p>`;
+  return`<div class="bib-ph">Aperçu du CCTP <span>· mise en forme de Prescrire</span><button class="colhide" data-bfold-col="3" aria-label="Masquer la colonne Aperçu du CCTP" title="Masquer la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div><article class="cctp bib-cctp">${h}</article>`}
 
 /* ---------- liste : toute la bibliothèque, rangée par lots et sous-lots ---------- */
 function bibCenterHTML(){
   const names=bibLotNames(),list=bibList(),scope=bibArts(BIB.lot),st=bibStats(scope),filt=!!(BIB.q||BIB.et||BIB.inc);
   const k=(lbl,v,s="",cls="")=>`<div class="bib-k ${cls}"><span>${lbl}</span><b>${v}</b>${s?`<small>${s}</small>`:""}</div>`;
-  let h=`<div class="bib-ch"><h2>${BIB.lot==="*"?"Toute la bibliothèque":BIB.lot==="__none"?"Articles sans lot":esc(BIB.lot)}</h2><button class="btn" data-bact="newlot">+ Lot</button><button class="btn primary" data-bact="new">+ Article</button></div>
+  let h=`<div class="bib-ch"><button class="colhide bib-f1" data-bfold-col="1" aria-label="Masquer la colonne Bibliothèque" title="Masquer la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><h2>${BIB.lot==="*"?"Toute la bibliothèque":BIB.lot==="__none"?"Articles sans lot":esc(BIB.lot)}</h2><button class="btn" data-bact="newlot">+ Lot</button><button class="btn primary" data-bact="new">+ Article</button></div>
     <div class="bib-ks">${k("Articles",st.n,`${names.length} lot${names.length>1?"s":""}`)}${k("Validés",Math.round(st.pv)+" %",`${st.v} sur ${st.n}`)}${k("À relire",st.rel,st.rev?`${st.rev} à réviser`:"",st.rev?"al":"")}${k("Incomplets",st.inc,"sans descriptif ou sans prix",st.inc?"al":"")}${k("Prix à revoir",st.old,`plus de ${PRIX_MOIS} mois`,st.old?"al":"")}</div>
     <div class="bib-tools"><input type="search" id="bib-q" placeholder="Rechercher un article…" value="${esc(BIB.q)}" aria-label="Rechercher un article">
       <select id="bib-lotf" aria-label="Lot"><option value="*">Tous les lots</option>${names.map(n=>`<option value="${esc(n)}" ${BIB.lot===n?"selected":""}>${esc(n)}</option>`).join("")}${BASE.some(a=>!a.lot)?`<option value="__none" ${BIB.lot==="__none"?"selected":""}>Sans lot</option>`:""}</select>
       <select id="bib-et" aria-label="Filtrer par état"><option value="">Tous les états</option>${ETATS.map(([k2,l])=>`<option value="${k2}" ${BIB.et===k2?"selected":""}>${l}</option>`).join("")}</select>
-      <label class="bib-chk"><input type="checkbox" id="bib-inc" ${BIB.inc?"checked":""}> Incomplets</label><span style="flex:1"></span><button class="link" data-bact="fold">Tout replier</button><button class="link" data-bact="unfold">Tout déplier</button></div>`;
+      <label class="bib-chk"><input type="checkbox" id="bib-inc" ${BIB.inc?"checked":""}> Incomplets</label>
+      <select id="bib-sort" aria-label="Trier"><option value="man" ${BIB.sort==="man"?"selected":""}>Ordre de la bibliothèque</option><option value="az" ${BIB.sort==="az"?"selected":""}>Désignation (A → Z)</option><option value="plus" ${BIB.sort==="plus"?"selected":""}>Plus complets d'abord</option><option value="moins" ${BIB.sort==="moins"?"selected":""}>Moins complets d'abord</option></select><span style="flex:1"></span><button class="link" data-bact="fold">Tout replier</button><button class="link" data-bact="unfold">Tout déplier</button></div>`;
   if(BIB.chk.size)h+=`<div class="bib-bulk"><b>${BIB.chk.size} sélectionné${BIB.chk.size>1?"s":""}</b><span>Ranger dans</span><input type="text" id="bib-mvl" list="bib-lots" placeholder="Lot" value="${BIB.lot!=="*"&&BIB.lot!=="__none"?esc(BIB.lot):""}"><input type="text" id="bib-mvs" list="bib-sls" placeholder="Sous-lot (facultatif)"><button class="btn" data-bact="mv">Ranger</button><span class="bib-sep"></span><select id="bib-mve" aria-label="État"><option value="">État…</option>${ETATS.map(([k2,l])=>`<option value="${k2}">${l}</option>`).join("")}</select><button class="btn" data-bact="mve">Appliquer</button><span style="flex:1"></span><button class="link" data-bact="unchk">Désélectionner</button></div>
     <datalist id="bib-lots">${names.map(n=>`<option value="${esc(n)}">`).join("")}</datalist><datalist id="bib-sls">${[...new Set(BASE.map(a=>a.sl).filter(Boolean))].sort().map(n=>`<option value="${esc(n)}">`).join("")}</datalist>`;
   const groups=BIB.lot==="*"?[...names,...(BASE.some(a=>!a.lot)?["__none"]:[])]:[BIB.lot];
-  const row=a=>{const inc=bibInc(a),nc=clCount(a);return`<tr class="${BIB.kind==="art"&&BIB.sel===a.id?"on":""}" data-ba="${a.id}"><td class="ck"><input type="checkbox" data-bck="${a.id}" ${BIB.chk.has(a.id)?"checked":""} aria-label="Sélectionner ${esc(a.nom)}"></td><td>${esc(a.nom)}<div class="hint">${esc(a.cat||"")}</div></td><td>${esc(a.u)}</td><td class="r nw">${num(a.prix)?nf.format(num(a.prix)):"—"}</td><td><span class="bib-et e-${bibEt(a)}">${esc(ETATS.find(e=>e[0]===bibEt(a))[1])}</span></td><td class="c">${(a.desc||"").trim()?"✓":"—"}</td><td class="c">${nc||"—"}</td><td>${inc.length?`<span class="bib-inc">${inc.join(", ")}</span>`:""}</td></tr>`};
+  const dr=BIB.sort==="man";
+  const row=a=>{const inc=bibInc(a),nc=clCount(a),sc=bibScore(a);return`<tr class="${BIB.kind==="art"&&BIB.sel===a.id?"on":""}" data-ba="${a.id}" draggable="${dr}"><td class="ck">${dr?'<span class="bib-grip" aria-hidden="true">⠿</span>':""}<input type="checkbox" data-bck="${a.id}" ${BIB.chk.has(a.id)?"checked":""} aria-label="Sélectionner ${esc(a.nom)}"></td><td>${esc(a.nom)}<div class="hint">${esc(a.cat||"")}</div></td><td>${esc(a.u)}</td><td class="r nw">${num(a.prix)?nf.format(num(a.prix)):"—"}</td><td><span class="bib-et e-${bibEt(a)}">${esc(ETATS.find(e=>e[0]===bibEt(a))[1])}</span></td><td class="c">${nc||"—"}</td><td><span class="bib-sc" title="Complétude ${sc} %"><span class="bib-bar"><i style="width:${sc}%;background:${sc>=80?"var(--ok)":sc>=50?"var(--accent)":"var(--warn)"}"></i></span><small>${sc} %</small></span></td><td>${inc.length?`<span class="bib-inc">${inc.join(", ")}</span>`:""}</td></tr>`};
   let body="";
   groups.forEach(nm=>{const arts=list.filter(a=>nm==="__none"?!a.lot:norm(a.lot)===norm(nm));if(filt&&!arts.length)return;
     const all=bibArts(nm),s=bibStats(all),L=nm==="__none"?null:lotbByName(nm),open=filt||!BIB.col.has(nm),on=BIB.kind==="lot"&&L&&LIB.lsel===L.id;
     const flag=nm==="__none"?"":!L?'<span class="bib-flag" title="Pas encore de fiche lot (DTU, clauses communes)">sans fiche lot</span>':verifOld(L)?`<span class="bib-warn" title="${esc(verifTxt(L))}">⚠ références à vérifier</span>`:`<span class="bib-ok">${esc(verifTxt(L))}</span>`;
-    body+=`<tbody class="bib-gb"><tr class="bib-g ${on?"on":""}" data-bg="${esc(nm)}"><td class="ck"><button class="bib-tg" data-bfold="${esc(nm)}" aria-expanded="${open}" aria-label="${open?"Replier":"Déplier"} ${esc(nm)}">${CLX_DN}</button></td><td colspan="7"><div class="bib-gh"><b>${nm==="__none"?"Sans lot":esc(nm)}</b>${flag}<span class="bib-gc">${all.length} article${all.length>1?"s":""} · ${Math.round(s.pv)} % validés</span><span class="bib-bar"><i style="width:${s.pv}%"></i></span><span style="flex:1"></span>${nm==="__none"?"":`${L?`<button class="btn mini2" data-bfl="${L.id}">Fiche lot</button>`:`<button class="btn mini2" data-bmk="${esc(nm)}">Créer la fiche lot</button>`}<button class="link" data-bexp="${esc(nm)}" title="Fiche lot et articles de ce lot, à partager (.json)">Exporter</button>`}</div></td></tr>`;
+    body+=`<tbody class="bib-gb"><tr class="bib-g ${on?"on":""}" data-bg="${esc(nm)}"><td class="ck"><button class="bib-tg" data-bfold="${esc(nm)}" aria-expanded="${open}" aria-label="${open?"Replier":"Déplier"} ${esc(nm)}">${CLX_DN}</button></td><td colspan="7"><div class="bib-gh"><b>${nm==="__none"?"Sans lot":esc(nm)}</b>${flag}<span class="bib-gc">${all.length} article${all.length>1?"s":""} · ${Math.round(s.pv)} % validés</span><span class="bib-bar"><i style="width:${s.pv}%"></i></span><span style="flex:1"></span>${nm==="__none"?"":`${L?`<button class="btn mini2" data-bfl="${L.id}">Fiche lot</button>`:`<button class="btn mini2" data-bmk="${esc(nm)}">Créer la fiche lot</button>`}<button class="link" data-bexp="${esc(nm)}" title="Fiche lot et articles de ce lot, à partager (.cazb)">Exporter</button>`}</div></td></tr>`;
     if(open){const noSl=arts.filter(a=>!a.sl);body+=noSl.map(row).join("");
-      [...new Set(arts.map(a=>a.sl).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"fr")).forEach(sl=>{const sa=arts.filter(a=>a.sl===sl);body+=`<tr class="bib-sg"><td></td><td colspan="7">${esc(sl)} <span>· ${sa.length}</span></td></tr>`+sa.map(row).join("")});
+      [...new Set(arts.map(a=>a.sl).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"fr")).forEach(sl=>{const sa=arts.filter(a=>a.sl===sl);body+=`<tr class="bib-sg" data-bsg="${esc(JSON.stringify([nm==="__none"?"":nm,sl]))}"><td></td><td colspan="7">${esc(sl)} <span>· ${sa.length}</span></td></tr>`+sa.map(row).join("")});
       if(!arts.length)body+=`<tr class="bib-none"><td></td><td colspan="7">Aucun article dans ce lot. Rangez-en avec la sélection, ou « + Article ».</td></tr>`}
     body+="</tbody>"});
-  h+=body?`<table class="bib-t"><thead><tr><th class="ck"><input type="checkbox" id="bib-all" aria-label="Tout sélectionner" ${list.length&&list.every(a=>BIB.chk.has(a.id))?"checked":""}></th><th>Article</th><th>U</th><th class="r">Prix HT</th><th>État</th><th class="c" title="Descriptif">Desc.</th><th class="c" title="Clauses du descriptif détaillé">Clauses</th><th>À compléter</th></tr></thead>${body}</table>`
+  h+=body?`<table class="bib-t"><thead><tr><th class="ck"><input type="checkbox" id="bib-all" aria-label="Tout sélectionner" ${list.length&&list.every(a=>BIB.chk.has(a.id))?"checked":""}></th><th>Article</th><th>U</th><th class="r">Prix HT</th><th>État</th><th class="c" title="Clauses du descriptif détaillé">Clauses</th><th title="Descriptif, prix, clauses et état de rédaction">Complétude</th><th>À compléter</th></tr></thead>${body}</table>${dr?'<p class="hint" style="margin:8px 2px">Glissez un article (ou les articles cochés) sur un autre article, un lot ou un sous-lot pour le réorganiser.</p>':'<p class="hint" style="margin:8px 2px">Revenez à « Ordre de la bibliothèque » pour réorganiser les articles par glisser-déposer.</p>'}`
     :`<div class="empty">${BASE.length?"Aucun article ne correspond aux filtres.":"La bibliothèque est vide : commencez par « + Lot » ou « + Article »."}</div>`;
   return h}
 function bindBibCenter(c){
@@ -1293,6 +1408,19 @@ function bindBibCenter(c){
   {const e=c.querySelector("#bib-lotf");if(e)e.onchange=()=>{BIB.lot=e.value;BIB.chk.clear();bibRender(true)}}
   {const e=c.querySelector("#bib-et");if(e)e.onchange=()=>{BIB.et=e.value;bibRender(true)}}
   {const e=c.querySelector("#bib-inc");if(e)e.onchange=()=>{BIB.inc=e.checked;bibRender(true)}}
+  {const e=c.querySelector("#bib-sort");if(e)e.onchange=()=>{BIB.sort=e.value;bibRender(true)}}
+  const clr=()=>c.querySelectorAll(".drop-b,.drop-a,.drop-in").forEach(x=>x.classList.remove("drop-b","drop-a","drop-in"));
+  c.querySelectorAll('tr[data-ba][draggable="true"]').forEach(tr=>{
+    tr.ondragstart=e=>{const id=tr.dataset.ba;BIB_DRAG=BIB.chk.has(id)?[...BIB.chk]:[id];e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",id);tr.classList.add("drag")};
+    tr.ondragend=()=>{BIB_DRAG=null;clr();c.querySelectorAll(".drag").forEach(x=>x.classList.remove("drag"))}});
+  c.querySelectorAll("tr[data-ba],tr[data-bg],tr[data-bsg]").forEach(tr=>{
+    tr.ondragover=e=>{if(!BIB_DRAG)return;e.preventDefault();e.dataTransfer.dropEffect="move";clr();if(tr.dataset.ba){const r=tr.getBoundingClientRect();tr.classList.add(e.clientY<r.top+r.height/2?"drop-b":"drop-a")}else tr.classList.add("drop-in")};
+    tr.ondragleave=e=>{if(!tr.contains(e.relatedTarget))tr.classList.remove("drop-b","drop-a","drop-in")};
+    tr.ondrop=e=>{e.preventDefault();const ids=BIB_DRAG;BIB_DRAG=null;clr();if(!ids)return;let lot,sl,pos=null;
+      if(tr.dataset.ba){const t=BASE.find(x=>x.id===tr.dataset.ba);lot=t.lot||"";sl=t.sl||"";const r=tr.getBoundingClientRect();pos=e.clientY<r.top+r.height/2?t.id:"after:"+t.id}
+      else if(tr.dataset.bg){lot=tr.dataset.bg==="__none"?"":tr.dataset.bg;sl=""}
+      else[lot,sl]=JSON.parse(tr.dataset.bsg);
+      bibMove(ids,lot,sl,pos)}});
   {const e=c.querySelector("#bib-all");if(e)e.onchange=()=>{bibList().forEach(a=>e.checked?BIB.chk.add(a.id):BIB.chk.delete(a.id));bibRender(true)}}
   c.querySelectorAll("[data-bck]").forEach(x=>{x.onclick=ev=>ev.stopPropagation();x.onchange=()=>{x.checked?BIB.chk.add(x.dataset.bck):BIB.chk.delete(x.dataset.bck);bibRender(true)}});
   c.querySelectorAll("tr[data-ba]").forEach(tr=>tr.onclick=()=>{BIB.kind="art";BIB.sel=tr.dataset.ba;bibRender()});
@@ -1301,7 +1429,7 @@ function bindBibCenter(c){
   c.querySelectorAll("[data-bfold]").forEach(b=>b.onclick=()=>{const nm=b.dataset.bfold;BIB.col.has(nm)?BIB.col.delete(nm):BIB.col.add(nm);bibRender(true)});
   c.querySelectorAll("[data-bfl]").forEach(b=>b.onclick=()=>openLot(b.dataset.bfl));
   c.querySelectorAll("[data-bmk]").forEach(b=>b.onclick=()=>{const N={id:uid(),nom:b.dataset.bmk,dtu:"",intro:"",verif:0};LOTB.push(N);saveBase();openLot(N.id);const i=$("#lbl-dtu");if(i)i.focus()});
-  c.querySelectorAll("[data-bexp]").forEach(b=>b.onclick=()=>{const nm=b.dataset.bexp,L=lotbByName(nm);saveFile(`Fiches ${nm}.json`,new Blob([JSON.stringify({format:"prescrire-fiches",version:2,cree:new Date().toISOString(),articles:bibArts(nm),lots:L?[L]:[]},null,1)],{type:"application/json"}))});
+  c.querySelectorAll("[data-bexp]").forEach(b=>b.onclick=()=>{const nm=b.dataset.bexp,L=lotbByName(nm);saveFile(`Fiches ${nm}.cazb`,new Blob([JSON.stringify({format:"prescrire-fiches",version:2,cree:new Date().toISOString(),articles:bibArts(nm),lots:L?[L]:[]},null,1)],{type:"application/json"}))});
   c.querySelectorAll("[data-bact]").forEach(b=>b.onclick=()=>{const k=b.dataset.bact,real=BIB.lot!=="*"&&BIB.lot!=="__none";
     if(k==="newlot"){const L={id:uid(),nom:"Nouveau lot",dtu:"",intro:"",verif:0};LOTB.push(L);saveBase();BIB.col.delete(L.nom);openLot(L.id);const i=$("#lbl-nom");if(i){i.focus();i.select()}}
     else if(k==="new"){const a={id:uid(),nom:"Nouvel article",lot:real?BIB.lot:"",cat:catList()[0],u:"U",prix:0,desc:"",etat:"redaction"};BASE.unshift(a);saveBase();BIB.kind="art";BIB.sel=a.id;BIB.q="";BIB.et="";BIB.inc=false;bibRender();const i=$("#bib-nom");if(i){i.focus();i.select()}}
@@ -1312,11 +1440,11 @@ function bindBibCenter(c){
     else if(k==="unchk"){BIB.chk.clear();bibRender(true)}})}
 /* ---------- colonne de droite : article ou fiche lot ---------- */
 function bibEdit(){const box=$("#bib-r");
-  if(BIB.kind==="lot"&&LOTB.some(L=>L.id===LIB.lsel)){box.innerHTML=`<div class="bib-rh">Fiche lot</div><div class="lib-edit" id="lb-ledit"></div>`;lotbEdit();return}
+  if(BIB.kind==="lot"&&LOTB.some(L=>L.id===LIB.lsel)){box.innerHTML=`<div class="bib-rh">Fiche lot<button class="colhide" data-bfold-col="2" aria-label="Masquer la colonne Fiche" title="Masquer la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button></div><div class="lib-edit" id="lb-ledit"></div>`;lotbEdit();return}
   const a=BIB.kind==="art"&&BASE.find(x=>x.id===BIB.sel);
-  if(!a){box.innerHTML=`<div class="empty">Choisissez un article dans la liste, ou ouvrez la fiche d'un lot.<br><br>Rangez les articles par lot et sous-lot (cases à cocher, puis « Ranger dans »), suivez leur état de rédaction et complétez ceux qui sont signalés. Prescrire voit les modifications dès qu'elles sont faites.</div>`;return}
+  if(!a){box.innerHTML=`<div class="bib-rh">Fiche<button class="colhide" data-bfold-col="2" aria-label="Masquer la colonne Fiche" title="Masquer la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button></div><div class="empty">Choisissez un article dans la liste, ou ouvrez la fiche d'un lot.<br><br>Rangez les articles par lot et sous-lot (cases à cocher, puis « Ranger dans »), suivez leur état de rédaction et complétez ceux qui sont signalés. Prescrire voit les modifications dès qu'elles sont faites.</div>`;return}
   const sls=[...new Set(BASE.filter(x=>norm(x.lot)===norm(a.lot)).map(x=>x.sl).filter(Boolean))].sort();
-  box.innerHTML=`<div class="bib-rh">Article</div><div class="lib-edit">
+  box.innerHTML=`<div class="bib-rh">Article<button class="colhide" data-bfold-col="2" aria-label="Masquer la colonne Fiche" title="Masquer la colonne"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button></div><div class="lib-edit">
     <div class="f"><label for="bib-nom">Désignation</label><input type="text" id="bib-nom" value="${esc(a.nom)}"></div>
     <div class="grid2"><div class="f"><label for="bib-lot">Lot</label><input type="text" id="bib-lot" value="${esc(a.lot)}" list="bib-lotsr"><datalist id="bib-lotsr">${bibLotNames().map(n=>`<option value="${esc(n)}">`).join("")}</datalist></div>
       <div class="f"><label for="bib-sl">Sous-lot</label><input type="text" id="bib-sl" value="${esc(a.sl||"")}" list="bib-slsr" placeholder="Facultatif"><datalist id="bib-slsr">${sls.map(n=>`<option value="${esc(n)}">`).join("")}</datalist></div></div>
@@ -1341,13 +1469,19 @@ function bibEdit(){const box=$("#bib-r");
 
 /* ---------- fichier ouvert à part (autre bibliothèque) ---------- */
 let BIB_HOME=null;
-function bibOpenFile(){
-  const go=(txt,name,path,mtime)=>{const d=parseLib(txt);if(!d||(!d.articles.length&&!(d.lots||[]).length))return toast("Ce fichier n'est pas une bibliothèque Prescrire.");
+function bibLoad(txt,name,path,mtime){const d=parseLib(txt);if(!d||(!d.articles.length&&!(d.lots||[]).length))return toast("Ce fichier n'est pas une bibliothèque Prescrire.");
     if(!BIB_HOME)BIB_HOME={base:BASE,lots:LOTB,cats:CATS,catsMaj:CATS_MAJ};
     BIB.file={name,path:path||null,mtime:mtime||0,dirty:false};BASE=normBase(d.articles);LOTB=normLots(d.lots);if(Array.isArray(d.categories)&&d.categories.length){CATS=d.categories}TOMB=[];resnap();
-    BIB.lot="*";BIB.sl="";BIB.kind="";BIB.sel=null;BIB.chk.clear();bibRender();toast(`Fichier ouvert : ${name}. La bibliothèque du poste n'est pas touchée.`,4000)};
-  if(T&&T.dialog)return T.dialog.open({multiple:false,filters:[{name:"Bibliothèque Prescrire",extensions:["json"]}]}).then(async p=>{if(!p)return;const txt=await inv("read_text",{path:p});const mt=await inv("mtime",{path:p}).catch(()=>0);go(txt,p.split(/[\\/]/).pop(),p,mt)});
-  pickFile(".json,application/json",f=>{const r=new FileReader();r.onload=()=>go(r.result,f.name);r.readAsText(f)})}
+    BIB.lot="*";BIB.sl="";BIB.kind="";BIB.sel=null;BIB.chk.clear();bibRender();toast(`Fichier ouvert : ${name}. La bibliothèque du poste n'est pas touchée.`,4000)}
+/* double-clic sur un fichier .cazb : ouverture dans BIB */
+async function bibOpenPath(p){
+  const go=async()=>{try{const txt=await inv("read_text",{path:p});const mt=await inv("mtime",{path:p}).catch(()=>0);bibLoad(txt,p.split(/[\\/]/).pop(),p,mt)}catch(e){toast("Lecture impossible : "+e,6000)}};
+  if(!(BIB.file&&BIB.file.dirty))return go();
+  openModal("Modifications non enregistrées",`<p>Les modifications de « ${esc(BIB.file.name)} » ne sont pas enregistrées.</p>`,`<button class="btn" data-m="cancel">Annuler</button><button class="btn" id="bo-drop">Ouvrir sans enregistrer</button><button class="btn primary" id="bo-save">Enregistrer puis ouvrir</button>`);
+  $("#bo-drop").onclick=()=>{closeModal();go()};$("#bo-save").onclick=async()=>{closeModal();await bibSaveFile();if(!BIB.file.dirty)go()}}
+function bibOpenFile(){const go=bibLoad;
+  if(T&&T.dialog)return T.dialog.open({multiple:false,filters:[{name:"Bibliothèque Prescrire",extensions:["cazb","json"]}]}).then(async p=>{if(!p)return;const txt=await inv("read_text",{path:p});const mt=await inv("mtime",{path:p}).catch(()=>0);go(txt,p.split(/[\\/]/).pop(),p,mt)});
+  pickFile(".cazb,.json",f=>{const r=new FileReader();r.onload=()=>go(r.result,f.name);r.readAsText(f)})}
 async function bibSaveFile(force){const F=BIB.file;if(!F)return;
   if(T&&F.path){const mt=await inv("mtime",{path:F.path}).catch(()=>0);
     if(!force&&mt&&F.mtime&&mt!==F.mtime){openModal("Le fichier a changé depuis son ouverture",`<p>« ${esc(F.name)} » a été modifié par ailleurs (un autre poste ou une autre application) depuis que vous l'avez ouvert.</p><p>Fusionner garde les deux séries de modifications, fiche par fiche, la plus récente l'emportant.</p>`,
@@ -1374,7 +1508,7 @@ async function bibXlsx(){if(!needLib("ExcelJS"))return;
     const r=ws.addRow([a.lot,a.sl||"",a.nom,a.cat,a.u,num(a.prix),ETATS.find(e=>e[0]===bibEt(a))[1],a.desc||"",...CL_KEYS.map(k=>clStdText(a,k)),clFreeText(a),a.prixMaj?new Date(a.prixMaj):null,bibInc(a).join(", ")]);
     r.font={name:"Arial",size:10};r.getCell(6).numFmt='#,##0.00 "€"';r.getCell(8).alignment={wrapText:true,vertical:"top"};r.getCell(3).alignment={wrapText:true,vertical:"top"};r.getCell(10+CL_KEYS.length).numFmt="dd/mm/yyyy"});
   ws.autoFilter={from:"A1",to:{row:1,column:10+CL_KEYS.length}};
-  await saveFile(`${BIB.file?BIB.file.name.replace(/\.json$/i,""):"Bibliothèque Prescrire"} ${today().replace(/\//g,"-")}.xlsx`,new Blob([await wb.xlsx.writeBuffer()],{type:XLSX_MIME}))}
+  await saveFile(`${BIB.file?BIB.file.name.replace(/\.(json|cazb)$/i,""):"Bibliothèque Prescrire"} ${today().replace(/\//g,"-")}.xlsx`,new Blob([await wb.xlsx.writeBuffer()],{type:XLSX_MIME}))}
 const catList=()=>CATS&&CATS.length?CATS:CATS_DEF;
 const PHASES=["ESQ","APS","APD","PRO","DCE","ACT","EXE","DET","AOR"];
 /* Lieux d'exemple : [niveau, nom, surface sol m², périmètre ml, hauteur m] */
@@ -1445,7 +1579,7 @@ function toast(m,ms){const t=$("#toast");t.textContent=m;t.hidden=false;clearTim
    ====================================================================== */
 const KEY_P="prescrire-projet",KEY_B="prescrire-bibliotheque",KEY_OLD="prescrire-v1";
 let S,BASE,LIVE=null;
-const normBase=a=>(Array.isArray(a)?a:[]).filter(x=>x&&x.nom).map(x=>({id:x.id||uid(),nom:String(x.nom),lot:x.lot||"",cat:x.cat||catList()[0],u:fixU(x.u||"U"),prix:num(x.prix),desc:x.desc||"",cls:clCopy(x),maj:x.maj||0,par:x.par||"",prixMaj:x.prixMaj||x.maj||0,...(x.sl?{sl:String(x.sl)}:{}),...(ETATS.some(e=>e[0]===x.etat)?{etat:x.etat}:{}),...(Array.isArray(x.al)&&x.al.length?{al:x.al}:{})}));
+const normBase=a=>(Array.isArray(a)?a:[]).filter(x=>x&&x.nom).map(x=>({id:x.id||uid(),nom:String(x.nom),lot:x.lot||"",cat:x.cat||catList()[0],u:fixU(x.u||"U"),prix:num(x.prix),desc:x.desc||"",cls:clCopy(x),maj:x.maj||0,par:x.par||"",prixMaj:x.prixMaj||x.maj||0,...(x.sl?{sl:String(x.sl)}:{}),...(Number.isFinite(x.o)?{o:x.o}:{}),...(ETATS.some(e=>e[0]===x.etat)?{etat:x.etat}:{}),...(Array.isArray(x.al)&&x.al.length?{al:x.al}:{})}));
 /* Exemples de descriptif détaillé */
 const DEMO_CL={
  "Peinture acrylique murs 2 couches":{support:"Supports réceptionnés secs, sains et dépoussiérés, humidité inférieure à 5 %. Les rebouchages importants restent à la charge du lot plâtrerie.",entrepreneur:"Présentation d'un échantillon de chaque teinte sur 1 m² pour validation par l'architecte avant exécution.",realisation:"Application à la brosse ou au rouleau, température ambiante supérieure à 8 °C, respect des temps de séchage entre couches.",finalisation:"Nettoyage des projections sur menuiseries, sols et appareillages ; retouches après passage des autres corps d'état.",limites:"Les menuiseries extérieures et les boiseries sont traitées au lot Menuiseries."},
@@ -1530,7 +1664,7 @@ function persist(){try{localStorage.setItem(KEY_P,JSON.stringify(S))}catch(e){}r
    ====================================================================== */
 const T=window.__TAURI__||null,inv=(c,a)=>T.core.invoke(c,a);
 let SNAP=new Map(),TOMB=[],ME=(()=>{try{return localStorage.getItem("prescrire-nom")||""}catch(e){return""}})(),LIB_PATH=null,LIB_MTIME=0,LIB_ERR="",CFG={},CFG_PATH=null,DIRS=null;
-const artKey=a=>JSON.stringify([a.nom,a.lot,a.cat,a.u,r2(num(a.prix)),a.desc,clSig(a),a.al||0,a.sl||"",a.etat||""]);
+const artKey=a=>JSON.stringify([a.nom,a.lot,a.cat,a.u,r2(num(a.prix)),a.desc,clSig(a),a.al||0,a.sl||"",a.etat||"",a.o??""]);
 let SNAPP=new Map();
 function resnap(){SNAPL=new Map(LOTB.map(L=>[L.id,lotKey(L)]));SNAP=new Map(BASE.map(a=>[a.id,artKey(a)]));SNAPP=new Map(BASE.map(a=>[a.id,r2(num(a.prix))]))}
 function stamp(){const now=Date.now(),seen=new Set();
@@ -1781,7 +1915,7 @@ treeEl.addEventListener("drop",e=>{
   dragId=null;commit();renderFiche();
 });
 /* Import de lots, sous-lots ou prestations d'un autre projet (.caz) */
-$("#b-implots").onclick=()=>pickFile(".caz,.json",file=>{const r=new FileReader();r.onload=()=>openImportLots(r.result,file.name);r.readAsText(file)});
+$("#b-implots").onclick=()=>pickFile(".caz,.cazb,.json",file=>{const r=new FileReader();r.onload=()=>openImportLots(r.result,file.name);r.readAsText(file)});
 function openImportLots(text,fname){
   let d;try{d=JSON.parse(text)}catch(e){return toast("Ce fichier n'est pas un projet Prescrire lisible.")}
   const p=d&&d.format==="prescrire-projet"?d.projet:d;
@@ -2258,7 +2392,7 @@ function openShareGroup(g,isLot){
     if(kk==="copy"){try{await navigator.clipboard.writeText(txt);closeModal();toast("Texte copié.")}catch(err){$("#m-body").insertAdjacentHTML("beforeend",`<textarea readonly style="width:100%;height:160px">${esc(txt)}</textarea>`)}}
     else if(kk==="mail"){closeModal();openUrlExt(`mailto:?subject=${encodeURIComponent("Prescrire — "+(g.nom||""))}&body=${encodeURIComponent(txt.slice(0,1800))}`)}
     else if(kk==="save"){closeModal();await saveFile(`Lot - ${base}.json`,new Blob([groupFile(g,wp)],{type:"application/json"}))}
-    else if(kk==="fiches"){closeModal();await saveFile(`Fiches - ${base}.json`,new Blob([fichesDoc(flatP([g]).map(n=>ficheArticle(n,wp)))],{type:"application/json"}))}}}
+    else if(kk==="fiches"){closeModal();await saveFile(`Fiches - ${base}.cazb`,new Blob([fichesDoc(flatP([g]).map(n=>ficheArticle(n,wp)))],{type:"application/json"}))}}}
 function openShare(n){
   const I=(d)=>`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const opts=[
@@ -2266,20 +2400,20 @@ function openShare(n){
     ["mail",I('<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'),"E-mail avec le texte","Ouvre votre messagerie, le descriptif dans le message (pour une entreprise ou un BET)"],
     ["mailf",I('<path d="M21 12.5l-8.5 8.5a5 5 0 0 1-7-7l9-9a3.3 3.3 0 0 1 4.7 4.7l-9 9a1.7 1.7 0 0 1-2.4-2.4l8.3-8.3"/>'),"E-mail avec la fiche jointe","Enregistre la fiche, puis ouvre votre messagerie : glissez le fichier en pièce jointe"],
     ["save",I('<path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M4 19h16"/>'),"Enregistrer la fiche…","Un fichier à importer dans un autre Prescrire (Bibliothèque › Importer des fiches)"],
-    ["recueil",I('<path d="M4 4h12a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><path d="M8 4v16"/><path d="M12 9h3"/>'),"Ajouter à un recueil…","Ajoute la fiche à un recueil existant (ex. « Menuiseries bois.json ») ; si elle y figure déjà, elle est remplacée par cette version"]];
+    ["recueil",I('<path d="M4 4h12a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2z"/><path d="M8 4v16"/><path d="M12 9h3"/>'),"Ajouter à un recueil…","Ajoute la fiche à un recueil existant (ex. « Menuiseries bois.cazb ») ; si elle y figure déjà, elle est remplacée par cette version"]];
   openModal("Partager la fiche",`<p style="margin:0"><b>${esc(ttl(n)||"Prestation")}</b> · descriptif et descriptif détaillé. Les notes internes ne sont jamais partagées.</p>
     <label class="chk"><input type="checkbox" id="sh-prix" ${SH.prix?"checked":""}> Inclure le prix unitaire${num(n.prix)?` (${eur(num(n.prix))})`:""}</label>
     <div class="shareopts">${opts.map(([k,ic,t,d])=>`<button class="shareopt" data-sh="${k}">${ic}<span><b>${t}</b><small>${d}</small></span></button>`).join("")}</div>`,
     `<button class="btn" data-m="cancel">Fermer</button>`,{focus:false});
   $("#sh-prix").onchange=e=>SH.prix=e.target.checked;
   $("#m-body").onclick=async e=>{const b=e.target.closest("[data-sh]");if(!b)return;const k=b.dataset.sh,wp=SH.prix;
-    const txt=ficheText(n,wp),name=`Fiche - ${slug(ttl(n)||"prestation").slice(0,60)}.json`,blob=()=>new Blob([fichesDoc([ficheArticle(n,wp)])],{type:"application/json"});
+    const txt=ficheText(n,wp),name=`Fiche - ${slug(ttl(n)||"prestation").slice(0,60)}.cazb`,blob=()=>new Blob([fichesDoc([ficheArticle(n,wp)])],{type:"application/json"});
     const subj="Prescrire — "+(ttl(n)||"fiche prestation");
     if(k==="copy"){try{await navigator.clipboard.writeText(txt);closeModal();toast("Texte de la fiche copié.")}catch(err){$("#m-body").insertAdjacentHTML("beforeend",`<textarea readonly style="width:100%;height:160px">${esc(txt)}</textarea>`);$("#m-body textarea").select();toast("Copie automatique refusée : le texte est sélectionné, faites Cmd+C.")}}
     else if(k==="mail"){closeModal();openUrlExt(`mailto:?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(txt.slice(0,1800))}`)}
     else if(k==="mailf"){closeModal();const ok=await saveFile(name,blob());if(ok)openUrlExt(`mailto:?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent("Bonjour,\n\nVous trouverez ci-joint la fiche « "+(ttl(n)||"")+" » au format Prescrire.\nPour l'ajouter à votre bibliothèque : Bibliothèque › Importer des fiches…, ou glissez le fichier sur la fenêtre de Prescrire.\n")}`)}
     else if(k==="save"){closeModal();await saveFile(name,blob())}
-    else if(k==="recueil"){closeModal();pickFile(".json",(file,path)=>{const r=new FileReader();r.onload=async()=>{
+    else if(k==="recueil"){closeModal();pickFile(".cazb,.json",(file,path)=>{const r=new FileReader();r.onload=async()=>{
       let d;try{d=JSON.parse(r.result)}catch(err){return toast("Ce fichier n'est pas un recueil de fiches lisible.")}
       const arts=Array.isArray(d)?d:(d.articles||d.bibliotheque||[]);if(!Array.isArray(arts))return toast("Ce fichier n'est pas un recueil de fiches.");
       const art=ficheArticle(n,wp),i=arts.findIndex(z=>norm(z.nom||"")===norm(art.nom));
@@ -2304,12 +2438,12 @@ function importLibText(text){
   saveBase();if(!$("#modal").hidden&&$("#lb-list"))try{libList();libEdit()}catch(e){}
   toast(`Bibliothèque : ${a} fiche${a>1?"s":""} ajoutée${a>1?"s":""}, ${u} mise${u>1?"s":""} à jour${la+lu?` · fiches lot : ${la} ajoutée${la>1?"s":""}, ${lu} mise${lu>1?"s":""} à jour`:""}.`,4500);
 }
-/* Glisser un fichier sur la fenêtre : fiche ou recueil (.json) → bibliothèque ; projet (.caz) → ouverture */
+/* Glisser un fichier sur la fenêtre : fiche ou recueil (.cazb ou .json) → bibliothèque ; projet (.caz) → ouverture */
 window.addEventListener("dragover",e=>{if(e.dataTransfer&&[...e.dataTransfer.types].includes("Files"))e.preventDefault()});
 window.addEventListener("drop",e=>{
   const f=e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files[0];if(!f)return;e.preventDefault();
   if(/\.caz$/i.test(f.name))return guardDirty("Ouvrir",()=>openProjectFile(f,null));
-  if(!/\.json$/i.test(f.name))return toast("Glissez une fiche ou un recueil (.json), ou un projet (.caz).");
+  if(!/\.(json|cazb)$/i.test(f.name))return toast("Glissez une fiche ou un recueil (.cazb), ou un projet (.caz).");
   const r=new FileReader();r.onload=()=>{let d=null;try{d=JSON.parse(r.result)}catch(err){}
     if(d&&d.format==="prescrire-projet")return guardDirty("Ouvrir",()=>openProjectText(r.result,f.name,null));importLibText(r.result)};r.readAsText(f);
 });
@@ -3150,7 +3284,7 @@ const HELP=[
   <ul><li>Quand vous modifiez une prestation, Prescrire indique si elle est conforme à la bibliothèque, et propose d'y enregistrer vos changements.</li>
   <li>Dans l'application, la bibliothèque peut être un fichier placé dans un dossier partagé de l'agence : chacun l'enrichit, les modifications sont fusionnées article par article.</li>
   <li>L'outil <b>Doublons</b> repère les articles aux noms proches, les compare champ par champ et les fusionne.</li>
-  <li><b>Importer des fiches</b> reprend des fiches partagées par un confrère ou un recueil (.json).</li></ul>
+  <li><b>Importer des fiches</b> reprend des fiches partagées par un confrère ou un recueil (.cazb).</li></ul>
   <h4>Fiches lot</h4><p>L'onglet <b>Fiches lot</b> garde, pour chaque lot, les DTU et normes de référence, les clauses générales et les clauses communes, avec la date de la dernière vérification des références. Dans un projet, la fiche d'un lot propose d'appliquer la fiche lot de la bibliothèque ; si l'une ou l'autre change ensuite, l'écart est signalé, avec « Reporter dans la bibliothèque » ou « Revenir à la bibliothèque ». « Enregistrer comme fiche lot » crée une fiche à partir d'un lot du projet : c'est toujours un geste volontaire, pour que rien de propre à une opération ne remonte dans la bibliothèque.</p>
   <h4>Prescrire BIB</h4><p>Pour entretenir la bibliothèque au calme, sans projet ouvert, utilisez l'application gratuite <b>Prescrire BIB</b> : classement par lots et sous-lots, état de rédaction de chaque article, articles incomplets signalés, fiches lot, doublons, exports Excel et JSON. Elle travaille sur la même bibliothèque que Prescrire.</p>`],
  ["offres","Analyser les offres",`<ol><li>Publiez la DPGF <b>Entreprises</b> en Excel et envoyez-la aux entreprises consultées.</li>
@@ -3357,8 +3491,8 @@ function openLib(){
   $("#lb-list").onclick=e=>{const tr=e.target.closest("tr[data-a]");if(!tr)return;LIB.sel=tr.dataset.a;libList();libEdit()};
   $("#lb-imp").onclick=()=>pickFile(".xlsx",f=>importLibXlsx(f).catch(err=>toast("Import impossible : "+(err&&err.message||err))));
   $("#lb-exp").onclick=()=>exportLibXlsx().catch(err=>toast("Export impossible : "+(err&&err.message||err)));
-  $("#lb-save").onclick=()=>saveFile(`Bibliothèque Prescrire ${today().replace(/\//g,"-")}.json`,new Blob([JSON.stringify({format:"prescrire-bibliotheque",version:10,categories:catList(),articles:BASE,lots:LOTB},null,1)],{type:"application/json"}));
-  $("#lb-load").onclick=()=>pickFile(".json,application/json",f=>{const r=new FileReader();r.onload=()=>{importLibText(r.result);libList();libEdit()};r.readAsText(f)});
+  $("#lb-save").onclick=()=>saveFile(`Bibliothèque Prescrire ${today().replace(/\//g,"-")}.cazb`,new Blob([JSON.stringify({format:"prescrire-bibliotheque",version:10,categories:catList(),articles:BASE,lots:LOTB},null,1)],{type:"application/json"}));
+  $("#lb-load").onclick=()=>pickFile(".cazb,.json",f=>{const r=new FileReader();r.onload=()=>{importLibText(r.result);libList();libEdit()};r.readAsText(f)});
 }
 $("#b-lib").onclick=openLib;
 /* ======================================================================
@@ -4183,6 +4317,7 @@ function aboutHTML(){
       <button class="link" id="ab-more" aria-expanded="false" aria-controls="ab-clip">Lire plus</button></section></div>`;
 }
 const CHANGES=[
+ ["0.18.1","27 novembre 2026",["Fichiers de bibliothèque au format .cazb, avec leur propre icône : un double-clic les ouvre dans Prescrire BIB. Les fiches, recueils et bibliothèques partagés s'enregistrent désormais en .cazb ; les anciens fichiers .json s'ouvrent toujours.","Prescrire BIB : colonnes réglables et masquables (liste, fiche, aperçu du CCTP), glisser-déposer pour réordonner les articles ou les changer de lot, tri du plus complet au moins complet, aperçu du CCTP à droite de la fiche, zones de texte affichées en entier.","Prescrire BIB : l'icône a le même aspect que celle de Prescrire dans le Dock et la barre des tâches."]],
  ["0.18.0","26 novembre 2026",["Descriptif détaillé personnalisable : chaque paragraphe de clauses se renomme, se déplace, se supprime ou s'ajoute, sous des intertitres eux aussi modifiables. La structure type reste proposée par défaut ; vos projets et bibliothèques existants sont convertis automatiquement à l'ouverture, sans perte.","Fiches lot dans la bibliothèque : DTU et normes de référence, clauses générales et clauses communes d'un lot, tenues à jour une seule fois et appliquées aux lots de vos projets. Un écart avec la bibliothèque est signalé dans la fiche du lot.","Clauses communes d'un lot ou d'un sous-lot : paragraphes titrés, imprimés dans l'encadré de généralités.","Prescrire BIB : nouvelle application gratuite pour entretenir la bibliothèque sans projet ouvert (lots et sous-lots, état de rédaction, articles incomplets, fiches lot, doublons, exports Excel et JSON).","Exports Excel de la bibliothèque : colonne « Autres clauses » pour les paragraphes ajoutés, colonnes Sous-lot et État reconnues à l'import."]],
  ["0.17.0","26 novembre 2026",["Phases et indices : la phase se change d'un clic sur l'étiquette en haut à gauche (de l'esquisse à la réception). En changeant de phase, l'indice en cours est figé avec sa phase et la nouvelle phase repart à l'indice A ; l'historique se lit ESQ A → APS A → … → DCE B.","Comparer deux indices : nouveau bouton dans la barre au-dessus du CCTP et de la DPGF, pour voir les prestations ajoutées, supprimées et modifiées entre deux dossiers, avec l'écart de prix.","Recherche (Cmd+K) : retrouvez une prestation, un lot ou une commande au clavier.","Un nouveau projet commence en phase esquisse.","Le tableau de bord revient dans la version libre et s'ouvre au lancement : chiffres clés, état de la rédaction, répartition de l'estimation, consultation, et la liste « À faire » (aussi sous la cloche). Il n'affiche que les cartes utiles à la phase du projet.","L'analyse des offres revient elle aussi dans la version libre : import des DPGF remplies par les entreprises, comparaison à l'estimation lot par lot, export Excel.","Barre d'outils : icône du Descriptif, et les outils dans le même ordre que la version complète. Le planning, le suivi financier du chantier (icône €), les comptes rendus et la réception sont en cours de développement."]],
  ["0.16.0","25 novembre 2026",["Les modules Analyse des offres, Planning et Suivi de chantier sont retirés de cette version : ils sont en cours de développement, leurs boutons l'indiquent. Les données correspondantes de vos projets (offres importées, planning, marchés et TS) sont conservées dans vos fichiers .caz",
@@ -4405,7 +4540,10 @@ document.querySelectorAll(".split").forEach(sp=>{
 });
 window.addEventListener("resize",()=>{clampW();layoutCols()});
 function boot(){setTimeout(hReset,0);reindex();recalcAll();renderHead();renderTree();$("#v-lots").setAttribute("aria-pressed",S.view==="lots");$("#v-lieux").setAttribute("aria-pressed",S.view==="lieux");setTab("dash");renderFiche();persist()}
-async function drainPending(){const list=await inv("take_pending").catch(()=>[]);const p=list&&list[list.length-1];if(p)guardDirty("Ouvrir",()=>openPath(p))}
+async function drainPending(){const list=await inv("take_pending").catch(()=>[]);const p=list&&list[list.length-1];if(!p)return;
+  if(window.PRESCRIRE_MODE==="bib"){if(/\.(cazb|json)$/i.test(p))bibOpenPath(p);return}
+  if(/\.cazb$/i.test(p))return inv("read_text",{path:p}).then(importLibText).catch(e=>toast("Lecture impossible : "+e,6000));
+  guardDirty("Ouvrir",()=>openPath(p))}
 const vnum=v=>String(v||"").replace(/^v/i,"").split(".").map(x=>parseInt(x,10)||0);
 const vNewer=(a,b)=>{const x=vnum(a),y=vnum(b);for(let i=0;i<3;i++){if((x[i]||0)!==(y[i]||0))return(x[i]||0)>(y[i]||0)}return false};
 async function checkUpdate(){

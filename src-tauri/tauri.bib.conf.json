@@ -27,14 +27,31 @@
       "icons-bib/icon.icns",
       "icons-bib/icon.ico"
     ],
-    "fileAssociations": null,
-    "resources": null,
+    "fileAssociations": [
+      {
+        "ext": [
+          "cazb"
+        ],
+        "name": "Prescrire.Bibliotheque",
+        "description": "Bibliothèque Prescrire",
+        "role": "Editor",
+        "mimeType": "application/x-prescrire-bibliotheque"
+      }
+    ],
+    "resources": {
+      "icons/caz.ico": null,
+      "icons/cazb.ico": "cazb.ico"
+    },
     "macOS": {
-      "files": null
+      "infoPlist": "Info.bib.plist",
+      "files": {
+        "Resources/caz.icns": null,
+        "Resources/cazb.icns": "icons/cazb.icns"
+      }
     },
     "windows": {
       "nsis": {
-        "installerHooks": null
+        "installerHooks": "windows/hooks-bib.nsh"
       }
     }
   }

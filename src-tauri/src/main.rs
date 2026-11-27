@@ -7,11 +7,13 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use std::{fs, path::PathBuf, sync::Mutex, time::UNIX_EPOCH};
 use tauri::{Emitter, Manager};
 
-/// Projets .caz demandés à l'ouverture (double-clic dans le Finder ou l'Explorateur).
+/// Fichiers demandés à l'ouverture (double-clic dans le Finder ou l'Explorateur) :
+/// projets .caz pour Prescrire, bibliothèques .cazb pour Prescrire BIB.
 struct Pending(Mutex<Vec<String>>);
 
 fn is_caz(s: &str) -> bool {
-    s.to_lowercase().ends_with(".caz")
+    let s = s.to_lowercase();
+    s.ends_with(".caz") || s.ends_with(".cazb")
 }
 
 /// Écriture sûre : fichier temporaire puis renommage, pour ne jamais laisser
@@ -108,7 +110,7 @@ fn main() {
 
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, argv, _cwd| {
-            // Windows : un double-clic sur un .caz alors que Prescrire est déjà ouvert.
+            // Windows : un double-clic sur un .caz ou un .cazb alors que l'application est déjà ouverte.
             let files: Vec<String> = argv.into_iter().skip(1).filter(|a| is_caz(a)).collect();
             if !files.is_empty() {
                 app.state::<Pending>().0.lock().unwrap().extend(files);
@@ -129,7 +131,7 @@ fn main() {
         .expect("Prescrire n'a pas pu démarrer");
 
     app.run(|_app, _event| {
-        // macOS : un double-clic sur un .caz dans le Finder.
+        // macOS : un double-clic sur un .caz ou un .cazb dans le Finder.
         #[cfg(target_os = "macos")]
         if let tauri::RunEvent::Opened { urls } = &_event {
             let files: Vec<String> = urls
