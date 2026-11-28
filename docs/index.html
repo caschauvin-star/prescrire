@@ -218,13 +218,23 @@
     .appel .btn-blanc { background: #fff; color: var(--bleu); }
     .appel .btn-blanc:hover { background: #eef4ff; }
 
-    /* Galerie de captures */
-    .galerie { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 22px; }
-    .shot { margin: 0; position: relative; background: #fff; border: 1px solid var(--bord); border-radius: 12px; overflow: hidden; cursor: zoom-in; box-shadow: 0 2px 8px rgba(20,30,50,.05); transition: box-shadow .15s, transform .15s; }
-    .shot:hover { box-shadow: 0 10px 26px rgba(20,30,50,.12); transform: translateY(-2px); }
-    .shot img { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--bord); background: var(--surface); }
-    .shot figcaption { padding: 14px 16px; font-size: .92rem; color: var(--gris); }
-    .shot-pro { position: absolute; top: 12px; left: 12px; z-index: 2; font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #fff; background: var(--bleu); padding: 3px 9px; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,80,200,.3); }
+    /* Galerie — carrousel large */
+    .carousel { position: relative; max-width: 1200px; margin: 0 auto; }
+    .car-viewport { overflow-x: auto; overflow-y: hidden; border-radius: 14px; border: 1px solid var(--bord); background: #fff; box-shadow: 0 18px 50px rgba(20,30,50,.14); scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none; }
+    .car-viewport::-webkit-scrollbar { display: none; }
+    .car-track { display: flex; }
+    .cslide { position: relative; flex: 0 0 100%; min-width: 100%; margin: 0; scroll-snap-align: start; box-sizing: border-box; }
+    .cslide img { display: block; width: 100%; height: auto; cursor: zoom-in; background: var(--surface); }
+    .cslide figcaption { padding: 16px 20px; font-size: .98rem; color: var(--gris); border-top: 1px solid var(--bord); background: #fff; }
+    .shot-pro { position: absolute; top: 14px; left: 14px; z-index: 2; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: #fff; background: var(--bleu); padding: 4px 10px; border-radius: 5px; box-shadow: 0 2px 6px rgba(0,80,200,.3); }
+    .car-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--bord); background: rgba(255,255,255,.95); color: var(--encre); font-size: 1.5rem; line-height: 1; cursor: pointer; box-shadow: 0 4px 14px rgba(20,30,50,.18); display: flex; align-items: center; justify-content: center; transition: background .15s, color .15s; }
+    .car-btn:hover { background: var(--bleu); color: #fff; border-color: var(--bleu); }
+    .car-prev { left: -22px; } .car-next { right: -22px; }
+    .car-dots { display: flex; justify-content: center; gap: 9px; margin-top: 22px; flex-wrap: wrap; }
+    .car-dot { width: 9px; height: 9px; border-radius: 50%; border: 0; padding: 0; background: var(--bord); cursor: pointer; transition: background .15s, transform .15s; }
+    .car-dot.actif { background: var(--bleu); transform: scale(1.3); }
+    .car-compteur { text-align: center; color: var(--gris-doux); font-size: .85rem; margin-top: 10px; font-family: "JetBrains Mono", monospace; }
+    @media (max-width: 1260px) { .car-prev { left: 8px; } .car-next { right: 8px; } }
     .shot-lightbox { position: fixed; inset: 0; z-index: 100; background: rgba(15,20,30,.85); display: flex; align-items: center; justify-content: center; padding: 28px; cursor: zoom-out; }
     .shot-lightbox[hidden] { display: none; }
     .shot-lightbox figure { margin: 0; max-width: 1200px; width: 100%; }
@@ -9656,51 +9666,23 @@ if(T)initApp();
           <h2>Un aperçu de Prescrire, de la rédaction au chantier</h2>
           <p class="lead">De la rédaction du CCTP et de la DPGF jusqu'au suivi financier du chantier et à la réception : un aperçu des écrans de Prescrire.</p>
         </div>
-        <div class="galerie">
-          <figure class="shot" onclick="ouvrirShot('captures/tableau-de-bord.jpg','Tableau de bord : estimation, avancement de la rédaction, répartition par lot et meilleures offres, d\'un coup d\'œil.')">
-            <img src="captures/tableau-de-bord.jpg" alt="Tableau de bord de Prescrire" loading="lazy">
-            <figcaption>Tableau de bord : estimation, avancement et répartition.</figcaption>
-          </figure>
-          <figure class="shot" onclick="ouvrirShot('captures/cctp.jpg','Rédaction du CCTP : l\'arbre des lots, la fiche de prestation et l\'aperçu du CCTP mis à jour en direct.')">
-            <img src="captures/cctp.jpg" alt="Rédaction du CCTP dans Prescrire" loading="lazy">
-            <figcaption>Rédaction du CCTP : les trois colonnes, aperçu en direct.</figcaption>
-          </figure>
-          <figure class="shot" onclick="ouvrirShot('captures/dpgf.jpg','DPGF : récapitulatif par lot, sous-totaux de TVA par taux, total HT et TTC, base et PSE.')">
-            <img src="captures/dpgf.jpg" alt="DPGF récapitulative" loading="lazy">
-            <figcaption>DPGF : récapitulatif, TVA par taux, HT et TTC.</figcaption>
-          </figure>
-          <figure class="shot" onclick="ouvrirShot('captures/offres.jpg','Analyse des offres : comparatif des entreprises, écarts à l\'estimation, moins-disant et prix manquants, lot par lot.')">
-            <img src="captures/offres.jpg" alt="Analyse comparative des offres" loading="lazy">
-            <figcaption>Analyse des offres : écarts et moins-disant par lot.</figcaption>
-          </figure>
-          <figure class="shot" onclick="ouvrirShot('captures/sombre.jpg','Mode sombre : la même interface, reposante pour les longues séances de rédaction.')">
-            <img src="captures/sombre.jpg" alt="Prescrire en mode sombre" loading="lazy">
-            <figcaption>Mode sombre, au choix.</figcaption>
-          </figure>
-          <figure class="shot" onclick="ouvrirShot('captures/aide.jpg','Aide intégrée et visite guidée pour prendre l\'outil en main rapidement.')">
-            <img src="captures/aide.jpg" alt="Aide intégrée de Prescrire" loading="lazy">
-            <figcaption>Aide intégrée et visite guidée.</figcaption>
-          </figure>
-          <figure class="shot" onclick="ouvrirShot('captures/planning.jpg','Planning des travaux : enchaînement des lots en diagramme de Gantt, calé sur les jours ouvrés, export Excel et PDF A3.')">
-            <span class="shot-pro">Pro</span>
-            <img src="captures/planning.jpg" alt="Planning des travaux (Gantt)" loading="lazy">
-            <figcaption>Planning : enchaînement des lots, export Excel et PDF A3.</figcaption>
-          </figure>
-          <figure class="shot" onclick="ouvrirShot('captures/chantier.jpg','Suivi financier du chantier : marchés signés, avenants, montant actualisé et écart, lot par lot.')">
-            <span class="shot-pro">Pro</span>
-            <img src="captures/chantier.jpg" alt="Suivi financier du chantier" loading="lazy">
-            <figcaption>Suivi de chantier : marchés, avenants et écarts.</figcaption>
-          </figure>
-          <figure class="shot" onclick="ouvrirShot('captures/comptes-rendus.jpg','Comptes rendus de chantier : présences, diffusion et observations par lot, reprise des points non levés, export PDF.')">
-            <span class="shot-pro">Pro</span>
-            <img src="captures/comptes-rendus.jpg" alt="Comptes rendus de chantier" loading="lazy">
-            <figcaption>Comptes rendus : présences, observations par lot.</figcaption>
-          </figure>
-          <figure class="shot" onclick="ouvrirShot('captures/reception.jpg','Réception des travaux : réserves par lot, procès-verbaux et procédure du CCAG (formulaires EXE) pour les marchés publics.')">
-            <span class="shot-pro">Pro</span>
-            <img src="captures/reception.jpg" alt="Réception des travaux" loading="lazy">
-            <figcaption>Réception : réserves, PV et procédure CCAG (EXE).</figcaption>
-          </figure>
+        <div class="carousel">
+          <button class="car-btn car-prev" type="button" aria-label="Précédent" onclick="carGo(-1)">‹</button>
+          <div class="car-viewport"><div class="car-track" id="car-track">
+            <figure class="cslide"><img src="captures/tableau-de-bord.jpg" alt="Tableau de bord — estimation, avancement et répartition." loading="eager" onclick="ouvrirShot('captures/tableau-de-bord.jpg','Tableau de bord : estimation, avancement de la rédaction, répartition par lot et meilleures offres, d\'un coup d\'œil.')"><figcaption>Tableau de bord — estimation, avancement et répartition.</figcaption></figure>
+            <figure class="cslide"><img src="captures/cctp.jpg" alt="Rédaction du CCTP — les trois colonnes, aperçu en direct." loading="lazy" onclick="ouvrirShot('captures/cctp.jpg','Rédaction du CCTP : l\'arbre des lots, la fiche de prestation et l\'aperçu du CCTP mis à jour en direct.')"><figcaption>Rédaction du CCTP — les trois colonnes, aperçu en direct.</figcaption></figure>
+            <figure class="cslide"><img src="captures/dpgf.jpg" alt="DPGF — récapitulatif, TVA par taux, HT et TTC." loading="lazy" onclick="ouvrirShot('captures/dpgf.jpg','DPGF : récapitulatif par lot, sous-totaux de TVA par taux, total HT et TTC, base et PSE.')"><figcaption>DPGF — récapitulatif, TVA par taux, HT et TTC.</figcaption></figure>
+            <figure class="cslide"><img src="captures/offres.jpg" alt="Analyse des offres — écarts et moins-disant par lot." loading="lazy" onclick="ouvrirShot('captures/offres.jpg','Analyse des offres : comparatif des entreprises, écarts à l\'estimation, moins-disant et prix manquants, lot par lot.')"><figcaption>Analyse des offres — écarts et moins-disant par lot.</figcaption></figure>
+            <figure class="cslide"><img src="captures/sombre.jpg" alt="Mode sombre, au choix." loading="lazy" onclick="ouvrirShot('captures/sombre.jpg','Mode sombre : la même interface, reposante pour les longues séances de rédaction.')"><figcaption>Mode sombre, au choix.</figcaption></figure>
+            <figure class="cslide"><img src="captures/aide.jpg" alt="Aide intégrée et visite guidée." loading="lazy" onclick="ouvrirShot('captures/aide.jpg','Aide intégrée et visite guidée pour prendre l\'outil en main rapidement.')"><figcaption>Aide intégrée et visite guidée.</figcaption></figure>
+            <figure class="cslide"><span class="shot-pro">Pro</span><img src="captures/planning.jpg" alt="Planning — enchaînement des lots, export Excel et PDF A3." loading="lazy" onclick="ouvrirShot('captures/planning.jpg','Planning des travaux : enchaînement des lots en diagramme de Gantt, calé sur les jours ouvrés, export Excel et PDF A3.')"><figcaption>Planning — enchaînement des lots, export Excel et PDF A3.</figcaption></figure>
+            <figure class="cslide"><span class="shot-pro">Pro</span><img src="captures/chantier.jpg" alt="Suivi de chantier — avancement, situations et avenants." loading="lazy" onclick="ouvrirShot('captures/chantier.jpg','Suivi financier du chantier : avancement constaté et réalisé par prestation, situations d\'acompte, marchés signés et avenants.')"><figcaption>Suivi de chantier — avancement, situations et avenants.</figcaption></figure>
+            <figure class="cslide"><span class="shot-pro">Pro</span><img src="captures/comptes-rendus.jpg" alt="Comptes rendus — présences et observations par lot." loading="lazy" onclick="ouvrirShot('captures/comptes-rendus.jpg','Comptes rendus de chantier : présences, diffusion et observations par lot, reprise des points non levés, export PDF.')"><figcaption>Comptes rendus — présences et observations par lot.</figcaption></figure>
+            <figure class="cslide"><span class="shot-pro">Pro</span><img src="captures/reception.jpg" alt="Réception — réserves, PV et procédure CCAG (EXE)." loading="lazy" onclick="ouvrirShot('captures/reception.jpg','Réception des travaux : réserves par lot, procès-verbaux et procédure du CCAG (formulaires EXE4 à EXE9) pour les marchés publics.')"><figcaption>Réception — réserves, PV et procédure CCAG (EXE).</figcaption></figure>
+          </div></div>
+          <button class="car-btn car-next" type="button" aria-label="Suivant" onclick="carGo(1)">›</button>
+          <div class="car-dots" id="car-dots"></div>
+          <div class="car-compteur" id="car-compteur"></div>
         </div>
       </div>
       <div id="shot-lightbox" class="shot-lightbox" onclick="fermerShot()" hidden>
@@ -9833,6 +9815,30 @@ if(T)initApp();
       </span>
     </div>
   </footer>
+
+  <script>
+    // Carrousel de la galerie (défilement natif avec accroche)
+    var carIdx=0;
+    function carVp(){return document.querySelector(".car-viewport");}
+    function carCount(){return document.querySelectorAll("#car-track .cslide").length;}
+    function carW(){return carVp().clientWidth;}
+    function carDots(){
+      var dots=document.querySelectorAll("#car-dots .car-dot");
+      dots.forEach(function(d,i){d.classList.toggle("actif",i===carIdx);});
+      var c=document.getElementById("car-compteur");if(c)c.textContent=(carIdx+1)+" / "+carCount();
+    }
+    function carSet(i){var n=carCount();carIdx=(i%n+n)%n;var sl=document.querySelectorAll("#car-track .cslide")[carIdx];carVp().scrollTo({left:sl?sl.offsetLeft:carIdx*carW(),behavior:"smooth"});carDots();}
+    function carGo(step){carSet(carIdx+step);}
+    (function(){
+      var n=carCount(),dd=document.getElementById("car-dots");
+      if(dd){for(var i=0;i<n;i++){var b=document.createElement("button");b.className="car-dot";b.type="button";b.setAttribute("aria-label","Vue "+(i+1));(function(k){b.onclick=function(){carSet(k);};})(i);dd.appendChild(b);}}
+      var vp=carVp(),tmr=null;
+      vp.addEventListener("scroll",function(){if(tmr)clearTimeout(tmr);tmr=setTimeout(function(){var sls=document.querySelectorAll("#car-track .cslide"),best=0,bd=1e9;sls.forEach(function(x,i){var d=Math.abs(x.offsetLeft-vp.scrollLeft);if(d<bd){bd=d;best=i;}});carIdx=best;carDots();},90);});
+      window.addEventListener("keydown",function(e){if(document.getElementById("shot-lightbox").hidden){if(e.key==="ArrowLeft")carGo(-1);if(e.key==="ArrowRight")carGo(1);}});
+      window.addEventListener("resize",function(){var sl=document.querySelectorAll("#car-track .cslide")[carIdx];if(sl)vp.scrollLeft=sl.offsetLeft;});
+      carDots();
+    })();
+  </script>
 
   <script>
     // Galerie : ouverture/fermeture de l'agrandissement
